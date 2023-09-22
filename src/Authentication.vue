@@ -1,5 +1,5 @@
 <template>
-
+  <h1>Аутентификация</h1>
 </template>
 
 <script>
