@@ -8,16 +8,19 @@
 		<version>3.1.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>NEWSApplication</artifactId>
+	<groupId>com.news</groupId>
+	<artifactId>application</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>NEWSApplication</name>
-	<description>Online news service</description>
+	<name>application</name>
+	<description>online news service</description>
 	<properties>
 		<java.version>17</java.version>
-		<snakeyaml.version>2.0</snakeyaml.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -25,7 +28,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-docker-compose</artifactId>
+			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
