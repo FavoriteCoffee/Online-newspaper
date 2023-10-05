@@ -12,4 +12,16 @@ public class MainController {
         model.addAttribute("title", "HomePage");
         return "home";
     }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("title", "Login");
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("title", "Register");
+        return "register";
+    }
 }
