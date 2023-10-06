@@ -23,12 +23,12 @@ public class UsersController {
     public @ResponseBody String postRegister(@RequestParam String login
             , @RequestParam String password) {
         for(User user: userRepository.findAll()){
-            if (Objects.equals(user.getLogin(), login)){
+            if (Objects.equals(user.getUserName(), login)){
                 return "error: login_is_already_used";
             }
         }
         User n = new User();
-        n.setLogin(login);
+        n.setUserName(login);
         n.setPassword(password);
         userRepository.save(n);
         return "success";
@@ -44,7 +44,7 @@ public class UsersController {
     public @ResponseBody String postLogin(@RequestParam String login
             , @RequestParam String password) {
         for(User user: userRepository.findAll()){
-            if (Objects.equals(user.getLogin(), login)){
+            if (Objects.equals(user.getUserName(), login)){
                 if(Objects.equals(user.getPassword(), password)){
                     return "success";
                 }
