@@ -6,28 +6,36 @@ import com.news.application.repo.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/news")
 public class NewsController {
     @Autowired
     private PostRepository postRepository;
-    @PostMapping(path="/add_post")
-    public @ResponseBody String addNewPost (@RequestParam String title
-            , @RequestParam String text) {
+
+    @GetMapping("")
+    public String news(Model model){
+        Iterable<Post> posts = postRepository.findAll();
+        model.addAttribute("title", "News");
+        model.addAttribute("posts", posts);
+        return "news-main";
+    }
+
+    @GetMapping("/add")
+    public String getNewsAdd(Model model){
+        model.addAttribute("title", "News Add");
+        return "news-add";
+    }
+
+    @PostMapping("/add")
+    public @ResponseBody String postNewsAdd (@RequestParam String title
+            , @RequestParam String text, @RequestParam Long authorId) {
         Post p = new Post();
         p.setTitle(title);
         p.setText(text);
+        p.setAuthor_id(authorId);
         postRepository.save(p);
         return "saved";
-    }
-
-    @GetMapping(path="/get_all_posts")
-    public @ResponseBody Iterable<Post> getAllPosts() {
-        // This returns a JSON or XML with the users
-        return postRepository.findAll();
     }
 }
