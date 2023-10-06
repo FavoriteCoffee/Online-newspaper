@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="'This is the ' + ${title} + '!'" />
+<div th:each="el : ${posts}">
+        <h3 th:text="${el.getTitle()}"></h3>
+</div>
+</body>
+</html>
