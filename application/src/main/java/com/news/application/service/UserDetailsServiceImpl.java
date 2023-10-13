@@ -26,4 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return user.map(UserDetailsImpl::new).get();
     }
 
+    public User addUser(User user){
+        return userRepository.save(user);
+    }
 }
