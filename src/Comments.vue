@@ -1,9 +1,20 @@
 <template>
-    <div>
-        <h2>Это комент</h2>
-        <h2>{{ comment.text }}</h2>
-        <input type="button" value="лайк подписка колокольчик"/>
-    </div>
+        <v-container>
+            <v-row>
+                <div :class="['text-subtitle-1', 'pa-2']">Это комент</div>        
+            </v-row>
+            <v-row>
+                <div :class="['text-body-1', 'pa-2']">{{ comment.text }}</div>
+            </v-row>
+            <v-row>
+                <v-btn>лайк подписка колокольчик"</v-btn>        
+            </v-row>
+        </v-container>
+    <!-- <div>
+        <div :class="['text-subtitle-1', 'pa-2']">Это комент</div>
+        <div :class="['text-body-1', 'pa-2']">{{ comment.text }}</div>
+        <v-btn>лайк подписка колокольчик"</v-btn>
+    </div> -->
 </template>
 
 <script setup>
