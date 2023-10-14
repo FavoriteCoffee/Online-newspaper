@@ -1,5 +1,5 @@
 <template>
-<v-container style="margin: 0; background-repeat: repeat; background-image: url('./img/fon.png')" >
+<v-container style="margin: 0; background-repeat: repeat; background-image: url('./img/fon.png');" >
     <v-row width="200px" style="margin: 0;">
       <v-col cols="4">
         <v-sheet class="pa-2 ma-2">
