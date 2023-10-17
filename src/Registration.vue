@@ -1,6 +1,6 @@
 <template>
   <v-card
-    style="padding: 10px; margin:15px;"
+    style="padding: 10px; margin:15px; ackground-repeat: repeat; background-image: url('./img/fon.png');"
     width="50%"
     title="Регистрация">
       <v-text-field label="Введите nic"/>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "Ragistration"
+  name: "Registration"
 }
 </script>
 

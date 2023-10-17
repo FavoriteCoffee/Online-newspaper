@@ -1,9 +1,9 @@
 <template>
     <v-card 
-        width="80%"
-        style="margin: 10px; padding: 0; border-color: #A5CBE8; border: 10px; background-color: bisque;">
+        width="72%"
+        style="margin: 10px; margin-left: 14%; padding: 0; border: solid; border-color: #b4c987;  background-color: #fff;">
 
-        <v-container style="padding: 0;">
+        <v-container style="padding: 0; margin: 0;">
             <v-row style=" padding: 0;">
 
                 <v-col cols="4">
@@ -11,55 +11,58 @@
                 </v-col>
 
 
-                <v-col cols="8">
+                <v-col cols="8" style="padding-right: 6%;">
 
                     <!-- ЗАГОЛОВОК -->
 
-                    <v-row>
-                        <div :class="['text-h6', 'pa-2']">{{ news.id }})))) {{ news.title }}</div>
+                    <v-row style="padding: 0; margin-top: 0;">
+                        <v-col>
+                            <div style="font-size: 2em; font-family: Georgia, 'Times New Roman', Times, serif;">{{ news.id }} {{ news.title }}</div>
+                        </v-col>
+
+                        <v-col>
+                            <div align="end" :class="['text-body-2', 'pa-2']">Опубликовано {{ news.data }}</div>
+                        </v-col>
                     </v-row>
 
                     <!-- ТЕКСТ -->
 
                     <div v-if="showText">
-                        <v-row>
-                            <div class="overflow-auto" :class="['text-body-1', 'pa-2']">{{ news.text }}</div>
+                        <v-row style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 1em; padding: 0; margin-right: 1%; margin-left: 1%;">
+                            <div class="overflow-auto" >{{ news.text }}</div>
                         </v-row>
-                        <v-row>
+                        <!-- <v-row>
                             <v-btn @click="changeTextVisibility" width="100%">свернуть</v-btn>
-                        </v-row>
+                        </v-row> -->
                     </div>
-                    <div v-else>
-                        <v-row height="50px" class="overflow-hidden">
-                            <div :class="['text-body-1', 'pa-2']">{{ news.text }}</div>
-                        </v-row>
+                    <div v-else >
                         <v-row>
-                            <v-btn @click="changeTextVisibility" width="100%">показать больше</v-btn>
+                            <div style="height: 70px; margin-left: 1%;" class="overflow-hidden" :class="['text-body-1', 'pa-2']">{{ news.text }}</div>
                         </v-row>
                     </div>
 
                     <!-- БЛОК КНОПОК -->
 
-                    <v-row >
-                        <v-col align="end">
-                            <div :class="['text-body-1', 'pa-2']">Опубликовано {{ news.data }}</div>
+                    <v-row style="margin-top: 4%; margin-bottom: 1%;">
+
+                        <v-col v-if="showText" cols="6">
+                            <p @click="changeTextVisibility" width="100%" style="padding: 0; margin-bottom: 1%;"><p class="material-icons">expand_less</p></p>
+                        </v-col>
+                        <v-col v-else cols="6">
+                            <p @click="changeTextVisibility" width="100%" style="padding: 0; margin-bottom: 1%;"><p class="material-icons">expand_more</p></p>
                         </v-col>
 
-                        <v-col align="end">
-                            <v-btn @click="changeCommentsVisibility">Комментарии (15)</v-btn>
-                            <div :class="['text-body-1', 'pa-2']"></div>
+                        <v-col align="center">
+                            <p @click="changeCommentsVisibility">Комментарии (15)</p>
+                            <!-- <div :class="['text-body-1', 'pa-2']"></div> -->
                         </v-col>
 
-                        <v-col align="end">
-                            <v-btn>like(3)</v-btn>
+                        <v-col align="end" style="padding-right: 0;">
+                            <!-- <v-btn class="material-icons">language</v-btn> -->
+                            <p style="color: #950400;"><i class="material-icons">favorite_border</i></p>
                         </v-col>
                     </v-row>
-
-
-                
-                
-                
-                
+                           
                 </v-col>                    
 
             </v-row>
@@ -68,13 +71,13 @@
 <!-- КОММЕНТАРИИ -->
             <div v-if="showComments">
                 <div v-if="showAllComents">
-                    <v-row>
-                        <v-col cols="4" offset="4">
+                    <v-row style="padding-right: 6%; padding-left: 4%;">
+                        <v-col style="padding: 0; margin-top: 1%;" cols="8" offset="4">
                             <Comments v-for="comment of news.comments" :key="comment" :comment="comment"/>
                         </v-col>
                     </v-row>
 
-                    <v-row>
+                    <v-row style="padding-right: 6%; ; padding-left: 4%;">
                         <v-col  align="end" cols="8" offset="4">
                             <v-btn @click="changeAllCommentsVisibility">Свернуть комментарии</v-btn>
                         </v-col>
@@ -82,20 +85,20 @@
                 </div>
 
                 <div v-else>
-                    <v-row>
+                    <v-row style="padding-right: 6%; ; padding-left: 2%; margin-top: 1%;">
                     <v-col cols="4" offset="4">
                         <Comments v-for="comment of news.comments.slice(0, 2)" :key="comment" :comment="comment"/>
                     </v-col>
                     </v-row>
 
                     <v-row>
-                        <v-col align="end" cols="8" offset="4">
+                        <v-col style="padding-right: 6%; ; padding-left: 2%;" align="end" cols="8" offset="4">
                             <v-btn @click="changeAllCommentsVisibility">Еще комментарии</v-btn>
                         </v-col>
                     </v-row>
                 </div>
 
-                <v-row>
+                <v-row style="padding-right: 6%; ; padding-left: 2%; margin-bottom: 1%;">
                     <v-col cols="8" offset="4">
                         <v-textarea
                         label="Оставьте комментарий"
