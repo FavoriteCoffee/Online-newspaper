@@ -45,14 +45,14 @@
 
                     <v-row style="margin-top: 4%; margin-bottom: 1%;">
 
-                        <v-col v-if="showText" cols="6">
+                        <v-col v-if="showText">
                             <p @click="changeTextVisibility" width="100%" style="padding: 0; margin-bottom: 1%;"><p class="material-icons">expand_less</p></p>
                         </v-col>
-                        <v-col v-else cols="6">
+                        <v-col v-else >
                             <p @click="changeTextVisibility" width="100%" style="padding: 0; margin-bottom: 1%;"><p class="material-icons">expand_more</p></p>
                         </v-col>
 
-                        <v-col align="center">
+                        <v-col align="end" cols="3" offset="7">
                             <p @click="changeCommentsVisibility">Комментарии (15)</p>
                             <!-- <div :class="['text-body-1', 'pa-2']"></div> -->
                         </v-col>
@@ -79,21 +79,21 @@
 
                     <v-row style="padding-right: 6%; ; padding-left: 4%;">
                         <v-col  align="end" cols="8" offset="4">
-                            <v-btn @click="changeAllCommentsVisibility">Свернуть комментарии</v-btn>
+                            <v-btn @click="changeAllCommentsVisibility"><p class="material-icons">expand_less</p> Свернуть комментарии</v-btn>
                         </v-col>
                     </v-row>
                 </div>
 
                 <div v-else>
                     <v-row style="padding-right: 6%; ; padding-left: 2%; margin-top: 1%;">
-                    <v-col cols="4" offset="4">
-                        <Comments v-for="comment of news.comments.slice(0, 2)" :key="comment" :comment="comment"/>
-                    </v-col>
+                        <v-col cols="8" offset="4">
+                            <Comments v-for="comment of news.comments.slice(0, 2)" :key="comment" :comment="comment"/>
+                        </v-col>
                     </v-row>
 
-                    <v-row>
-                        <v-col style="padding-right: 6%; ; padding-left: 2%;" align="end" cols="8" offset="4">
-                            <v-btn @click="changeAllCommentsVisibility">Еще комментарии</v-btn>
+                    <v-row style="padding-right: 6%; ; padding-left: 4%;">
+                        <v-col align="end" cols="8" offset="4">
+                            <v-btn @click="changeAllCommentsVisibility"><p class="material-icons">expand_more</p> Еще комментарии</v-btn>
                         </v-col>
                     </v-row>
                 </div>
