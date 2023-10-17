@@ -8,15 +8,15 @@
 
     <div v-else>
       <v-row>
-        <v-col cols="5">
+        <v-col cols="8">
           <div style="float: left;"><b><h1 style="color: #fff; font-size: 5em;">LOGO</h1></b></div>
         </v-col>
       
-        <v-col style="padding-top: 2em; color: #fff;" align="end">
-          Nick
+        <v-col style="padding: 0; padding-top: 2em;" align="end" cols="2" >
+          <v-btn style="float: right; margin: 2%;">Nick</v-btn>
         </v-col>
 
-        <v-col style="padding-top: 2em; " align="end">
+        <v-col style="padding-top: 2em; " align="end" cols="2">
           <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Вход {{ userIn }}</v-btn>
       </v-col>
     </v-row>
