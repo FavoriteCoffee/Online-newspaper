@@ -1,5 +1,5 @@
 <template>
-        <v-container width="100%">
+        <v-container>
             <v-row>
                 <div :class="['text-subtitle-1', 'pa-2']">Это комент</div>        
             </v-row>

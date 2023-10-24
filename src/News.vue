@@ -98,15 +98,17 @@
                     </v-row>
                 </div>
 
-                <v-row style="padding-right: 6%; ; padding-left: 2%; margin-bottom: 1%;">
-                    <v-col cols="8" offset="4">
-                        <v-textarea
-                        label="Оставьте комментарий"
-                        maxlength="120"
-                        single-line/>
-                        <v-btn width="100%">Опубликовать</v-btn>
-                    </v-col>
-                </v-row>
+                <div v-if="userIn">
+                    <v-row style="padding-right: 6%; ; padding-left: 2%; margin-bottom: 1%;">
+                        <v-col cols="8" offset="4">
+                            <v-textarea
+                            label="Оставьте комментарий"
+                            maxlength="120"
+                            single-line/>
+                            <v-btn width="100%">Опубликовать</v-btn>
+                        </v-col>
+                    </v-row>
+                </div>    
             </div>
         </v-container>
     </v-card>
