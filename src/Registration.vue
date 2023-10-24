@@ -5,7 +5,12 @@
     title="Регистрация">
       <v-text-field label="Введите nic"/>
       <v-text-field label="Введите пароль"/>
-      <v-btn>Ввод</v-btn>
+      <router-link to="/main" class="nav-link">
+        <v-btn>OK</v-btn>
+      </router-link>
+      <router-link to="/authentication" class="nav-link">
+        <v-btn>Вход</v-btn>
+      </router-link>
   </v-card>
 </template>
 

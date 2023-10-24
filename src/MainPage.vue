@@ -1,26 +1,21 @@
 <template>
-
+   <router-view /> 
   <v-card width="100%" height="80px" style=";background-image: url('./img/top.png'); padding-left: 14%; padding-right: 14%">
-    <div v-if="userIn">
-      <div><h1 style="color: #fff;">LOGO</h1></div>
-      <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Выход {{ userIn }}</v-btn>
-    </div>
-
-    <div v-else>
       <v-row>
         <v-col cols="8">
           <div style="float: left;"><b><h1 style="color: #fff; font-size: 5em;">LOGO</h1></b></div>
         </v-col>
       
         <v-col style="padding: 0; padding-top: 2em;" align="end" cols="2" >
-          <v-btn style="float: right; margin: 2%;">Nick</v-btn>
+          <v-btn @click="this.$router.push('/registration')" style="float: right; margin: 2%;">Nick</v-btn>
         </v-col>
 
         <v-col style="padding-top: 2em; " align="end" cols="2">
-          <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Вход {{ userIn }}</v-btn>
+          <router-link to="/generalmain" class="nav-link">
+            <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Вход {{ userIn }}</v-btn>
+          </router-link>
       </v-col>
     </v-row>
-    </div>
   </v-card>
 
  <!-- <v-card>
