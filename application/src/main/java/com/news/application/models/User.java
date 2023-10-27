@@ -2,33 +2,33 @@ package com.news.application.models;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "user_name")
     private String userName;
 
+    @Column(name = "password")
     private String password;
 
-    private boolean isActive;
-    private String roles;
+    @OneToMany(mappedBy="author", cascade = CascadeType.ALL)
+    private List<Post> posts;
 
-    public String getRoles() {
-        return roles;
-    }
+    @OneToMany(mappedBy="author", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
-    public void setRoles(String roles) {
-        this.roles = roles;
-    }
+    public User(){}
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
+    public User(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
     }
 
     public Long getId() {
@@ -53,5 +53,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
