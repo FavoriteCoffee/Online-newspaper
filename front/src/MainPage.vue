@@ -7,12 +7,12 @@
         </v-col>
       
         <v-col style="padding: 0; padding-top: 2em;" align="end" cols="2" >
-          <v-btn @click="this.$router.push('/registration')" style="float: right; margin: 2%;">Nick</v-btn>
+          <v-btn style="float: right; margin: 2%;">Nick</v-btn>
         </v-col>
 
         <v-col style="padding-top: 2em; " align="end" cols="2">
           <router-link to="/generalmain" class="nav-link">
-            <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Вход {{ userIn }}</v-btn>
+            <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Вход</v-btn>
           </router-link>
       </v-col>
     </v-row>
@@ -42,7 +42,7 @@
 </v-card>   -->
   <div>
     <News v-for="news of myStore.news" :key="news.id" :news="news"/>
-</div>  
+  </div>  
 
 
 </template>
