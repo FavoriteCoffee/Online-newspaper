@@ -22,13 +22,13 @@ public class Post {
     private User author;
 
     @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
-    private List<Comments> comments;
+    private List<Comment> comments;
 
-    public List<Comments> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comments> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 

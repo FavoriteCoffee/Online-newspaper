@@ -2,17 +2,13 @@ package com.news.application.controllers;
 
 import com.news.application.models.Comment;
 import com.news.application.models.Post;
-import com.news.application.models.User;
 import com.news.application.repo.CommentRepository;
 import com.news.application.repo.PostRepository;
-import org.hibernate.annotations.Comments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +27,7 @@ public class CommentsController {
     public ResponseEntity<Object> getAllComments(@PathVariable("post_id") Long post_id){
         try {
             Post post = postRepository.findById(post_id).get();
-            List<Comments> comments = post.getComments();
+            List<Comment> comments = post.getComments();
             return new ResponseEntity<Object>(comments, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
