@@ -2,55 +2,75 @@ package com.news.application.controllers;
 
 import com.news.application.models.User;
 import com.news.application.repo.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 
-@Controller
+@RestController
 public class UsersController {
+
     @Autowired
     private UserRepository userRepository;
-    @GetMapping("/register")
-    public String getRegister(Model model){
-        model.addAttribute("title", "Register");
-        return "register";
-    }
 
-    @PostMapping("/register")
-    public @ResponseBody String postRegister(@RequestParam String login
-            , @RequestParam String password) {
-        for(User user: userRepository.findAll()){
-            if (Objects.equals(user.getLogin(), login)){
-                return "error: login_is_already_used";
-            }
+    private final Logger logger = LoggerFactory.getLogger(UsersController.class);
+
+    @GetMapping("/users")
+    public ResponseEntity<Object> getAllUsers(){
+        try {
+            Iterable<User> users = userRepository.findAll();
+            return new ResponseEntity<Object>(users, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
-        User n = new User();
-        n.setLogin(login);
-        n.setPassword(password);
-        userRepository.save(n);
-        return "success";
     }
 
-    @GetMapping("/login")
-    public String getLogin(Model model){
-        model.addAttribute("title", "Login");
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public @ResponseBody String postLogin(@RequestParam String login
-            , @RequestParam String password) {
-        for(User user: userRepository.findAll()){
-            if (Objects.equals(user.getLogin(), login)){
-                if(Objects.equals(user.getPassword(), password)){
-                    return "success";
-                }
-                return "error: wrong_password";
-            }
+    @GetMapping("/users/{id}")
+    public ResponseEntity<Object> getUserById(@PathVariable("id") Long id) {
+        try {
+            User user = userRepository.findById(id).get();
+            return new ResponseEntity<Object>(user, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
-        return "error: wrong_login";
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<Object> createUser(@RequestBody User user) {
+        try {
+            User savedUser = userRepository.save(user);
+            return new ResponseEntity<Object>(savedUser, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<Object> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+        try {
+            user.setId(id);
+            User savedUser = userRepository.save(user);
+            return new ResponseEntity<Object>(savedUser, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
+        try {
+            userRepository.deleteById(id);
+            return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

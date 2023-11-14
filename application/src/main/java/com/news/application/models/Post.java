@@ -1,6 +1,9 @@
 package com.news.application.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Comments;
+
+import java.util.List;
 
 @Entity
 public class Post {
@@ -8,9 +11,26 @@ public class Post {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    private String title, text;
+    @Column(name = "title")
+    private String title;
 
-    private Long author_id;
+    @Column(name = "text")
+    private String text;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_author_id")
+    private User author;
+
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Long getId() {
         return id;
@@ -36,11 +56,11 @@ public class Post {
         this.text = text;
     }
 
-    public Long getAuthor_id() {
-        return author_id;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setAuthor_id(Long author_id) {
-        this.author_id = author_id;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 }
