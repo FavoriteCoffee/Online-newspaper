@@ -9,7 +9,7 @@
       <v-text-field label="Введите фамилию"/>
 
       <router-link to="/main" class="nav-link">
-        <v-btn>OK</v-btn>
+        <v-btn @click="myStore.saveUser()">OK</v-btn>
       </router-link>
       <router-link to="/authentication" class="nav-link">
         <v-btn>Вход</v-btn>
@@ -17,10 +17,13 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  name: "Registration"
-}
+<script setup>
+import { ref, computed } from 'vue';
+import { useStore } from "./store/app.js";
+const myStore = useStore();
+// export default {
+//   name: "Registration"
+// }
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
-import http from '../http-common'
+import http from "../http-common.js"
 
-class CustomerDataService {
+class UserDataService {
     getAll() {
         return http.get('/users')
     }
