@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import UserDataService from "../services/UserDataService";
+
+
 
 export const useStore = defineStore('MyStore', {
     state: () => ({
@@ -6,66 +9,68 @@ export const useStore = defineStore('MyStore', {
         news: [{id: 1, showText:false, data:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: '111bJCHjkbjhvkJhVKUYCJSB:OÏJESPOJSFo;1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', comments: [{text: "1коммент 1 новости"}, {text: "2коммент 1 новости"}, {text: "3коммент 1 новости"}]},
                  {id: 2,  showText:false, data:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{text: "IF you happen to have read another book about Christopher Robin, you may remember that he once had a swan (or the swan had Christopher Robin, I don't know which) and that he used to call this swan Pooh. That was a long time ago, and when we said good-bye, we took the name with us, as we didn't think the swan would want it any more. Well, when Edward Bear said that he would like an exciting name all to himself, Christopher Robin said at once, without stopping to think, that he was Winnie-the-Pooh. And he was. So, as I have explained the Pooh part, I will now explain the rest of it."}, {text: "2коммент 2 новости"}, {text: "3коммент 2 новости"}]},
             	 {id: 3,  showText:false, data:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments: [{text: "1коммент 3 новости"}, {text: "2коммент 3 новости"}, {text: "3коммент 3 новости"}]}],
-        
+        user: {
+            userName: "HippoMaru",
+            password: "1111"
+        }
     }),
-    getters: {
+    // getters: {
 
-    },
+    // },
     actions: {
       changeVisibility(val){
         val = !val
       },
-      saveCustomer() {
+      saveUser() {
         var data = {
-            firstName: this.customer.firstName,
-            lastName: this.customer.lastName,
-            email: this.customer.email,
-            phone: this.customer.phone
+            userName: this.user.userName,
+            password: this.user.password
         }
-        CustomerDataService.create(data)
+        UserDataService.create(data)
             .then(response => {
-                this.customer.id = response.data.id
+                this.user.id = response.data.id
                 this.submitted = true;
             })
             .catch( e => {
                 alert(e)
             })
+        console.log(data.userName, data.password)    
     },
-    newCustomer() {
+    newUser() {
         this.submitted = false
-        this.customer = {}
+        this.user = {}
     },
     newPage(newPage){
         path = "'/" + newPage + "'"
         // this.$router.push(path)
       }
     },
-    getCustomer(id) {
-      CustomerDataService.get(id)
+    getUser(id) {
+      UserDataService.get(id)
           .then(response => {
-              this.currentCustomer = response.data
+              this.currentUser = response.data
           })
           .catch(e => {
               alert(e)
           })
     },
-    updateCustomer() {
-        CustomerDataService.update(this.currentCustomer.id, this.currentCustomer)
+    updateUser() {
+        UserDataService.update(this.currentUser.id, this.currentUser)
             .then(() => {
-                this.message = 'The customer was updated successfully!'
+                this.message = 'The user was updated successfully!'
             })
             .catch(e => {
                 alert(e)
             })
     },
-    deleteCustomer() {
-        CustomerDataService.delete(this.currentCustomer.id)
+    deleteUser() {
+        UserDataService.delete(this.currentUser.id)
             .then(() => {
-                this.$router.push({name: 'customers'})
+                this.$router.push({name: 'users'})
             })
             .catch(e => {
                 alert(e)
             })
     }
-    
+
 });

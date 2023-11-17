@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class PostsController {
     @Autowired
@@ -38,6 +39,7 @@ public class PostsController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/posts")
     public ResponseEntity<Object> createPost(@RequestBody Post post) {
         try {
