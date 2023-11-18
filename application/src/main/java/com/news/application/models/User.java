@@ -24,13 +24,6 @@ public class User {
     @OneToMany(mappedBy="author", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    public User(){}
-
-    public User(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-    }
-
     public Long getId() {
         return id;
     }
