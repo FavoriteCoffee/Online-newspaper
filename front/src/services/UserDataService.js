@@ -1,8 +1,12 @@
 import http from '../http-common'
 
 class UserDataService {
-    getAll() {
+    getAllUsers() {
         return http.get('/users')
+    }
+
+    getAllNews() {
+        returnyttp.get('/news')
     }
 
     get(id) {
@@ -13,11 +17,15 @@ class UserDataService {
         return http.post('/users', data)
     }
 
-    update(id, data) {
+    updateUser(id, data) {
         return http.put(`/users/${id}`, data)
     }
 
-    delete(id) {
+    updateNews(id, data) {
+        return http.put(`/news/${id}`, data)
+    }
+
+    deleteUser(id) {
         return http.delete(`/users/${id}`)
     }
 }

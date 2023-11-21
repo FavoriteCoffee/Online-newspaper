@@ -3,14 +3,13 @@
     style="padding: 10px; margin:15px; ackground-repeat: repeat; background-image: url('./img/fon.png');"
     width="50%"
     title="Регистрация">
-      <v-text-field label="Введите nic"/>
-      <v-text-field label="Введите пароль"/>
-      <v-text-field label="Введите имя"/>
-      <v-text-field label="Введите фамилию"/>
+      <v-text-field @blur="myStore.registrationData.enteredName = $event.target.value" label="Введите nic"/>
+      <v-text-field @blur="myStore.registrationData.enteredPassword = $event.target.value" label="Введите пароль"/>
 
-      <router-link to="/main" class="nav-link">
-        <v-btn @click="myStore.saveUser()">OK</v-btn>
-      </router-link>
+
+      <!-- <router-link to="/main" class="nav-link"> -->
+        <v-btn @click="myStore.verificationOfRegistration()">OK</v-btn>
+      <!-- </router-link> -->
       <router-link to="/authentication" class="nav-link">
         <v-btn>Вход</v-btn>
       </router-link>

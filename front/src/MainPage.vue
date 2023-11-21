@@ -7,7 +7,7 @@
         </v-col>
       
         <v-col style="padding: 0; padding-top: 2em;" align="end" cols="2" >
-          <v-btn style="float: right; margin: 2%;">Nick</v-btn>
+          <v-btn style="float: right; margin: 2%;">{{ myStore.user.userName }}</v-btn>
         </v-col>
 
         <v-col style="padding-top: 2em; " align="end" cols="2">

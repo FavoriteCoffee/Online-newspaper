@@ -68,7 +68,8 @@
             </v-row>
 
 
-<!-- КОММЕНТАРИИ -->
+            <!-- КОММЕНТАРИИ -->
+
             <div v-if="showComments">
                 <div v-if="showAllComents">
                     <v-row style="padding-right: 6%; padding-left: 4%;">
@@ -98,14 +99,15 @@
                     </v-row>
                 </div>
 
-                <div v-if="userIn">
+                <div v-if="myStore.userIn">
                     <v-row style="padding-right: 6%; ; padding-left: 2%; margin-bottom: 1%;">
                         <v-col cols="8" offset="4">
                             <v-textarea
+                            @blur="changeCommentText($event.target.value)"
                             label="Оставьте комментарий"
                             maxlength="120"
                             single-line/>
-                            <v-btn width="100%">Опубликовать</v-btn>
+                            <v-btn @click="myStore.addComment(this.news.id, this.commentText)" width="100%">Опубликовать</v-btn>
                         </v-col>
                     </v-row>
                 </div>    
@@ -117,6 +119,8 @@
 <script setup>
 import Comments from './Comments.vue';
 import { ref, computed } from 'vue';
+import { useStore } from "./store/app.js";
+const myStore = useStore();
 
 const props = defineProps({
     news: {
@@ -129,6 +133,11 @@ const props = defineProps({
 const showText = ref(false)
 const showComments = ref(false)
 const showAllComents = ref(false)
+const commentText = ref("")
+
+const changeCommentText = (newText) => {
+    commentText.value = newText
+}
 
 const changeTextVisibility = () => {
     showText.value = !showText.value
