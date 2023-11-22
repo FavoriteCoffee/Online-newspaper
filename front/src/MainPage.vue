@@ -12,7 +12,7 @@
 
         <v-col style="padding-top: 2em; " align="end" cols="2">
           <router-link to="/generalmain" class="nav-link">
-            <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Вход</v-btn>
+            <v-btn style="float: right; margin: 2%; background-color: #5f8b00; color: #fff;">Выход</v-btn>
           </router-link>
       </v-col>
     </v-row>

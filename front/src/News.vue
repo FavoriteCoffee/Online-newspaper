@@ -57,10 +57,21 @@
                             <!-- <div :class="['text-body-1', 'pa-2']"></div> -->
                         </v-col>
 
-                        <v-col align="end" style="padding-right: 0;">
-                            <!-- <v-btn class="material-icons">language</v-btn> -->
-                            <p style="color: #950400;"><i class="material-icons">favorite_border</i></p>
-                        </v-col>
+                        <!-- <div v-if="myStore.isNewsLiked(this.news.id)" > -->
+                        <div v-if="showText" >    
+                            <v-col align="end" style="padding-right: 0;">
+                                <!-- <v-btn class="material-icons">language</v-btn> -->
+                                <!-- <p style="color: #950400;"><i @click="myStore.changeNewsLike()" class="material-icons">favorite</i></p> -->
+                                <p style="color: #950400;"><i @click="changeTextVisibility" class="material-icons">favorite</i></p>
+                            </v-col>
+                        </div>
+                        <div v-else>
+                            <v-col align="end" style="padding-right: 0;">
+                                <!-- <v-btn class="material-icons">language</v-btn> -->
+                                <!-- <p style="color: #950400;"><i @click="myStore.changeNewsLike()" class="material-icons">favorite_border</i></p> -->
+                                <p style="color: #950400;"><i @click="changeTextVisibility" class="material-icons">favorite_border</i></p>
+                            </v-col>
+                        </div>
                     </v-row>
                            
                 </v-col>                    
@@ -74,7 +85,7 @@
                 <div v-if="showAllComents">
                     <v-row style="padding-right: 6%; padding-left: 4%;">
                         <v-col style="padding: 0; margin-top: 1%;" cols="8" offset="4">
-                            <Comments v-for="comment of news.comments" :key="comment" :comment="comment"/>
+                            <Comments v-for="comment of news.comments" :key="comment" :comment="comment" :newsId="this.news.id"/>
                         </v-col>
                     </v-row>
 
@@ -88,7 +99,7 @@
                 <div v-else>
                     <v-row style="padding-right: 6%; ; padding-left: 2%; margin-top: 1%;">
                         <v-col cols="8" offset="4">
-                            <Comments v-for="comment of news.comments.slice(0, 2)" :key="comment" :comment="comment"/>
+                            <Comments v-for="comment of news.comments.slice(0, 2)" :key="comment" :comment="comment" :newsId="this.news.id"/>
                         </v-col>
                     </v-row>
 
@@ -107,7 +118,7 @@
                             label="Оставьте комментарий"
                             maxlength="120"
                             single-line/>
-                            <v-btn @click="myStore.addComment(this.news.id, this.commentText)" width="100%">Опубликовать</v-btn>
+                            <v-btn @click="myStore.addComment(this.news.id, getCommentText())" width="100%">Опубликовать</v-btn>
                         </v-col>
                     </v-row>
                 </div>    
@@ -137,8 +148,12 @@ const commentText = ref("")
 
 const changeCommentText = (newText) => {
     commentText.value = newText
+    console.log(newText, commentText.value)
 }
 
+const getCommentText = () => {
+    return commentText.value
+}
 const changeTextVisibility = () => {
     showText.value = !showText.value
 }
