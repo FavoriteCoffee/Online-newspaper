@@ -21,7 +21,7 @@
                         </v-col>
 
                         <v-col>
-                            <div align="end" :class="['text-body-2', 'pa-2']">Опубликовано {{ news.data }}</div>
+                            <div align="end" :class="['text-body-2', 'pa-2']">Опубликовано {{ news.date }}</div>
                         </v-col>
                     </v-row>
 

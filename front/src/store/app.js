@@ -4,9 +4,9 @@ import UserDataService from "../services/UserDataService";
 
 export const useStore = defineStore('MyStore', {
     state: () => ({
-        news: [{id: 1, showText:false, data:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: '111bJCHjkbjhvkJhVKUYCJSB:OÏJESPOJSFo;1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
-                 {id: 2,  showText:false, data:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{text: "IF you happen to have read another book about Christopher Robin, you may remember that he once had a swan (or the swan had Christopher Robin, I don't know which) and that he used to call this swan Pooh. That was a long time ago, and when we said good-bye, we took the name with us, as we didn't think the swan would want it any more. Well, when Edward Bear said that he would like an exciting name all to himself, Christopher Robin said at once, without stopping to think, that he was Winnie-the-Pooh. And he was. So, as I have explained the Pooh part, I will now explain the rest of it.", id:'1111'}, {text: "2коммент 2 новости", id:'1111'}, {text: "3коммент 2 новости", id:'1111'}]},
-            	 {id: 3,  showText:false, data:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments: [{text: "1коммент 3 новости", id:'1111'}, {text: "2коммент 3 новости", id:'1112'}, {text: "3коммент 3 новости", id:'1113'}]}],
+        news: [{id: 1, showText:false, date:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: '111bJCHjkbjhvkJhVKUYCJSB:OÏJESPOJSFo;1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
+                 {id: 2,  showText:false, date:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{likedBy: [], text: "IF you happen to have read another book about Christopher Robin, you may remember that he once had a swan (or the swan had Christopher Robin, I don't know which) and that he used to call this swan Pooh. That was a long time ago, and when we said good-bye, we took the name with us, as we didn't think the swan would want it any more. Well, when Edward Bear said that he would like an exciting name all to himself, Christopher Robin said at once, without stopping to think, that he was Winnie-the-Pooh. And he was. So, as I have explained the Pooh part, I will now explain the rest of it.", id:'1111'}, {text: "2коммент 2 новости", id:'1111'}, {text: "3коммент 2 новости", id:'1111'}]},
+            	 {id: 3,  showText:false, date:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments: [{text: "1коммент 3 новости", id:'1111'}, {text: "2коммент 3 новости", id:'1112'}, {text: "3коммент 3 новости", id:'1113'}]}],
         
         authenticationData: {
             enteredName: "",
@@ -29,6 +29,8 @@ export const useStore = defineStore('MyStore', {
         userIn: true
     }),
     // // getters: {
+    //       функция для обновления:
+
     //     поиск пользователя по лог и паролю в базе
     //      
     //     добавление нового пользователя 
@@ -44,13 +46,15 @@ export const useStore = defineStore('MyStore', {
 
     
     actions: {
-    
-    // ---------- >>  GETTERS  << --------- //
 
-    loadActualNews(){
+        в основном работаем со стором, при пост запросах изменяем оба хранилища
+    
+    // ---------- >>  GETTERS  << --------- // можно переписать через обращение к стору, но оставить код обращения к бд чтобы склеить функцию большой загрузки
+
+    loadActualNews(){ //каждый час + при обновлении
         this.news = actions.getTodayNews();
-      },
-      checkUser(){
+    },
+    checkUser(){
         for (let user in UserDataService.getAllUsers){
             if (user.userName === this.authenticationData.enteredName){
                 if (user.password === this.authenticationData.enteredPassword){
@@ -66,7 +70,21 @@ export const useStore = defineStore('MyStore', {
         let today = new Date();
         for (let news in UserDataService.getAllNews){
             if (news.date < today - 86400000){
-                todayNews.push(news);
+                let tempNews = {
+                    id: news.id,
+                    date: news.date,
+                    img: news.img,
+                    title: news.title,
+                    text: news.text,
+                    comments: []
+                }
+
+                for (let comment in UserDataService.getAllComments){
+                    if (comment.newsId === news.id){
+                        tempNews.comments.push(comment)
+                    }
+                }
+                todayNews.push(tempNews);
             }
         }
         return todayNews;
@@ -106,7 +124,7 @@ export const useStore = defineStore('MyStore', {
             }
         }
     },
-    isCommentLiked(newsId, commentId){
+    isCommentLiked(newsId, commentId){// можно переписать на проверку через обращение к стору
         for (let news in UserDataService.getAllNews){
             if (news.id === newsId){
                 for (let comment in news.comments){
@@ -132,8 +150,15 @@ export const useStore = defineStore('MyStore', {
             })
       },
 
+
     // ---------- >>  MUTATIONS  << --------- //
     
+    pushTestDataToDB(){
+        for (let news in this.news){
+
+        }
+    },
+
 
     saveUser() {
         //добавить проверку на то нет ли уже такого пользователя и на адекватность значений
@@ -145,7 +170,7 @@ export const useStore = defineStore('MyStore', {
             userName: this.user.userName,
             password: this.user.password
         }
-        UserDataService.create(data)
+        UserDataService.createUser(data)
             .then(response => {
                 this.user.id = response.data.id
                 this.submitted = true;
@@ -154,7 +179,50 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
         console.log(data.userName, data.password)    
-    },   
+    }, 
+    addComment(newsId, commentText){
+        console.log(newsId, commentText)
+        var data = {
+            newsId: newsId,
+            text: commentText,
+            likedBy: []
+        }
+        UserDataService.createComment(data)
+            .then(response => {
+                this.comment.id = response.data.id
+                this.submitted = true
+            })
+            .catch( e => {
+                alert(e)
+            })
+
+
+        for (let news in this.news){
+            if (news.id === newsId){
+                news.comments.push(data)// на самом деле дата + айдишник
+            }
+        }
+    },
+    addNews(title, text, ){
+        now = new Date()
+        var data = {
+            //id:  //ОТКУДА БЕРУТСЯ АЙДИШНИКИ??
+            date: now,
+            title: title,
+            text: text,
+            likedBy: []
+        }
+        UserDataService.createNews(data)
+        .then(response => {
+            this.news.id = response.data.id
+            this.submitted = true
+        })
+        .catch( e => {
+            alert(e)
+        })
+
+        this.news.push(data)// на самом деле дата + айдишник
+    },
     verificationOfRegistration(){
         if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== ""){
             //if (!this.checkUser()) {
@@ -168,7 +236,7 @@ export const useStore = defineStore('MyStore', {
     verificationOfAuthentication(){
         if (this.authenticationData.enteredName !== "" && this.authenticationData.enteredPassword !== ""){
             //if (this.checkUser()){
-                this.userIn = false
+                this.userIn = true
                 console.log("userIn === true", this.userIn)
 
                 window.location.href = '/main';
@@ -198,9 +266,7 @@ export const useStore = defineStore('MyStore', {
     changeCommentLike(id){
 
     },
-    addComment(newsId, text){
-        console.log(newsId, text)
-    },
+
     newUser() {
         this.submitted = false
         this.user = {}
@@ -208,7 +274,7 @@ export const useStore = defineStore('MyStore', {
     newPage(newPage){
         path = "'/" + newPage + "'"
         // this.$router.push(path)
-      }
+      
     },
 
     updateUser() {
@@ -230,4 +296,5 @@ export const useStore = defineStore('MyStore', {
             })
     }
 
+    }
 });
