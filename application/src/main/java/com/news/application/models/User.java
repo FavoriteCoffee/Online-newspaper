@@ -24,6 +24,27 @@ public class User {
     @OneToMany(mappedBy="author", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy="author", cascade = CascadeType.ALL)
+    private List<CommentsLike> commentsLikes;
+    @OneToMany(mappedBy="author", cascade = CascadeType.ALL)
+    private List<PostsLike> postsLikes;
+
+    public List<CommentsLike> getCommentsLikes() {
+        return commentsLikes;
+    }
+
+    public void setCommentsLikes(List<CommentsLike> commentsLikes) {
+        this.commentsLikes = commentsLikes;
+    }
+
+    public List<PostsLike> getPostsLikes() {
+        return postsLikes;
+    }
+
+    public void setPostsLikes(List<PostsLike> postsLikes) {
+        this.postsLikes = postsLikes;
+    }
+
     public Long getId() {
         return id;
     }
