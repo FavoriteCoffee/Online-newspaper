@@ -6,7 +6,7 @@ import org.hibernate.annotations.Comments;
 import java.util.List;
 
 @Entity
-public class Post {
+public class    Post {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -23,6 +23,17 @@ public class Post {
 
     @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
+    private List<PostsLike> likes;
+
+    public List<PostsLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<PostsLike> likes) {
+        this.likes = likes;
+    }
 
     public List<Comment> getComments() {
         return comments;
