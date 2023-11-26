@@ -40,7 +40,7 @@ class UserDataService {
     }
 
     createComment(data) {
-        return http.post('/comments', data)
+        return http.post('/posts/cum/comments', data)
     }
 
     // ---- >>  << ---- //

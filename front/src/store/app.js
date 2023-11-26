@@ -291,35 +291,35 @@ export const useStore = defineStore('MyStore', {
             alert(e)
         })
         // как получить айдишник только что созданной новости и внести его в коммент
-                   var data = {
-                text: "text" + String(i),
-                title: "title" + String(i),
-                likedBy: [i],
-                img: './img/cat.jpg',
-                date: now
-            }
-            UserDataService.createNews(data)
-                .then(response => {
-                    this.news.id = response.data.id
-                    this.submitted = true;
-                })
-                .catch( e => {
-                    alert(e)
-                })
+        var data = {
+            text: "text" + String(i),
+            title: "title" + String(i),
+            likedBy: [i],
+            img: './img/cat.jpg',
+            date: now
         }
+        UserDataService.createNews(data)
+            .then(response => {
+                this.news.id = response.data.id
+                this.submitted = true;
+            })
+            .catch( e => {
+                alert(e)
+            })
     },
 
 
     saveUser() {
         //добавить проверку на то нет ли уже такого пользователя и на адекватность значений
         this.currentUser.userName = this.registrationData.enteredName
-        this.currentUser.userName = this.registrationData.enteredPassword
+        this.currentUser.password = this.registrationData.enteredPassword
         this.userIn = true
 
         var data = {
             userName: this.currentUser.userName,
             password: this.currentUser.password
         }
+        console.log(data)
         UserDataService.createUser(data)
             .then(response => {
                 this.currentUser.id = response.data.id
@@ -334,9 +334,7 @@ export const useStore = defineStore('MyStore', {
     addComment(newsId, commentText){
         console.log(newsId, commentText)
         var data = {
-            newsId: newsId,
-            text: commentText,
-            likedBy: []
+            text: commentText
         }
         UserDataService.createComment(data)
             .then(response => {
