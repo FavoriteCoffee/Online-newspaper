@@ -58,18 +58,18 @@
                         </v-col>
 
                         <!-- <div v-if="myStore.isNewsLiked(this.news.id)" > -->
-                        <div v-if="showText" >    
+                        <div v-if="myStore.isNewsLiked(this.news.id)" >    
                             <v-col align="end" style="padding-right: 0;">
                                 <!-- <v-btn class="material-icons">language</v-btn> -->
-                                <!-- <p style="color: #950400;"><i @click="myStore.changeNewsLike()" class="material-icons">favorite</i></p> -->
-                                <p style="color: #950400;"><i @click="changeTextVisibility" class="material-icons">favorite</i></p>
+                                <p style="color: #950400;"><i @click="myStore.changeNewsLike(this.news.id)" class="material-icons">favorite</i></p>
+                                <!-- <p style="color: #950400;"><i @click="changeTextVisibility" class="material-icons">favorite</i></p> -->
                             </v-col>
                         </div>
                         <div v-else>
                             <v-col align="end" style="padding-right: 0;">
                                 <!-- <v-btn class="material-icons">language</v-btn> -->
                                 <!-- <p style="color: #950400;"><i @click="myStore.changeNewsLike()" class="material-icons">favorite_border</i></p> -->
-                                <p style="color: #950400;"><i @click="changeTextVisibility" class="material-icons">favorite_border</i></p>
+                                <p style="color: #950400;"><i @click="myStore.changeNewsLike(this.news.id)" class="material-icons">favorite_border</i></p>
                             </v-col>
                         </div>
                     </v-row>
