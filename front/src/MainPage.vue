@@ -41,7 +41,7 @@
   </v-container>
 </v-card>   -->
   <div>
-    <News v-for="news of myStore.news" :key="news.id" :news="news"/>
+    <News v-for="news of myStore.getAllNews()" :key="news.id" :news="news"/>
   </div>  
 
 

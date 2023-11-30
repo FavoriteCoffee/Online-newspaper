@@ -4,9 +4,9 @@ import UserDataService from "../services/UserDataService";
 
 export const useStore = defineStore('MyStore', {
     state: () => ({
-        news: [{id: 1, likedBy: ["name"], showText:false, date:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: '111bJCHjkbjhvkJhVKUYCJSB:OÏJESPOJSFo;1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
-                 {id: 2, likedBy: ["name"],  showText:false, date:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{likedBy: ["name"], text: "IF you happen to have read another book about Christopher Robin, you may remember that he once had a swan (or the swan had Christopher Robin, I don't know which) and that he used to call this swan Pooh. That was a long time ago, and when we said good-bye, we took the name with us, as we didn't think the swan would want it any more. Well, when Edward Bear said that he would like an exciting name all to himself, Christopher Robin said at once, without stopping to think, that he was Winnie-the-Pooh. And he was. So, as I have explained the Pooh part, I will now explain the rest of it.", id:'1111'}, {text: "2коммент 2 новости", id:'1111'}, {text: "3коммент 2 новости", id:'1111'}]},
-            	 {id: 3,  likedBy: [], showText:false, date:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments: [{text: "1коммент 3 новости", id:'1111'}, {text: "2коммент 3 новости", id:'1112'}, {text: "3коммент 3 новости", id:'1113'}]}],
+        // news: [{id: 1, likedBy: ["name"], showText:false, date:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: '111bJCHjkbjhvkJhVKUYCJSB:OÏJESPOJSFo;1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
+        //          {id: 2, likedBy: ["name"],  showText:false, date:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{likedBy: ["name"], text: "IF you happen to have read another book about Christopher Robin, you may remember that he once had a swan (or the swan had Christopher Robin, I don't know which) and that he used to call this swan Pooh. That was a long time ago, and when we said good-bye, we took the name with us, as we didn't think the swan would want it any more. Well, when Edward Bear said that he would like an exciting name all to himself, Christopher Robin said at once, without stopping to think, that he was Winnie-the-Pooh. And he was. So, as I have explained the Pooh part, I will now explain the rest of it.", id:'1111'}, {text: "2коммент 2 новости", id:'1111'}, {text: "3коммент 2 новости", id:'1111'}]},
+        //     	 {id: 3,  likedBy: [], showText:false, date:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments: [{text: "1коммент 3 новости", id:'1111'}, {text: "2коммент 3 новости", id:'1112'}, {text: "3коммент 3 новости", id:'1113'}]}],
         
         authenticationData: {
             enteredName: "",
@@ -29,6 +29,11 @@ export const useStore = defineStore('MyStore', {
 
         userIn: true
     }),
+
+    // НОВЫЕ ПРАВИЛА 
+    //     в сторе храним только текущего пользователя 
+    //     все данные получаем из базы
+
     // // getters: {
     //       функция для обновления:
 
@@ -79,41 +84,46 @@ export const useStore = defineStore('MyStore', {
     getTodayNews(){
         let todayNews = []
         let today = new Date();
-        allNews = UserDataService.getAllNews
-        allComments = UserDataService.getAllComments
-        for (let i = 0; i < allNews.length; i++){
-            if (allNews[i].date < today - 86400000){
-                let tempNews = {
-                    id: allNews[i].id,
-                    date: allNews[i].date,
-                    img: allNews[i].img,
-                    title: allNews[i].title,
-                    text: allNews[i].text,
-                    comments: []
-                }
 
-                for (let j = 0; j < allComments.length; j++){
-                    if (allComments[j].newsId === news.id){
-                        tempNews.comments.push(allComments[j])
-                    }
-                }
-                todayNews.push(tempNews);
-            }
-        }
+        let recentNews = UserDataService.getRecentNews
+
+        // allNews = UserDataService.getAllNews
+        // allComments = UserDataService.getAllComments
+        // for (let i = 0; i < allNews.length; i++){
+        //     if (allNews[i].date < today - 86400000){
+        //         let tempNews = {
+        //             id: allNews[i].id,
+        //             date: allNews[i].date,
+        //             img: allNews[i].img,
+        //             title: allNews[i].title,
+        //             text: allNews[i].text,
+        //             comments: []
+        //         }
+
+        //         for (let j = 0; j < allComments.length; j++){
+        //             if (allComments[j].newsId === news.id){
+        //                 tempNews.comments.push(allComments[j])
+        //             }
+        //         }
+        //         todayNews.push(tempNews);
+        //     }
+        // }
         return todayNews;
     },
     getLatestComments(newsId){
-        for (let news of this.news){
-            if (news.id === newsId){
-                if (news.comments.length >= 3){
-                    return news.comments.slice(-3)
-                }
-                else if (news.comments.length > 0){
-                    return news.comments
-                }
-                else return false
-            }
-        }
+        let recentComments = UserDataService.getRecentComments(newsId)
+        return recentComments
+        // for (let news of this.news){
+        //     if (news.id === newsId){
+        //         if (news.comments.length >= 3){
+        //             return news.comments.slice(-3)
+        //         }
+        //         else if (news.comments.length > 0){
+        //             return news.comments
+        //         }
+        //         else return false
+        //     }
+        // }
         // for (let news in UserDataService.getAllNews){
         //     if (news.id === newsId){
         //         if (news.comments.length >= 3){
@@ -127,14 +137,16 @@ export const useStore = defineStore('MyStore', {
         // }
     },
     getComments(newsId){
-        for (let news of this.news){
-            if (news.id === newsId){
-                if (news.comments.length > 3){
-                    return news.comments
-                }
-                else return false
-            }
-        }  
+        let comments = UserDataService.getAllComments(newsId)
+        return comments
+        // for (let news of this.news){
+        //     if (news.id === newsId){
+        //         if (news.comments.length > 3){
+        //             return news.comments
+        //         }
+        //         else return false
+        //     }
+        // }  
         // for (let news in UserDataService.getAllNews){
         //     if (news.id === newsId){
         //         if (news.comments.length > 3){
@@ -144,39 +156,51 @@ export const useStore = defineStore('MyStore', {
         //     }
         // }
     },
-    isNewsLiked(id){
-        console.log("LIKE ", id)
-        for (let i = 0; i < this.news.length; i++){
-            console.log(this.news[i].id)
-            if (this.news[i].id === id){
-                console.log(i)
-                for (let j = 0; j < this.news[i].likedBy.length; j++){
-                    console.log(j)
-                    if (this.news[i].likedBy[j] === this.currentUser.userName){
-                        console.log("TRUE")
-                        return true
-                    }
-                }
-                console.log("FALSE")
-                return false
+    isNewsLiked(newsId){
+        for (let like of UserDataService.getNewsLikes(newsId, this.currentUser.id)) {
+            if (like.author === this.currentUser.userName) {
+                return true
             }
         }
+        return false
+        // console.log("LIKE ", id)
+        // for (let i = 0; i < this.news.length; i++){
+        //     console.log(this.news[i].id)
+        //     if (this.news[i].id === id){
+        //         console.log(i)
+        //         for (let j = 0; j < this.news[i].likedBy.length; j++){
+        //             console.log(j)
+        //             if (this.news[i].likedBy[j] === this.currentUser.userName){
+        //                 console.log("TRUE")
+        //                 return true
+        //             }
+        //         }
+        //         console.log("FALSE")
+        //         return false
+        //     }
+        // }
     },
-    isCommentLiked(newsId, commentId){// можно переписать на проверку через обращение к стору
-        for (let news of this.news){
-            if (news.id === newsId){
-                for (let comment of news.comments){
-                    if (comment.id === commentId){
-                        for (let user of news.likedBy){
-                            if (user === this.currentUser.userName){
-                                return true
-                            }
-                        }
-                        return false
-                    }
-                }
+    isCommentLiked(newsId, commentId){
+        for (let like of UserDataService.getCommentsLikes(newsId, commentId)) {
+            if (like.author === this.currentUser.userName) {
+                return true
             }
         }
+        return false
+        // for (let news of this.news){
+        //     if (news.id === newsId){
+        //         for (let comment of news.comments){
+        //             if (comment.id === commentId){
+        //                 for (let user of news.likedBy){
+        //                     if (user === this.currentUser.userName){
+        //                         return true
+        //                     }
+        //                 }
+        //                 return false
+        //             }
+        //         }
+        //     }
+        // }
         // for (let news in UserDataService.getAllNews){
         //     if (news.id === newsId){
         //         for (let comment in news.comments){
@@ -193,13 +217,15 @@ export const useStore = defineStore('MyStore', {
         // }
     },
     getUser(id) {
-        UserDataService.get(id)
+        let user = UserDataService.get(id)
             .then(response => {
                 this.currentUser = response.data
             })
             .catch(e => {
                 alert(e)
             })
+
+        return user
       },
 
 
@@ -346,11 +372,11 @@ export const useStore = defineStore('MyStore', {
             })
 
 
-        for (let news of this.news){
-            if (news.id === newsId){
-                news.comments.push(data)// на самом деле дата + айдишник
-            }
-        }
+        // for (let news of this.news){
+        //     if (news.id === newsId){
+        //         news.comments.push(data)// на самом деле дата + айдишник
+        //     }
+        // }
     },
     addNews(title, text, img){
         now = new Date()
@@ -363,17 +389,22 @@ export const useStore = defineStore('MyStore', {
         }
         UserDataService.createNews(data)
         .then(response => {
-            this.news.id = response.data.id
+            //this.news.id = response.data.id
             this.submitted = true
         })
         .catch( e => {
             alert(e)
         })
 
-        this.news.push(data)// на самом деле дата + айдишник
+        // this.news.push(data)// на самом деле дата + айдишник
     },
     verificationOfRegistration(){
-        if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== ""){
+        for (user of UserDataService.getAllUsers) {
+            if (user.userName === this.registrationData.enteredName) {
+                return false
+            }
+        }
+        if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== "" ){
             //if (!this.checkUser()) {
             this.saveUser()
             this.userIn = true
@@ -381,9 +412,10 @@ export const useStore = defineStore('MyStore', {
 
             window.location.href = '/main';
         }
+        return true
     },
     verificationOfAuthentication(){
-        if (this.authenticationData.enteredName !== "" && this.authenticationData.enteredPassword !== ""){
+        if (this.authenticationData.enteredName !== "" && this.authenticationData.enteredPassword !== "" && UserDataService.getUser(this.authenticationData.enteredName) !== false){
             //if (this.checkUser()){
                 this.userIn = true
                 console.log("userIn === true", this.userIn)
@@ -395,30 +427,49 @@ export const useStore = defineStore('MyStore', {
         val = !val
     },
     
-    changeNewsLike(id){
-        for (let news of this.news){
-            if (news.id === id){
-                for (let user of news.likedBy){
-                    if (user === this.currentUser.userName){
-                        let ind = news.likedBy.indexOf(user)
-                        if (news.likedBy !== -1){
-                            news.likedBy.splice(ind, 1)
-                        }
-                        var data = {
-                            likedBy: news.likedBy //нужна ли тут целиковая data?
-                        }
-                        UserDataService.updateNews(id, data)
-                        return false
-                    }
-                }
-                news.likedBy.push(this.currentUser.userName)
-                var data = {
-                    likedBy: news.likedBy //нужна ли тут целиковая data?
-                }
-                UserDataService.updateNews(id, data)
-                return true
+    changeNewsLike(post_id){
+        for (let like of UserDataService.getNewsLikes(post_id)) {
+            if (like.author === this.currentUser.userName) {
+                var isLiked = true
+                var like_id = like.id
             }
         }
+       
+        if (isLiked) {
+            UserDataService.unlikeNews(post_id, like_id)
+            .catch( e => {
+                alert(e)
+            })
+        } else {
+            UserDataService.likeNews(post_id)
+            .catch( e => {
+                alert(e)
+            })
+        }
+
+        // for (let news of this.news){
+        //     if (news.id === id){
+        //         for (let user of news.likedBy){
+        //             if (user === this.currentUser.userName){
+        //                 let ind = news.likedBy.indexOf(user)
+        //                 if (news.likedBy !== -1){
+        //                     news.likedBy.splice(ind, 1)
+        //                 }
+        //                 var data = {
+        //                     likedBy: news.likedBy //нужна ли тут целиковая data?
+        //                 }
+        //                 UserDataService.updateNews(id, data)
+        //                 return false
+        //             }
+        //         }
+        //         news.likedBy.push(this.currentUser.userName)
+        //         var data = {
+        //             likedBy: news.likedBy //нужна ли тут целиковая data?
+        //         }
+        //         UserDataService.updateNews(id, data)
+        //         return true
+        //     }
+        // }
         // for (let news in UserDataService.getAllNews){
         //     if (news.id === id){
         //         for (let user in news.likedBy){
@@ -435,8 +486,25 @@ export const useStore = defineStore('MyStore', {
         //     }
         // }
     },
-    changeCommentLike(id){
-
+    changeCommentLike(post_id, comment_id){
+        for (let like of UserDataService.getCommentsLikes(post_id, comment_id)) {
+            if (like.author === this.currentUser.userName) {
+                var isLiked = true
+                var like_id = like.id
+            }
+        }
+       
+        if (isLiked) {
+            UserDataService.unlikeComment(post_id, comment_id, like_id)
+            .catch( e => {
+                alert(e)
+            })
+        } else {
+            UserDataService.likeComment(post_id, comment_id)
+            .catch( e => {
+                alert(e)
+            })
+        }
     },
 
     newUser() {
@@ -450,7 +518,11 @@ export const useStore = defineStore('MyStore', {
     },
 
     updateUser() {
-        UserDataService.update(this.currentUser.id, this.currentUser)
+        let data = {
+            userName:this.currentUser.userName,
+            password: this.currentUser.password
+        }
+        UserDataService.update(this.currentUser.id, data)
             .then(() => {
                 this.message = 'The user was updated successfully!'
             })

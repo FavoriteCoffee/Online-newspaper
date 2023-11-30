@@ -12,12 +12,12 @@ class UserDataService {
         returnyttp.get('/news')
     }
 
-    getAllComments() {
-        return http.get(`/comments/${id}`)
+    getAllComments(id) {
+        return http.get(`posts/${id}/comments`)
     }
 
-    getUser(id) {
-        return http.get(`/users/${id}`)
+    getUser(name) {
+        return http.get(`/users/users/${name}`)
     }
 
     getNews(id) {
@@ -28,6 +28,21 @@ class UserDataService {
         return http.get(`/comments/${id}`)
     }
 
+    getRecentComments(id, userId) {
+        return http.get(`/posts/${id}/comments/recent`) 
+    }
+
+    getRecentNews() {
+        return http.get(`/posts/recent`)
+    }
+
+    getNewsLikes(id) {
+        return http.get(`/posts/${id}/likes`)
+    }
+
+    getCommentsLikes(post_id, comment_id) {
+        return http.get(`/posts/${post_id}/comments/${comment_id}/likes`)
+    }
     
     // ---- >>  << ---- //
 
@@ -39,9 +54,18 @@ class UserDataService {
         return http.post('/news', data)
     }
 
-    createComment(data) {
-        return http.post('/posts/cum/comments', data)
+    createComment(id, data) {
+        return http.post(`/posts/${id}/comments`, data)
     }
+
+    likeNews(id) {
+        return http.post(`posts/${id}/likes`)
+    }
+
+    likeComment(post_id, comment_id) {
+        return http.post(`/posts/${post_id}/comments/${comment_id}/likes`)
+    }
+
 
     // ---- >>  << ---- //
 
@@ -65,6 +89,18 @@ class UserDataService {
 
     deleteNews(id) {
         return http.delete(`/news/${id}`)
+    }
+
+    deleteComment(id, comment_id) {
+        return http.delete(`/posts/${id}/comments/${comment_id}`)
+    }
+    
+    unlikeNews(post_id, like_id) {
+        return http.delete(`/posts/${post_id}/likes/${like_id}`)   
+    }
+
+    unlikeComment(post_id, comment_id, like_id) {
+        return http.delete(`/posts/${post_id}/comments/${comment_id}/likes/${like_id}`)
     }
 }
 
