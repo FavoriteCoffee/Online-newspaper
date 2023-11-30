@@ -85,7 +85,8 @@ export const useStore = defineStore('MyStore', {
         let todayNews = []
         let today = new Date();
 
-        let recentNews = UserDataService.getRecentNews
+        //let recentNews = UserDataService.getRecentNews
+        todayNews.push(UserDataService.getAllNews())
 
         // allNews = UserDataService.getAllNews
         // allComments = UserDataService.getAllComments
@@ -242,13 +243,13 @@ export const useStore = defineStore('MyStore', {
         var data = {
             text: "text 1",
             title: "title 1",
-            likedBy: ["Hippomaru"],
-            img: './img/cat.jpg',
-            date: now
+            
+           // img: './img/cat.jpg',
+           // date: now
         }
         UserDataService.createNews(data)
             .then(response => {
-                this.news.id = response.data.id
+                //this.news.id = response.data.id
                 this.submitted = true;
             })
             .catch( e => {
@@ -259,13 +260,11 @@ export const useStore = defineStore('MyStore', {
         var data = {
             text: "text 2",
             title: "title 2",
-            likedBy: ["Hippomaru", "name"],
-            img: '#',
-            date: now
+          
         }
         UserDataService.createNews(data)
         .then(response => {
-            this.news.id = response.data.id
+            //this.news.id = response.data.id
             this.submitted = true;
         })
         .catch( e => {
@@ -276,62 +275,34 @@ export const useStore = defineStore('MyStore', {
         var data = {
             text: "text 3",
             title: "title 3",
-            likedBy: ["name"],
-            img: './img/castle.jpeg',
-            date: now
+          
         }
         UserDataService.createNews(data)
         .then(response => {
-            this.news.id = response.data.id
+            //this.news.id = response.data.id
             this.submitted = true;
         })
         .catch( e => {
             alert(e)
         })
         
-        var data = {
-            text: "text 3",
-            likedBy: ["name"],
-            newsId: 1
-        }
-        UserDataService.createComment(data)
-        .then(response => {
-            this.comment.id = response.data.id
-            this.submitted = true;
-        })
-        .catch( e => {
-            alert(e)
-        })
 
-        var data = {
-            text: "comment text 3",
-            likedBy: ["name"],
-            newsId: 1
-        }
-        UserDataService.createComment(data)
-        .then(response => {
-            this.comment.id = response.data.id
-            this.submitted = true;
-        })
-        .catch( e => {
-            alert(e)
-        })
         // как получить айдишник только что созданной новости и внести его в коммент
-        var data = {
-            text: "text" + String(i),
-            title: "title" + String(i),
-            likedBy: [i],
-            img: './img/cat.jpg',
-            date: now
-        }
-        UserDataService.createNews(data)
-            .then(response => {
-                this.news.id = response.data.id
-                this.submitted = true;
-            })
-            .catch( e => {
-                alert(e)
-            })
+        // var data = {
+        //     text: "text" + String(i),
+        //     title: "title" + String(i),
+        //     likedBy: [i],
+        //     img: './img/cat.jpg',
+        //     date: now
+        // }
+        // UserDataService.createNews(data)
+        //     .then(response => {
+        //         this.news.id = response.data.id
+        //         this.submitted = true;
+        //     })
+        //     .catch( e => {
+        //         alert(e)
+        //     })
     },
 
 

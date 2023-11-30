@@ -9,7 +9,7 @@ class UserDataService {
     }
 
     getAllNews() {
-        returnyttp.get('/news')
+        returnyttp.get('/posts')
     }
 
     getAllComments(id) {
@@ -21,7 +21,7 @@ class UserDataService {
     }
 
     getNews(id) {
-        return http.get(`/news/${id}`)
+        return http.get(`/posts/${id}`)
     }
 
     getComment(id) {
@@ -51,7 +51,7 @@ class UserDataService {
     }
 
     createNews(data) {
-        return http.post('/news', data)
+        return http.post('/posts', data)
     }
 
     createComment(id, data) {
@@ -74,7 +74,7 @@ class UserDataService {
     }
 
     updateNews(id, data) {
-        return http.put(`/news/${id}`, data)
+        return http.put(`/posts/${id}`, data)
     }
 
     updateComments(id, data) {
@@ -88,7 +88,7 @@ class UserDataService {
     }
 
     deleteNews(id) {
-        return http.delete(`/news/${id}`)
+        return http.delete(`/posts/${id}`)
     }
 
     deleteComment(id, comment_id) {

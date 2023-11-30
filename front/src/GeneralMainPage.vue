@@ -4,7 +4,7 @@
 
         <v-row>
           <v-col cols="8">
-            <div style="float: left;"><b><h1 style="color: #fff; font-size: 5em;">LOGO</h1></b></div>
+            <div @click="myStore.pushTestDataToDB()" style="float: left;"><b><h1 style="color: #fff; font-size: 5em;">LOGO</h1></b></div>
           </v-col>
   
           <v-col style="padding-top: 2em; " align="end" cols="2">
