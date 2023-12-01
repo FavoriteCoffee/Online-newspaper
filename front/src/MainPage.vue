@@ -41,7 +41,7 @@
   </v-container>
 </v-card>   -->
   <div>
-    <News v-for="news of myStore.getAllNews()" :key="news.id" :news="news"/>
+    <News v-for="news of myStore.getTodayNews()" :key="news.id" :news="news"/>
   </div>  
 
 
@@ -52,7 +52,9 @@ import News from './News.vue'
 import { ref, computed } from 'vue';
 import { useStore } from "./store/app.js";
 const myStore = useStore();
-
+myStore.addNews("Название первой статьи", "Текст первой статьи", undefined)
+myStore.addNews("Название второй статьи", "Текст второй статьи", undefined)
+myStore.addNews("Название третьей статьи", "Текст третьей статьи", undefined)
 const props = defineProps({
   classes:[
       ['He1', 'text-h1'],

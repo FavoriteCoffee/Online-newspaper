@@ -1,9 +1,8 @@
 package com.news.application.models;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Comments;
 
-import java.util.List;
+import java.util.Date;
 
 @Entity
 public class    Post {
@@ -17,30 +16,20 @@ public class    Post {
     @Column(name = "text")
     private String text;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_author_id")
-    private User author;
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    Date date;
 
-    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    @Column(name = "img")
+    @Lob
+    private Byte[] img;
 
-    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
-    private List<PostsLike> likes;
-
-    public List<PostsLike> getLikes() {
-        return likes;
+    public Byte[] getImg() {
+        return img;
     }
 
-    public void setLikes(List<PostsLike> likes) {
-        this.likes = likes;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setImg(Byte[] img) {
+        this.img = img;
     }
 
     public Long getId() {
@@ -59,19 +48,19 @@ public class    Post {
         this.title = title;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public String getText() {
         return text;
     }
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
     }
 }

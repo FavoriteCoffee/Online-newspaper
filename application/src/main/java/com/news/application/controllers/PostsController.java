@@ -1,13 +1,7 @@
 package com.news.application.controllers;
 
-import com.news.application.models.Comment;
-import com.news.application.models.CommentsLike;
-import com.news.application.models.Post;
-import com.news.application.models.PostsLike;
-import com.news.application.repo.CommentRepository;
-import com.news.application.repo.CommentsLikeRepository;
-import com.news.application.repo.PostRepository;
-import com.news.application.repo.PostsLikeRepository;
+import com.news.application.models.*;
+import com.news.application.repo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -32,12 +28,29 @@ public class PostsController {
     @Autowired
     private CommentsLikeRepository commentsLikeRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private final Logger logger = LoggerFactory.getLogger(PostsController.class);
 
     @GetMapping("/posts")
     public ResponseEntity<Object> getAllPosts(){
         try {
             Iterable<Post> posts = postRepository.findAll();
+            return new ResponseEntity<Object>(posts, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/posts/recent")
+    public ResponseEntity<Object> getRecentPosts(){
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -1);
+            Date date = cal.getTime();
+            List<Post> posts = postRepository.findByDateGreaterThan(date);
             return new ResponseEntity<Object>(posts, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -93,9 +106,19 @@ public class PostsController {
     @GetMapping("/posts/{post_id}/comments")
     public ResponseEntity<Object> getAllComments(@PathVariable("post_id") Long post_id){
         try {
-            Post post = postRepository.findById(post_id).get();
-            List<Comment> comments = post.getComments();
+            List<Comment> comments = commentRepository.findByPostId(post_id);
             return new ResponseEntity<Object>(comments, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/posts/{post_id}/comments/recent")
+    public ResponseEntity<Object> getRecentComments(@PathVariable("post_id") Long post_id){
+        try {
+            List<Comment> comments = commentRepository.findByPostId(post_id);
+            return new ResponseEntity<Object>(comments.subList(Math.max(comments.size() - 3, 0), comments.size()), HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -114,8 +137,9 @@ public class PostsController {
     }
 
     @PostMapping("/posts/{post_id}/comments")
-    public ResponseEntity<Object> createComment(@RequestBody Comment comment) {
+    public ResponseEntity<Object> createComment(@PathVariable("post_id") Long post_id, @RequestBody Comment comment) {
         try {
+            comment.setPost(postRepository.findById(post_id).get());
             Comment savedComment = commentRepository.save(comment);
             return new ResponseEntity<Object>(savedComment, HttpStatus.OK);
         } catch(Exception ex) {
@@ -150,8 +174,7 @@ public class PostsController {
     @GetMapping("/posts/{post_id}/likes")
     public ResponseEntity<Object> getAllPostsLikes(@PathVariable("post_id") Long post_id){
         try {
-            Post post = postRepository.findById(post_id).get();
-            List<PostsLike> likes = post.getLikes();
+            List<PostsLike> likes = postsLikeRepository.findByPostId(post_id);
             return new ResponseEntity<Object>(likes, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -171,8 +194,12 @@ public class PostsController {
     }
 
     @PostMapping("/posts/{post_id}/likes")
-    public ResponseEntity<Object> createPostsLike(@PathVariable("post_id") Long post_id, @RequestBody PostsLike like) {
+    public ResponseEntity<Object> createPostsLike(@PathVariable("post_id") Long post_id, @RequestBody String name) {
         try {
+            User author = userRepository.findByUserName(name).get();
+            PostsLike like = new PostsLike();
+            like.setPost(postRepository.findById(post_id).get());
+            like.setAuthor(author);
             PostsLike savedLike = postsLikeRepository.save(like);
             return new ResponseEntity<Object>(savedLike, HttpStatus.OK);
         } catch(Exception ex) {
@@ -195,8 +222,7 @@ public class PostsController {
     @GetMapping("/posts/{post_id}/comments/{comment_id}/likes")
     public ResponseEntity<Object> getAllCommentsLikes(@PathVariable("post_id") Long post_id, @PathVariable("comment_id") Long comment_id){
         try {
-            Comment comment = commentRepository.findById(comment_id).get();
-            List<CommentsLike> likes = comment.getLikes();
+            List<CommentsLike> likes = commentsLikeRepository.findByCommentId(comment_id);
             return new ResponseEntity<Object>(likes, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -216,8 +242,12 @@ public class PostsController {
     }
 
     @PostMapping("/posts/{post_id}/comments/{comment_id}/likes")
-    public ResponseEntity<Object> createCommentsLike(@PathVariable("post_id") Long post_id, @PathVariable("comment_id") Long comment_id, @RequestBody CommentsLike like) {
+    public ResponseEntity<Object> createCommentsLike(@PathVariable("post_id") Long post_id, @PathVariable("comment_id") Long comment_id, @RequestBody String name) {
         try {
+            User author = userRepository.findByUserName(name).get();
+            CommentsLike like = new CommentsLike();
+            like.setComment(commentRepository.findById(comment_id).get());
+            like.setAuthor(author);
             CommentsLike savedLike = commentsLikeRepository.save(like);
             return new ResponseEntity<Object>(savedLike, HttpStatus.OK);
         } catch(Exception ex) {
