@@ -82,11 +82,11 @@ export const useStore = defineStore('MyStore', {
         return false;
     },
     getTodayNews(){
-        let todayNews = []
-        let today = new Date();
 
         //let recentNews = UserDataService.getRecentNews
-        todayNews.push(UserDataService.getAllNews())
+        UserDataService.getRecentNews().then(response => {
+            console.log(response.data)
+            return response.data})
 
         // allNews = UserDataService.getAllNews
         // allComments = UserDataService.getAllComments
@@ -109,7 +109,6 @@ export const useStore = defineStore('MyStore', {
         //         todayNews.push(tempNews);
         //     }
         // }
-        return todayNews;
     },
     getLatestComments(newsId){
         let recentComments = UserDataService.getRecentComments(newsId)
@@ -350,13 +349,12 @@ export const useStore = defineStore('MyStore', {
         // }
     },
     addNews(title, text, img){
-        now = new Date()
+        let now = new Date()
         var data = {
             date: now,
             title: title,
-            img: img,
             text: text,
-            likedBy: []
+            img: img
         }
         UserDataService.createNews(data)
         .then(response => {
@@ -370,20 +368,24 @@ export const useStore = defineStore('MyStore', {
         // this.news.push(data)// на самом деле дата + айдишник
     },
     verificationOfRegistration(){
-        for (user of UserDataService.getAllUsers) {
-            if (user.userName === this.registrationData.enteredName) {
-                return false
+        UserDataService.getAllUsers().then(response => {
+            for (let user of response.data) {
+                console.log(user)
+                if (user.userName === this.registrationData.enteredName) {
+                    return false
+                }
             }
+            if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== "" ){
+                //if (!this.checkUser()) {
+                this.saveUser()
+                this.userIn = true
+                console.log("userIn === true", this.userIn)
+    
+                window.location.href = '/main';
+            }
+            return true
         }
-        if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== "" ){
-            //if (!this.checkUser()) {
-            this.saveUser()
-            this.userIn = true
-            console.log("userIn === true", this.userIn)
-
-            window.location.href = '/main';
-        }
-        return true
+        )
     },
     verificationOfAuthentication(){
         if (this.authenticationData.enteredName !== "" && this.authenticationData.enteredPassword !== "" && UserDataService.getUser(this.authenticationData.enteredName) !== false){

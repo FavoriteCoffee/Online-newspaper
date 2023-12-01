@@ -2,8 +2,6 @@ package com.news.application.models;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 public class Comment {
     @Id
@@ -13,27 +11,16 @@ public class Comment {
     @Column(name = "text")
     private String text;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fk_author_id")
     private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fk_post_id")
     private Post post;
 
-    @OneToMany(mappedBy="comment", cascade = CascadeType.ALL)
-    private List<CommentsLike> likes;
-
     public Post getPost() {
         return post;
-    }
-
-    public List<CommentsLike> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(List<CommentsLike> likes) {
-        this.likes = likes;
     }
 
     public void setPost(Post post) {

@@ -30,10 +30,10 @@ public class UsersController {
         }
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<Object> getUserById(@PathVariable("id") Long id) {
+    @GetMapping("/users/{name}")
+    public ResponseEntity<Object> getUserByName(@PathVariable("name") String name) {
         try {
-            User user = userRepository.findById(id).get();
+            User user = userRepository.findByUserName(name).get();
             return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);

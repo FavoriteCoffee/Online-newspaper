@@ -9,7 +9,7 @@ class UserDataService {
     }
 
     getAllNews() {
-        returnyttp.get('/posts')
+        return http.get('/posts')
     }
 
     getAllComments(id) {
