@@ -9,21 +9,23 @@
             <v-row>
                 <div v-if="myStore.isCommentLiked(this.newsId, this.comment.id)">
                     <v-col width="100%" align="end">
-                        <p style="color: #950400;"><i class="material-icons">favorite_border</i></p>     
+                        <p @click="myStore.changeCommentLike(this.newsId, this.comment.id)" 
+                           style="color: #950400;">
+                            <i class="material-icons">favorite</i>
+                        </p>     
                     </v-col>
                 </div>
-                <div v-else>
+                <div v-else
+                     >
                     <v-col width="100%" align="end">
-                        <p style="color: #950400;"><i class="material-icons">favorite_border</i></p>     
+                        <p @click="myStore.changeCommentLike(this.newsId, this.comment.id)"
+                           style="color: #950400;">
+                            <i class="material-icons">favorite_border</i>
+                        </p>     
                     </v-col>
                 </div>
             </v-row>
         </v-container>
-    <!-- <div>
-        <div :class="['text-subtitle-1', 'pa-2']">Это комент</div>
-        <div :class="['text-body-1', 'pa-2']">{{ comment.text }}</div>
-        <v-btn>лайк подписка колокольчик"</v-btn>
-    </div> -->
 </template>
 
 <script setup>

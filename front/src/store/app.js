@@ -20,7 +20,8 @@ export const useStore = defineStore('MyStore', {
         currentDateAndTime: null, //let currentDate = new Date();
         currentUser: {
             userName: "name",
-            password: "333"
+            password: "333",
+            id: 0
         },    
         users: [{userName: "HippoMaru1", password: "1111"},
                 {userName: "HippoMaru2", password: "1111"},
@@ -35,7 +36,7 @@ export const useStore = defineStore('MyStore', {
     //     все данные получаем из базы
 
     // // getters: {
-    //       функция для обновления:
+    //     функция для обновления:
 
     //     поиск пользователя по лог и паролю в базе
     //      
@@ -48,13 +49,6 @@ export const useStore = defineStore('MyStore', {
     //     запись постановки/снятия лайка с комментария
     //     запись нового комментария
 
-    // 
-
-    // 1.  Записываем в бд 3 новости (как определять сгенерированные айдишники?)
-    // 2.х Читаем их от туда в стор с проверкой на свежесть
-    // 3.х Строим страницы на основе стора
-    // 4.х При каких-то мелких изменениях синхронизируем стор и бд внесением одинаковых изменений
-    // 5.  Каждый час обновляемся
 
     // },
 
@@ -62,100 +56,50 @@ export const useStore = defineStore('MyStore', {
     
     actions: {
 
-       // в основном работаем со стором, при пост запросах изменяем оба хранилища
+     
     
-    // ---------- >>  GETTERS  << --------- // можно переписать через обращение к стору, но оставить код обращения к бд чтобы склеить функцию большой загрузки
+    // ---------- >>  GETTERS  << --------- //
+    //каждый час + при обновлении загружать свежие новости
 
-    loadActualNews(){ //каждый час + при обновлении
-        this.news = getTodayNews();
-    },
-    checkUser(){
-        users = UserDataService.getAllUsers
-        for (let i = 0; i < users.length; i++){
-            if (users[i].userName === this.authenticationData.enteredName){
-                if (users[i].password === this.authenticationData.enteredPassword){
-                    this.currentUser = user
-                    return true
-                }
-            }
-        }
-        return false;
-    },
+
+
+    // loadActualNews(){
+    //     this.news = getTodayNews();
+    // },
+    // checkNewUser(){
+    //     if (this.authenticationData.enteredName === "") {
+    //         return false
+    //     }
+    //     let users = UserDataService.getAllUsers
+    //     for (let user of users){
+    //         if (user.userName === this.authenticationData.enteredName){
+    //             return false
+    //         }
+    //     }
+    //     return true;
+    // },
+
     getTodayNews(){
-
-        //let recentNews = UserDataService.getRecentNews
         UserDataService.getRecentNews().then(response => {
             console.log(response.data)
-            return response.data})
+            return response.data
+        })
 
-        // allNews = UserDataService.getAllNews
-        // allComments = UserDataService.getAllComments
-        // for (let i = 0; i < allNews.length; i++){
-        //     if (allNews[i].date < today - 86400000){
-        //         let tempNews = {
-        //             id: allNews[i].id,
-        //             date: allNews[i].date,
-        //             img: allNews[i].img,
-        //             title: allNews[i].title,
-        //             text: allNews[i].text,
-        //             comments: []
-        //         }
-
-        //         for (let j = 0; j < allComments.length; j++){
-        //             if (allComments[j].newsId === news.id){
-        //                 tempNews.comments.push(allComments[j])
-        //             }
-        //         }
-        //         todayNews.push(tempNews);
-        //     }
-        // }
     },
+
     getLatestComments(newsId){
-        let recentComments = UserDataService.getRecentComments(newsId)
+        UserDataService.getRecentComments(newsId).then(response => {
+            return response.data
+        })
         return recentComments
-        // for (let news of this.news){
-        //     if (news.id === newsId){
-        //         if (news.comments.length >= 3){
-        //             return news.comments.slice(-3)
-        //         }
-        //         else if (news.comments.length > 0){
-        //             return news.comments
-        //         }
-        //         else return false
-        //     }
-        // }
-        // for (let news in UserDataService.getAllNews){
-        //     if (news.id === newsId){
-        //         if (news.comments.length >= 3){
-        //             return news.comments.slice(-3)
-        //         }
-        //         else if (news.comments.length > 0){
-        //             return news.comments
-        //         }
-        //         else return false
-        //     }
-        // }
     },
+
     getComments(newsId){
-        let comments = UserDataService.getAllComments(newsId)
-        return comments
-        // for (let news of this.news){
-        //     if (news.id === newsId){
-        //         if (news.comments.length > 3){
-        //             return news.comments
-        //         }
-        //         else return false
-        //     }
-        // }  
-        // for (let news in UserDataService.getAllNews){
-        //     if (news.id === newsId){
-        //         if (news.comments.length > 3){
-        //             return news.comments
-        //         }
-        //         else return false
-        //     }
-        // }
+        UserDataService.getAllComments(newsId).then(response => {
+            return response.data
+        })   
     },
+
     isNewsLiked(newsId){
         for (let like of UserDataService.getNewsLikes(newsId, this.currentUser.id)) {
             if (like.author === this.currentUser.userName) {
@@ -163,23 +107,8 @@ export const useStore = defineStore('MyStore', {
             }
         }
         return false
-        // console.log("LIKE ", id)
-        // for (let i = 0; i < this.news.length; i++){
-        //     console.log(this.news[i].id)
-        //     if (this.news[i].id === id){
-        //         console.log(i)
-        //         for (let j = 0; j < this.news[i].likedBy.length; j++){
-        //             console.log(j)
-        //             if (this.news[i].likedBy[j] === this.currentUser.userName){
-        //                 console.log("TRUE")
-        //                 return true
-        //             }
-        //         }
-        //         console.log("FALSE")
-        //         return false
-        //     }
-        // }
     },
+
     isCommentLiked(newsId, commentId){
         for (let like of UserDataService.getCommentsLikes(newsId, commentId)) {
             if (like.author === this.currentUser.userName) {
@@ -187,69 +116,36 @@ export const useStore = defineStore('MyStore', {
             }
         }
         return false
-        // for (let news of this.news){
-        //     if (news.id === newsId){
-        //         for (let comment of news.comments){
-        //             if (comment.id === commentId){
-        //                 for (let user of news.likedBy){
-        //                     if (user === this.currentUser.userName){
-        //                         return true
-        //                     }
-        //                 }
-        //                 return false
-        //             }
-        //         }
-        //     }
-        // }
-        // for (let news in UserDataService.getAllNews){
-        //     if (news.id === newsId){
-        //         for (let comment in news.comments){
-        //             if (comment.id === commentId){
-        //                 for (let user in news.likedBy){
-        //                     if (user === this.currentUser.userName){
-        //                         return true
-        //                     }
-        //                 }
-        //                 return false
-        //             }
-        //         }
-        //     }
-        // }
     },
-    getUser(id) {
-        let user = UserDataService.get(id)
-            .then(response => {
-                this.currentUser = response.data
-            })
-            .catch(e => {
-                alert(e)
-            })
-
-        return user
-      },
-
 
     // ---------- >>  MUTATIONS  << --------- //
 
     exit(){
         this.currentUser.password = null
         this.currentUser.userName = null
+        this.currentUser.id = null
         this.userIn = false
     },
     
     pushTestDataToDB(){
+        var newsid1
+        var newsid2
+        var newsid3
+
+        var userid
+
+        var commentsid1 = new Array(3).fill(null)
+        var commentsid2 = new Array(3).fill(null)
+        var commentsid3 = new Array(3).fill(null)
+
         var now = new Date()
+
         var data = {
             text: "text 1",
             title: "title 1",
-            
-           // img: './img/cat.jpg',
-           // date: now
         }
-        UserDataService.createNews(data)
-            .then(response => {
-                //this.news.id = response.data.id
-                this.submitted = true;
+        UserDataService.createNews(data).then(response => {
+            newsid1 = response.data.id
             })
             .catch( e => {
                 alert(e)
@@ -259,54 +155,81 @@ export const useStore = defineStore('MyStore', {
         var data = {
             text: "text 2",
             title: "title 2",
-          
         }
-        UserDataService.createNews(data)
-        .then(response => {
-            //this.news.id = response.data.id
-            this.submitted = true;
-        })
-        .catch( e => {
-            alert(e)
-        })
+        UserDataService.createNews(data).then(response => {
+            newsid2 = response.data.id
+            })
+            .catch( e => {
+                alert(e)
+            })
 
                 
         var data = {
             text: "text 3",
             title: "title 3",
-          
         }
-        UserDataService.createNews(data)
-        .then(response => {
-            //this.news.id = response.data.id
-            this.submitted = true;
-        })
-        .catch( e => {
-            alert(e)
-        })
-        
+        UserDataService.createNews(data).then(response => {
+            newsid3 = response.data.id
+            })
+            .catch( e => {
+                alert(e)
+            })
+            
 
-        // как получить айдишник только что созданной новости и внести его в коммент
-        // var data = {
-        //     text: "text" + String(i),
-        //     title: "title" + String(i),
-        //     likedBy: [i],
-        //     img: './img/cat.jpg',
-        //     date: now
-        // }
-        // UserDataService.createNews(data)
-        //     .then(response => {
-        //         this.news.id = response.data.id
-        //         this.submitted = true;
-        //     })
-        //     .catch( e => {
-        //         alert(e)
-        //     })
+        var data = {
+            userName: "Anna",
+            password: "Elsa"
+        }
+        UserDataService.createUser(data).then(response => {
+            userid = response.data.id
+            })
+            .catch( e => {
+                alert(e)
+            })
+            
+
+        var data = {
+            taxt: "comment 1"
+        }
+        for (let i = 0; i < commentsid1.length(); ++i){
+            UserDataService.createComment(newsid1, data).then(response => {
+                commentsid1[i] = response.data.id
+                })
+                .catch( e => {
+                    alert(e)
+                })
+        }
+
+        var data = {
+            taxt: "comment 2"
+        }
+        for (let i = 0; i < commentsid2.length(); ++i){
+            UserDataService.createComment(newsid1, data).then(response => {
+                commentsid2[i] = response.data.id
+                })
+                .catch( e => {
+                    alert(e)
+                })
+        }
+
+        var data = {
+            taxt: "comment 3"
+        }
+        for (let i = 0; i < commentsid3.length(); ++i){
+            UserDataService.createComment(newsid1, data).then(response => {
+                commentsid3[i] = response.data.id
+                })
+                .catch( e => {
+                    alert(e)
+                })
+        }
+
+        UserDataService.likeNews(newsid1)
+        UserDataService.likeComment(newsid2, commentsid2[2])
+
     },
 
-
     saveUser() {
-        //добавить проверку на то нет ли уже такого пользователя и на адекватность значений
         this.currentUser.userName = this.registrationData.enteredName
         this.currentUser.password = this.registrationData.enteredPassword
         this.userIn = true
@@ -325,48 +248,33 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
         console.log(data.userName, data.password)
+        return true
         
     }, 
+
     addComment(newsId, commentText){
         console.log(newsId, commentText)
         var data = {
             text: commentText
         }
-        UserDataService.createComment(data)
-            .then(response => {
-                this.comment.id = response.data.id
-                this.submitted = true
-            })
+        UserDataService.createComment(newsId, data)
             .catch( e => {
                 alert(e)
             })
-
-
-        // for (let news of this.news){
-        //     if (news.id === newsId){
-        //         news.comments.push(data)// на самом деле дата + айдишник
-        //     }
-        // }
     },
-    addNews(title, text, img){
-        let now = new Date()
-        var data = {
-            date: now,
-            title: title,
-            text: text,
-            img: img
-        }
-        UserDataService.createNews(data)
-        .then(response => {
-            //this.news.id = response.data.id
-            this.submitted = true
-        })
-        .catch( e => {
-            alert(e)
-        })
 
-        // this.news.push(data)// на самом деле дата + айдишник
-    },
+    // addNews(title, text){
+    //     var data = {
+    //         title: title,
+    //         text: text,
+    //         // img: img
+    //     }
+    //     UserDataService.createNews(data)
+    //     .catch( e => {
+    //         alert(e)
+    //     })
+    // },
+
     verificationOfRegistration(){
         UserDataService.getAllUsers().then(response => {
             for (let user of response.data) {
@@ -376,7 +284,6 @@ export const useStore = defineStore('MyStore', {
                 }
             }
             if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== "" ){
-                //if (!this.checkUser()) {
                 this.saveUser()
                 this.userIn = true
                 console.log("userIn === true", this.userIn)
@@ -387,15 +294,26 @@ export const useStore = defineStore('MyStore', {
         }
         )
     },
+
     verificationOfAuthentication(){
-        if (this.authenticationData.enteredName !== "" && this.authenticationData.enteredPassword !== "" && UserDataService.getUser(this.authenticationData.enteredName) !== false){
-            //if (this.checkUser()){
+        if (this.authenticationData.enteredName !== "" &&
+            this.authenticationData.enteredPassword !== "" && 
+            UserDataService.getUser(this.authenticationData.enteredName).then(response => {
+                var id = response.data.id
+            }) !== false){
+
                 this.userIn = true
                 console.log("userIn === true", this.userIn)
 
+                this.currentUser.userName = this.authenticationData.enteredName
+                this.currentUser.password = this.authenticationData.enteredPassword
+                this.currentUser.id = id
+                
                 window.location.href = '/main';
+                
         }
     },
+
     changeVisibility(val){
         val = !val
     },
@@ -419,46 +337,8 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
         }
-
-        // for (let news of this.news){
-        //     if (news.id === id){
-        //         for (let user of news.likedBy){
-        //             if (user === this.currentUser.userName){
-        //                 let ind = news.likedBy.indexOf(user)
-        //                 if (news.likedBy !== -1){
-        //                     news.likedBy.splice(ind, 1)
-        //                 }
-        //                 var data = {
-        //                     likedBy: news.likedBy //нужна ли тут целиковая data?
-        //                 }
-        //                 UserDataService.updateNews(id, data)
-        //                 return false
-        //             }
-        //         }
-        //         news.likedBy.push(this.currentUser.userName)
-        //         var data = {
-        //             likedBy: news.likedBy //нужна ли тут целиковая data?
-        //         }
-        //         UserDataService.updateNews(id, data)
-        //         return true
-        //     }
-        // }
-        // for (let news in UserDataService.getAllNews){
-        //     if (news.id === id){
-        //         for (let user in news.likedBy){
-        //             if (user === this.currentUser.userName){
-        //                 let ind = news.likedBy.indexOf(user)
-        //                 if (news.likedBy !== -1){
-        //                     news.likedBy.splice(ind, 1)
-        //                 }
-        //                 UserDataService.updateNews(id, news)
-        //             }
-        //         }
-        //         news.likedBy.push(this.currentUser.userName)
-        //         UserDataService.updateNews(id, news)
-        //     }
-        // }
     },
+
     changeCommentLike(post_id, comment_id){
         for (let like of UserDataService.getCommentsLikes(post_id, comment_id)) {
             if (like.author === this.currentUser.userName) {
@@ -484,6 +364,7 @@ export const useStore = defineStore('MyStore', {
         this.submitted = false
         this.currentUser = {}
     },
+
     newPage(newPage){
         path = "'/" + newPage + "'"
         // this.$router.push(path)
@@ -503,6 +384,7 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
     },
+
     deleteUser() {
         UserDataService.delete(this.currentUser.id)
             .then(() => {
@@ -512,6 +394,5 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
     }
-
     }
 });

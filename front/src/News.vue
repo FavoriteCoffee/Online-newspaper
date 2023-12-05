@@ -54,13 +54,10 @@
 
                         <v-col align="end" cols="3" offset="7">
                             <p @click="changeCommentsVisibility">Комментарии (15)</p>
-                            <!-- <div :class="['text-body-1', 'pa-2']"></div> -->
                         </v-col>
 
-                        <!-- <div v-if="myStore.isNewsLiked(this.news.id)" > -->
                         <div v-if="myStore.isNewsLiked(this.news.id)" >    
                             <v-col align="end" style="padding-right: 0;">
-                                <!-- <v-btn class="material-icons">language</v-btn> -->
                                 <p style="color: #950400;"><i @click="myStore.changeNewsLike(this.news.id)" class="material-icons">favorite</i></p>
                                 <!-- <p style="color: #950400;"><i @click="changeTextVisibility" class="material-icons">favorite</i></p> -->
                             </v-col>
@@ -85,7 +82,7 @@
                 <div v-if="showAllComents">
                     <v-row style="padding-right: 6%; padding-left: 4%;">
                         <v-col style="padding: 0; margin-top: 1%;" cols="8" offset="4">
-                            <Comments v-for="comment of news.comments" :key="comment" :comment="comment" :newsId="this.news.id"/>
+                            <Comments v-for="comment of myStore.getComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/>
                         </v-col>
                     </v-row>
 
@@ -99,7 +96,7 @@
                 <div v-else>
                     <v-row style="padding-right: 6%; ; padding-left: 2%; margin-top: 1%;">
                         <v-col cols="8" offset="4">
-                            <Comments v-for="comment of news.comments.slice(0, 2)" :key="comment" :comment="comment" :newsId="this.news.id"/>
+                            <Comments v-for="comment of myStore.getLatestComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/>
                         </v-col>
                     </v-row>
 

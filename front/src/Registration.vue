@@ -1,14 +1,16 @@
 <template>
   <v-card
-    style="padding: 10px; margin:15px; ackground-repeat: repeat; background-image: url('./img/fon.png');"
+    style="padding: 10px; 
+           margin-left:25%; 
+           margin-top:50px;"
     width="50%"
     title="Регистрация">
-      <v-text-field @blur="myStore.registrationData.enteredName = $event.target.value" label="Введите nic"/>
+      <v-text-field @blur="myStore.registrationData.enteredName = $event.target.value" label="Введите nick"/>
       <v-text-field @blur="myStore.registrationData.enteredPassword = $event.target.value" label="Введите пароль"/>
 
 
       <!-- <router-link to="/main" class="nav-link"> -->
-        <v-btn @click="myStore.verificationOfRegistration()">OK</v-btn>
+        <v-btn style="margin-right: 10px;" @click="myStore.verificationOfRegistration()">OK</v-btn>
       <!-- </router-link> -->
       <router-link to="/authentication" class="nav-link">
         <v-btn>Вход</v-btn>
