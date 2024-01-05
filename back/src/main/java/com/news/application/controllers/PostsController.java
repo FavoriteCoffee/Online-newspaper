@@ -4,6 +4,7 @@ import com.news.application.models.*;
 import com.news.application.repo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +73,9 @@ public class PostsController {
     @PostMapping("/posts")
     public ResponseEntity<Object> createPost(@RequestBody Post post) {
         try {
+            Calendar cal = Calendar.getInstance();
+            Date date = cal.getTime();
+            post.setDate(date);
             Post savedPost = postRepository.save(post);
             return new ResponseEntity<Object>(savedPost, HttpStatus.OK);
         } catch(Exception ex) {
@@ -118,6 +122,7 @@ public class PostsController {
     public ResponseEntity<Object> getRecentComments(@PathVariable("post_id") Long post_id){
         try {
             List<Comment> comments = commentRepository.findByPostId(post_id);
+            System.out.println(comments);
             return new ResponseEntity<Object>(comments.subList(Math.max(comments.size() - 3, 0), comments.size()), HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -136,10 +141,12 @@ public class PostsController {
         }
     }
 
-    @PostMapping("/posts/{post_id}/comments")
-    public ResponseEntity<Object> createComment(@PathVariable("post_id") Long post_id, @RequestBody Comment comment) {
+    @PostMapping("/posts/{post_id}/post-comment-by-userid/{author_id}")
+    public ResponseEntity<Object> createComment(@PathVariable("post_id") Long post_id, @PathVariable Long author_id, @RequestBody Comment comment) {
         try {
             comment.setPost(postRepository.findById(post_id).get());
+            comment.setAuthor(userRepository.findById(author_id).get());
+            System.out.println(1);
             Comment savedComment = commentRepository.save(comment);
             return new ResponseEntity<Object>(savedComment, HttpStatus.OK);
         } catch(Exception ex) {
