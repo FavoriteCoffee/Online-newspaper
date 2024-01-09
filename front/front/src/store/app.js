@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import UserDataService from "../services/UserDataService";
+import axios from "axios";
 
 
 export const useStore = defineStore('MyStore', {
@@ -55,8 +56,6 @@ export const useStore = defineStore('MyStore', {
 
     
     actions: {
-
-     
     
     // ---------- >>  GETTERS  << --------- //
     //каждый час + при обновлении загружать свежие новости
@@ -79,16 +78,11 @@ export const useStore = defineStore('MyStore', {
     //     return true;
     // },
 
-    getTodayNews(){
-        setTimeout(() => {  UserDataService.getRecentNews().then(response => {
+    async getTodayNews(){
+       UserDataService.getRecentNews().then(response => {
             console.log("today news array: ", response.data)
-            return response.data
-        }) }, 2000);
-
-
-
-        
-
+            return this.news = response.data
+        }) 
     },
 
     getLatestComments(newsId){
@@ -105,9 +99,13 @@ export const useStore = defineStore('MyStore', {
     },
 
     isNewsLiked(newsId){
-        var likes = UserDataService.getNewsLikes(newsId)
-        if (likes.length > 0){
-            for (let like of UserDataService.getNewsLikes(newsId)) {
+        var likes
+        UserDataService.getNewsLikes(newsId).then(response => {
+            likes = response.data
+            console.log(likes)
+       
+        if (likes !== undefined || likes.length !== 0){
+            for (let like of likes) {
                 if (like.author === this.currentUser.userName) {
                     return true
                 }
@@ -115,14 +113,18 @@ export const useStore = defineStore('MyStore', {
             return false
         }
         else return false
+     })
     },
 
     isCommentLiked(newsId, commentId){
-        for (let like of UserDataService.getCommentsLikes(newsId, commentId)) {
-            if (like.author === this.currentUser.userName) {
-                return true
+        UserDataService.getCommentsLikes(newsId, commentId).then(response => {
+            for (let like of response.data) {
+                if (like.author === this.currentUser.userName) {
+                    return true
+                }
             }
-        }
+        })
+    
         return false
     },
 
@@ -418,7 +420,8 @@ export const useStore = defineStore('MyStore', {
     },
     
     changeNewsLike(post_id){
-        for (let like of UserDataService.getNewsLikes(post_id)) {
+        UserDataService.getNewsLikes(post_id).then(response => {
+            for (let like of response.data) {
             if (like.author === this.currentUser.userName) {
                 var isLiked = true
                 var like_id = like.id
@@ -436,15 +439,19 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
         }
+        })
+        
     },
 
     changeCommentLike(post_id, comment_id){
-        for (let like of UserDataService.getCommentsLikes(post_id, comment_id)) {
+        UserDataService.getCommentsLikes(post_id, comment_id).then(response => {
+            for (let like of response.data) {
             if (like.author === this.currentUser.userName) {
                 var isLiked = true
                 var like_id = like.id
             }
-        }
+            } 
+        })
        
         if (isLiked) {
             UserDataService.unlikeComment(post_id, comment_id, like_id)
@@ -457,6 +464,8 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
         }
+       
+        
     },
 
     newUser() {
