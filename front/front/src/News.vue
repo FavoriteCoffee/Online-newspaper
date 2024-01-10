@@ -82,7 +82,8 @@
                 <div v-if="showAllComents">
                     <v-row style="padding-right: 6%; padding-left: 4%;">
                         <v-col style="padding: 0; margin-top: 1%;" cols="8" offset="4">
-                            <Comments v-for="comment of myStore.getComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/>
+                            <!-- <Comments v-for="comment of myStore.getComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/> -->
+                            <Comments v-for="comment of myStore.getLatestComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/>
                         </v-col>
                     </v-row>
 
@@ -96,6 +97,7 @@
                 <div v-else>
                     <v-row style="padding-right: 6%; ; padding-left: 2%; margin-top: 1%;">
                         <v-col cols="8" offset="4">
+                            <!-- <Comments v-for="comment of myStore.getLatestComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/> -->
                             <Comments v-for="comment of myStore.getLatestComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/>
                         </v-col>
                     </v-row>

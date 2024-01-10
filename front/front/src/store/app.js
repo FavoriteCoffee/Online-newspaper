@@ -7,8 +7,10 @@ export const useStore = defineStore('MyStore', {
     state: () => ({
         news: [{id: 1, likedBy: ["name"], showText:false, date:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: '111bJCHjkbjhvkJhVKUYCJSB:OÏJESPOJSFo;1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
                  {id: 2, likedBy: ["name"],  showText:false, date:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{likedBy: ["name"], text: "IF you happen to have read another book about Christopher Robin, you may remember that he once had a swan (or the swan had Christopher Robin, I don't know which) and that he used to call this swan Pooh. That was a long time ago, and when we said good-bye, we took the name with us, as we didn't think the swan would want it any more. Well, when Edward Bear said that he would like an exciting name all to himself, Christopher Robin said at once, without stopping to think, that he was Winnie-the-Pooh. And he was. So, as I have explained the Pooh part, I will now explain the rest of it.", id:'1111'}, {text: "2коммент 2 новости", id:'1111'}, {text: "3коммент 2 новости", id:'1111'}]},
-            	 {id: 3,  likedBy: [], showText:false, date:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments: [{text: "1коммент 3 новости", id:'1111'}, {text: "2коммент 3 новости", id:'1112'}, {text: "3коммент 3 новости", id:'1113'}]}],
-        
+            	 {id: 3,  likedBy: [], showText:false, date:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments:[{text: "com11", id: 11}, {text: "com12", id: 12}]}],
+        comments: [[{text: "com11", id: 11}, {text: "com12", id: 12}],
+                   {text: "com2", id: 1},
+                   {text: "com3", id: 1}],
         authenticationData: {
             enteredName: "",
             enteredPassword: ""
@@ -31,10 +33,6 @@ export const useStore = defineStore('MyStore', {
 
         userIn: true
     }),
-
-    // НОВЫЕ ПРАВИЛА 
-    //     в сторе храним только текущего пользователя 
-    //     все данные получаем из базы
 
     // // getters: {
     //     функция для обновления:
@@ -77,25 +75,66 @@ export const useStore = defineStore('MyStore', {
     //     }
     //     return true;
     // },
-
-    async getTodayNews(){
-       UserDataService.getRecentNews().then(response => {
-            console.log("today news array: ", response.data)
-            return this.news = response.data
+    async saveTodayNews(){
+        UserDataService.getRecentNews().then(response => {
+            this.news = response.data.slice(0)
         }) 
     },
 
-    getLatestComments(newsId){
-        UserDataService.getRecentComments(newsId).then(response => {
-            return response.data
+    async saveComments(news){
+        // UserDataService.getAllComments(news.id).then(response => {
+        //     news.comments = response.data.slice(0)
+        //     console.log("новость: ", news)
+        //     // console.log("ее комментарии: ", response.data) функция не изменяет поля новости, комменты не появляются глобально, как будто по значению передаем
+        // })   
+        UserDataService.getAllComments(news.id).then(response => {
+            for (let n of this.news){
+                if (n.id === news.id) {
+                    n.comments = response.data.slice(0)
+                    console.log("новость: ", n)
+                }
+            } // почему-то это нужно запустить дважды чтобы заработало, возможно оно выполняется раньше чем переопределение основного массива
         })
+    },
+
+    async showTodayNews(){
+        console.log("today news array: ", this.news)
+    },
+
+    async getTodayNews(){
+        await this.saveTodayNews()
+
+        for (let news of this.news){
+            await this.saveComments(news)   
+        }
+    
+        await this.showTodayNews()
+        
+    },
+
+    getLatestComments(newsId){
+        for (let news of this.news){
+            if (news.id === newsId){
+                console.log("то что получает компонент News: ", news)
+                return news.comments
+                
+            }
+        }
+        // UserDataService.getRecentComments(newsId).then(response => {
+        //     console.log("comments of news number", newsId, " ", response.data)
+        //     return response.data
+        // })
         return false
     },
 
+    // загрузочная функция загружает только данные новости, необходимо отдельно подгружать лайки и комментарии в местный массив
+    // (вернулись к началу (?))
+
     getComments(newsId){
-        UserDataService.getAllComments(newsId).then(response => {
-            return response.data
-        })   
+        // UserDataService.getAllComments(newsId).then(response => {
+        //     return response.data
+        // }) 
+        return console.log(this.news[2]) 
     },
 
     isNewsLiked(newsId){
@@ -444,11 +483,14 @@ export const useStore = defineStore('MyStore', {
     },
 
     changeCommentLike(post_id, comment_id){
+        var isLiked
+        var like_id
+
         UserDataService.getCommentsLikes(post_id, comment_id).then(response => {
             for (let like of response.data) {
             if (like.author === this.currentUser.userName) {
-                var isLiked = true
-                var like_id = like.id
+                isLiked = true
+                like_id = like.id
             }
             } 
         })
