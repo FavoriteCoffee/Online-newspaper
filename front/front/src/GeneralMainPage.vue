@@ -47,6 +47,10 @@
   const increase = () => {
     count.value++
   }
+
+  (function () {
+    myStore.pushTestDataToDB()
+  })();
   </script>
   
   <!-- <script>

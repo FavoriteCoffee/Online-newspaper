@@ -3,7 +3,7 @@
   <v-card width="100%" height="80px" style=";background-image: url('./img/top.png'); padding-left: 14%; padding-right: 14%">
       <v-row>
         <v-col cols="8">
-          <div @click="myStore.getTodayNews()" @dblclick="myStore.saveComments()" style="float: left;"><b><h1 style="color: #fff; font-size: 5em;">LOGO</h1></b></div>
+          <div @dblclick="myStore.saveComments()" style="float: left;"><b><h1 style="color: #fff; font-size: 5em;">LOGO</h1></b></div>
         </v-col>
       
         <v-col style="padding: 0; padding-top: 2em;" align="end" cols="2" >
@@ -51,6 +51,14 @@ const change = () => {
 const increase = () => {
   count.value++
 }
+
+(function () {
+  myStore.getTodayNews()
+})();
+
+// (function () {
+//   myStore.saveComments()
+// })();
 </script>
 
 <!-- <script>

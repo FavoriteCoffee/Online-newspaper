@@ -78,23 +78,29 @@ export const useStore = defineStore('MyStore', {
     async saveTodayNews(){
         UserDataService.getRecentNews().then(response => {
             this.news = response.data.slice(0)
+            // console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
         }) 
     },
 
-    async saveComments(news){
+    async saveComments(){
         // UserDataService.getAllComments(news.id).then(response => {
         //     news.comments = response.data.slice(0)
         //     console.log("новость: ", news)
         //     // console.log("ее комментарии: ", response.data) функция не изменяет поля новости, комменты не появляются глобально, как будто по значению передаем
         // })   
-        UserDataService.getAllComments(news.id).then(response => {
-            for (let n of this.news){
-                if (n.id === news.id) {
-                    n.comments = response.data.slice(0)
-                    console.log("новость: ", n)
-                }
-            } // почему-то это нужно запустить дважды чтобы заработало, возможно оно выполняется раньше чем переопределение основного массива
-        })
+
+        for (let news of this.news){
+    
+            UserDataService.getAllComments(news.id).then(response => {
+                for (let n of this.news){
+                    if (n.id === news.id) {
+                        n.comments = response.data.slice(0)
+                        console.log("новость: ", n)
+                    }
+                } // почему-то это нужно запустить дважды чтобы заработало, возможно оно выполняется раньше чем переопределение основного массива
+            })
+        }
+        await this.showTodayNews()
     },
 
     async showTodayNews(){
@@ -104,11 +110,11 @@ export const useStore = defineStore('MyStore', {
     async getTodayNews(){
         await this.saveTodayNews()
 
-        for (let news of this.news){
-            await this.saveComments(news)   
-        }
+        // for (let news of this.news){
+        //     await this.saveComments(news)   
+        // }
     
-        await this.showTodayNews()
+        // await this.showTodayNews()
         
     },
 
@@ -134,14 +140,14 @@ export const useStore = defineStore('MyStore', {
         // UserDataService.getAllComments(newsId).then(response => {
         //     return response.data
         // }) 
-        return console.log(this.news[2]) 
+        return this.news[2] 
     },
 
     isNewsLiked(newsId){
         var likes
         UserDataService.getNewsLikes(newsId).then(response => {
             likes = response.data
-            console.log(likes)
+            // console.log(likes)
        
         if (likes !== undefined || likes.length !== 0){
             for (let like of likes) {
@@ -193,7 +199,7 @@ export const useStore = defineStore('MyStore', {
             title: title
         }
         const res = await UserDataService.createNews(data)
-        console.log(res)
+        // console.log(res)
         return res.data.id
 
     },
@@ -204,7 +210,7 @@ export const useStore = defineStore('MyStore', {
             password: pass
         }
         const res = await UserDataService.createUser(data)
-        console.log(res)
+        // console.log(res)
         return res.data.id
 
     },
@@ -216,7 +222,7 @@ export const useStore = defineStore('MyStore', {
         }
 
         const res = await UserDataService.createComment(newsid, user_id, data)
-        console.log(res)
+        // console.log(res)
         return res.data.id
     },
 
@@ -377,7 +383,7 @@ export const useStore = defineStore('MyStore', {
             userName: this.currentUser.userName,
             password: this.currentUser.password
         }
-        console.log(data)
+        // console.log(data)
         UserDataService.createUser(data)
             .then(response => {
                 this.currentUser.id = response.data.id
@@ -459,10 +465,12 @@ export const useStore = defineStore('MyStore', {
     },
     
     changeNewsLike(post_id){
+        var isLiked = false
+
         UserDataService.getNewsLikes(post_id).then(response => {
             for (let like of response.data) {
             if (like.author === this.currentUser.userName) {
-                var isLiked = true
+                isLiked = true
                 var like_id = like.id
             }
         }
