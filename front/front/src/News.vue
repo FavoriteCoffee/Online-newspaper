@@ -31,9 +31,6 @@
                         <v-row style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 1em; padding: 0; margin-right: 1%; margin-left: 1%;">
                             <div class="overflow-auto" >{{ news.text }}</div>
                         </v-row>
-                        <!-- <v-row>
-                            <v-btn @click="changeTextVisibility" width="100%">свернуть</v-btn>
-                        </v-row> -->
                     </div>
                     <div v-else >
                         <v-row>
@@ -83,7 +80,7 @@
                     <v-row style="padding-right: 6%; padding-left: 4%;">
                         <v-col style="padding: 0; margin-top: 1%;" cols="8" offset="4">
                             <!-- <Comments v-for="comment of myStore.getComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/> -->
-                            <Comments v-for="comment of myStore.getLatestComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/>
+                            <Comments v-for="comment of myStore.getComments(this.news.id)" :key="comment" :comment="comment" :newsId="this.news.id"/>
                         </v-col>
                     </v-row>
 
@@ -117,7 +114,7 @@
                             label="Оставьте комментарий"
                             maxlength="120"
                             single-line/>
-                            <v-btn @click="myStore.addComment(this.news.id, getCommentText())" width="100%">Опубликовать</v-btn>
+                            <v-btn @click="myStore.addComment(this.news.id, myStore.currentUser.id, getCommentText())" width="100%">Опубликовать</v-btn>
                         </v-col>
                     </v-row>
                 </div>    
@@ -147,7 +144,7 @@ const commentText = ref("")
 
 const changeCommentText = (newText) => {
     commentText.value = newText
-    console.log(newText, commentText.value)
+    console.log(newText, myStore.currentUser.id, commentText.value)
 }
 
 const getCommentText = () => {

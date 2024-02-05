@@ -22,9 +22,9 @@ export const useStore = defineStore('MyStore', {
     
         currentDateAndTime: null, //let currentDate = new Date();
         currentUser: {
-            userName: "name",
-            password: "333",
-            id: 0
+            userName: "Anna",
+            password: "Olaf",
+            id: 205
         },    
         users: [{userName: "HippoMaru1", password: "1111"},
                 {userName: "HippoMaru2", password: "1111"},
@@ -33,6 +33,16 @@ export const useStore = defineStore('MyStore', {
 
         userIn: true
     }),
+
+    // готово - храним пользователя в локал сторадже
+    // проблемы с асинхронностью: комментарии к новостям приходится добавлять на страницу в ручную иначе они создаются раньше самих овостей
+    // тоже самое с самими новостями но это на GeneralMainPage
+    // картинки не понятно как хранить и передавать
+    // при аутентификации не передается id (возможно причина в том что ответ от сервера bad request но мы это не фиксируем)
+    // когда написал новый комментарий нужно обновить страницу чтобы его увидеть
+    // лайки:
+    // запрос для лайка новости не включает пользователя, так и должно быть?  
+    
 
     // // getters: {
     //     функция для обновления:
@@ -57,40 +67,17 @@ export const useStore = defineStore('MyStore', {
     
     // ---------- >>  GETTERS  << --------- //
     //каждый час + при обновлении загружать свежие новости
-
-
-
-    // loadActualNews(){
-    //     this.news = getTodayNews();
-    // },
-    // checkNewUser(){
-    //     if (this.authenticationData.enteredName === "") {
-    //         return false
-    //     }
-    //     let users = UserDataService.getAllUsers
-    //     for (let user of users){
-    //         if (user.userName === this.authenticationData.enteredName){
-    //             return false
-    //         }
-    //     }
-    //     return true;
-    // },
+ 
     async saveTodayNews(){
         UserDataService.getRecentNews().then(response => {
             this.news = response.data.slice(0)
             // console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
         }) 
+       
     },
 
     async saveComments(){
-        // UserDataService.getAllComments(news.id).then(response => {
-        //     news.comments = response.data.slice(0)
-        //     console.log("новость: ", news)
-        //     // console.log("ее комментарии: ", response.data) функция не изменяет поля новости, комменты не появляются глобально, как будто по значению передаем
-        // })   
-
         for (let news of this.news){
-    
             UserDataService.getAllComments(news.id).then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
@@ -100,7 +87,21 @@ export const useStore = defineStore('MyStore', {
                 } // почему-то это нужно запустить дважды чтобы заработало, возможно оно выполняется раньше чем переопределение основного массива
             })
         }
+        console.log(this.currentUser.userName)
         await this.showTodayNews()
+    },
+
+    async saveLikes(){
+        for (let news of this.news){
+            UserDataService.getNewsLikes(news.id).then(response => {
+                for (let n of this.news){
+                    if (n.id === news.id) {
+                        n.likedBy = response.data.slice(0)
+                        console.log("Лайки: ", response.data)
+                    }
+                } 
+            })
+        }
     },
 
     async showTodayNews(){
@@ -109,38 +110,36 @@ export const useStore = defineStore('MyStore', {
 
     async getTodayNews(){
         await this.saveTodayNews()
-
-        // for (let news of this.news){
-        //     await this.saveComments(news)   
-        // }
-    
-        // await this.showTodayNews()
-        
+        //await this.saveComments() //почему-то не работает, может что-то с асинхронностью. Приходится вручную вызывать
+        //await this.saveLikes()
     },
 
     getLatestComments(newsId){
         for (let news of this.news){
             if (news.id === newsId){
-                console.log("то что получает компонент News: ", news)
-                return news.comments
+                console.log("то что получает компонент News при свернутых комментах : ", news.comments.slice(0, 3))
+                return news.comments.slice(0, 3)
                 
             }
         }
-        // UserDataService.getRecentComments(newsId).then(response => {
-        //     console.log("comments of news number", newsId, " ", response.data)
-        //     return response.data
-        // })
         return false
     },
 
     // загрузочная функция загружает только данные новости, необходимо отдельно подгружать лайки и комментарии в местный массив
-    // (вернулись к началу (?))
 
     getComments(newsId){
-        // UserDataService.getAllComments(newsId).then(response => {
-        //     return response.data
-        // }) 
-        return this.news[2] 
+        for (let news of this.news){
+            if (news.id === newsId){
+                console.log("то что получает компонент News просто : ", news.comments)
+                return news.comments
+                
+            }
+        }
+        return false
+    },
+
+    getCurrentUserName(){
+        return JSON.parse(localStorage.getItem('user')).userName
     },
 
     isNewsLiked(newsId){
@@ -151,7 +150,7 @@ export const useStore = defineStore('MyStore', {
        
         if (likes !== undefined || likes.length !== 0){
             for (let like of likes) {
-                if (like.author === this.currentUser.userName) {
+                if (like.author === JSON.parse(localStorage.getItem('user')).userName) {
                     return true
                 }
             }
@@ -163,9 +162,14 @@ export const useStore = defineStore('MyStore', {
 
     isCommentLiked(newsId, commentId){
         UserDataService.getCommentsLikes(newsId, commentId).then(response => {
-            for (let like of response.data) {
-                if (like.author === this.currentUser.userName) {
-                    return true
+            likes = response.data
+            // console.log(likes)
+       
+            if (likes !== undefined || likes.length !== 0){
+                for (let like of response.data) {
+                    if (like.author === JSON.parse(localStorage.getItem('user')).userName) {
+                        return true
+                    }
                 }
             }
         })
@@ -181,17 +185,6 @@ export const useStore = defineStore('MyStore', {
         this.currentUser.id = null
         this.userIn = false
     },
-
-    // async pushDataToDBs(){
-
-    //     let mypromise = new Promise((resolve) => {
-    //         setTimeout(() => resolve("готово"), 1000)
-    //     });
-
-    //     let result = avait mypromise;
-
-    //     //alert(result);
-    // },
     
     async createTestNews(text, title){
         var data = {
@@ -220,10 +213,18 @@ export const useStore = defineStore('MyStore', {
             text: text,
 
         }
-
         const res = await UserDataService.createComment(newsid, user_id, data)
         // console.log(res)
         return res.data.id
+    },
+
+    async createTestLike(newsid){
+        // var data = {
+        //     author: "HippoMaru"
+        // }
+        const res = await UserDataService.likeNews(newsid)
+
+        console.log("типа лайк на первой новости: ", res.data)
     },
 
     async pushTestDataToDB(){
@@ -262,179 +263,72 @@ export const useStore = defineStore('MyStore', {
             commentsid1[i] = await this.createTestComment(newsid3, userid, "comment news3")
         }
 
+        await this.createTestLike(newsid1)
+        await this.createTestLike(newsid2)
+        await this.createTestLike(newsid3)
+
+
     },
 
-    // async pushTestDataToDB(){
-    //     var newsid1
-    //     var newsid2
-    //     var newsid3
-
-    //     var userid
-
-    //     var commentsid1 = new Array(3).fill(null)
-    //     var commentsid2 = new Array(3).fill(null)
-    //     var commentsid3 = new Array(3).fill(null)
-
-    //     var now = new Date()
-
-    //     var data = {
-    //         text: "text 1",
-    //         title: "title 1",
-    //     }
-    //     await UserDataService.createNews(data).then(response => {
-    //         //setTimeout(() => resolve("создаетсяновость"), 3000);
-    //         console.log(response.data.id)
-    //         newsid1 = response.data.id
-    //         console.log(newsid1)
-    //         })
-    //         .catch( e => {
-    //             alert(e)
-    //         })
-
-        
-
-    //     console.log(newsid1)
-
-    //     var data = {
-    //         text: "text 2",
-    //         title: "title 2",
-    //     }
-    //     UserDataService.createNews(data).then(response => {
-    //         newsid2 = response.data.id
-    //         })
-    //         .catch( e => {
-    //             alert(e)
-    //         })
-
-                
-    //     var data = {
-    //         text: "text 3",
-    //         title: "title 3",
-    //     }
-    //     UserDataService.createNews(data).then(response => {
-    //         newsid3 = response.data.id
-    //         })
-    //         .catch( e => {
-    //             alert(e)
-    //         })
-            
-
-    //     var data = {
-    //         userName: "Anna",
-    //         password: "Elsa"
-    //     }
-    //     UserDataService.createUser(data).then(response => {
-    //         userid = response.data.id
-    //         })
-    //         .catch( e => {
-    //             alert(e)
-    //         })
-
-
-    //     var data = {
-    //         taxt: "comment 1"
-    //     }
-    //     for (let i = 0; i < commentsid1.length ; ++i){
-    //         //console.log(newsid1)
-    //         UserDataService.createComment(newsid1, data).then(response => {
-                
-    //             commentsid1[i] = response.data.id
-    //             })
-    //             .catch( e => {
-    //                 alert(e)
-    //             })
-    //     }
-
-    //     var data = {
-    //         taxt: "comment 2"
-    //     }
-    //     for (let i = 0; i < commentsid2.length; ++i){
-    //         UserDataService.createComment(newsid1, data).then(response => {
-    //             commentsid2[i] = response.data.id
-    //             })
-    //             .catch( e => {
-    //                 alert(e)
-    //             })
-    //     }
-
-    //     var data = {
-    //         taxt: "comment 3"
-    //     }
-    //     for (let i = 0; i < commentsid3.length; ++i){
-    //         UserDataService.createComment(newsid1, data).then(response => {
-    //             commentsid3[i] = response.data.id
-    //             })
-    //             .catch( e => {
-    //                 alert(e)
-    //             })
-    //     }
-
-    //     UserDataService.likeNews(newsid1)
-    //     UserDataService.likeComment(newsid2, commentsid2[2])
-
-    // },
-
-    saveUser() {
-        this.currentUser.userName = this.registrationData.enteredName
-        this.currentUser.password = this.registrationData.enteredPassword
+    saveUser(enteredName, enteredPassword) {
+        this.currentUser.userName = enteredName
+        this.currentUser.password = enteredPassword
         this.userIn = true
 
         var data = {
-            userName: this.currentUser.userName,
-            password: this.currentUser.password
+            userName: enteredName,
+            password: enteredPassword
         }
         // console.log(data)
         UserDataService.createUser(data)
             .then(response => {
                 this.currentUser.id = response.data.id
                 this.submitted = true;
+                console.log(response.data.userName, response.data.id)
             })
             .catch( e => {
                 alert(e)
             })
-        console.log(data.userName, data.password)
+        
         return true
         
     }, 
 
-    addComment(newsId, commentText){
-        console.log(newsId, commentText)
+    addComment(newsId, user_id, commentText){
         var data = {
             text: commentText
         }
-        UserDataService.createComment(newsId, data)
+        console.log("из функции: ", newsId, user_id, commentText)
+        UserDataService.createComment(newsId, user_id, data)
             .catch( e => {
                 alert(e)
             })
     },
-
-    // addNews(title, text){
-    //     var data = {
-    //         title: title,
-    //         text: text,
-    //         // img: img
-    //     }
-    //     UserDataService.createNews(data)
-    //     .catch( e => {
-    //         alert(e)
-    //     })
-    // },
 
     verificationOfRegistration(){
         UserDataService.getAllUsers().then(response => {
             for (let user of response.data) {
                 console.log(user)
                 if (user.userName === this.registrationData.enteredName) {
+                    console.log("пользователь с таким именем уже существует")
                     return false
                 }
             }
             console.log(this.registrationData.enteredName, ' ', this.registrationData.enteredPassword)
             if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== "" ){
-                this.saveUser()
+                this.saveUser(this.registrationData.enteredName, this.registrationData.enteredPassword)
                 this.userIn = true
-                console.log("userIn === true", this.userIn)
+                console.log(this.currentUser.userName, this.currentUser.id)
     
-                window.location.href = '/main';
+                let user = {
+                    userName: this.registrationData.enteredName,
+                    password: this.registrationData.enteredPassword,
+                    id: this.currentUser.id
+                }
+
+                localStorage.setItem('user', JSON.stringify(user))
+
+                this.gotoAnotherPage('/main')
             }
             return true
         }
@@ -442,10 +336,14 @@ export const useStore = defineStore('MyStore', {
     },
 
     verificationOfAuthentication(){
+        var id ;
+
+//что возвращает сервер когда пользовательь не найден по имени?
         if (this.authenticationData.enteredName !== "" &&
             this.authenticationData.enteredPassword !== "" && 
             UserDataService.getUser(this.authenticationData.enteredName).then(response => {
-                var id = response.data.id
+//айдишник не возвращается
+                id = response.data.id
             }) !== false){
 
                 this.userIn = true
@@ -454,8 +352,16 @@ export const useStore = defineStore('MyStore', {
                 this.currentUser.userName = this.authenticationData.enteredName
                 this.currentUser.password = this.authenticationData.enteredPassword
                 this.currentUser.id = id
+
+                let user = {
+                    userName: this.authenticationData.enteredName,
+                    password: this.authenticationData.enteredPassword,
+                    id: this.currentUser.id
+                }
+
+                localStorage.setItem('user', JSON.stringify(user))
                 
-                window.location.href = '/main';
+                this.gotoAnotherPage('/main')
                 
         }
     },
@@ -466,14 +372,18 @@ export const useStore = defineStore('MyStore', {
     
     changeNewsLike(post_id){
         var isLiked = false
+        var like_id
 
         UserDataService.getNewsLikes(post_id).then(response => {
-            for (let like of response.data) {
-            if (like.author === this.currentUser.userName) {
-                isLiked = true
-                var like_id = like.id
+            if (response.data !== undefined || response.data.length !== 0){
+                for (let like of response.data) {
+                    if (like.author === this.currentUser.userName) {
+                        isLiked = true
+                        like_id = like.id
+                        console.log('id лайка текущего пользователя для новости: ', like_id)
+                    }
+                }
             }
-        }
        
         if (isLiked) {
             UserDataService.unlikeNews(post_id, like_id)
@@ -495,12 +405,14 @@ export const useStore = defineStore('MyStore', {
         var like_id
 
         UserDataService.getCommentsLikes(post_id, comment_id).then(response => {
-            for (let like of response.data) {
-            if (like.author === this.currentUser.userName) {
-                isLiked = true
-                like_id = like.id
+            if (response.data !== undefined || response.data.length !== 0){
+                for (let like of response.data) {
+                    if (like.author === this.currentUser.userName) {
+                        isLiked = true
+                        like_id = like.id
+                    }
+                } 
             }
-            } 
         })
        
         if (isLiked) {
@@ -516,6 +428,10 @@ export const useStore = defineStore('MyStore', {
         }
        
         
+    },
+
+    gotoAnotherPage(page){
+        window.location.href = page
     },
 
     newUser() {

@@ -10,7 +10,7 @@
 
 
       <!-- <router-link to="/main" class="nav-link"> -->
-        <v-btn style="margin-right: 10px;" @click="myStore.verificationOfRegistration()">OK</v-btn>
+        <v-btn style="margin-right: 10px;" @dblclick="myStore.gotoAnotherPage('/main')" @click="myStore.verificationOfRegistration()">OK</v-btn>
       <!-- </router-link> -->
       <router-link to="/authentication" class="nav-link">
         <v-btn>Вход</v-btn>

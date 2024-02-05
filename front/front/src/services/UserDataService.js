@@ -8,6 +8,7 @@ class UserDataService {
         return http.get('/users')
     }
 
+    //не нужны
     getAllNews() {
         return http.get('/posts')
     }
@@ -17,7 +18,7 @@ class UserDataService {
     }
 
     getUser(name) {
-        return http.get(`/users/users/${name}`)
+        return http.get(`/users/${name}`)
     }
 
     getNews(id) {
@@ -28,7 +29,8 @@ class UserDataService {
         return http.get(`/comments/${id}`)
     }
 
-    getRecentComments(id, userId) {
+    //не нужны
+    getRecentComments(id) {
         return http.get(`/posts/${id}/comments/recent`) 
     }
 
@@ -55,7 +57,7 @@ class UserDataService {
     }
 
     createComment(post_id, author_id, data) {
-        console.log(data)
+        console.log("из запроса: ", data)
         return http.post(`/posts/${post_id}/post-comment-by-userid/${author_id}`, data)
     }
 
@@ -63,8 +65,8 @@ class UserDataService {
         return http.post(`posts/${id}/likes`)
     }
 
-    likeComment(post_id, comment_id) {
-        return http.post(`/posts/${post_id}/comments/${comment_id}/likes`)
+    likeComment(post_id, comment_id, author) {
+        return http.post(`/posts/${post_id}/comments/${comment_id}/likes`, author)
     }
 
 
