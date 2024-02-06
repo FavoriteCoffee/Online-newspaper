@@ -34,14 +34,14 @@ export const useStore = defineStore('MyStore', {
         userIn: true
     }),
 
-    // готово - храним пользователя в локал сторадже
+    // готово - храним пользователя в локалсторадже
     // проблемы с асинхронностью: комментарии к новостям приходится добавлять на страницу в ручную иначе они создаются раньше самих овостей
     // тоже самое с самими новостями но это на GeneralMainPage
     // картинки не понятно как хранить и передавать
     // при аутентификации не передается id (возможно причина в том что ответ от сервера bad request но мы это не фиксируем)
     // когда написал новый комментарий нужно обновить страницу чтобы его увидеть
     // лайки:
-    // запрос для лайка новости не включает пользователя, так и должно быть?  
+    // запрос для лайка новости не включает пользователя, так и должно быть? В любом случае там бэд реквест на пост запросе 
     
 
     // // getters: {
@@ -162,7 +162,7 @@ export const useStore = defineStore('MyStore', {
 
     isCommentLiked(newsId, commentId){
         UserDataService.getCommentsLikes(newsId, commentId).then(response => {
-            likes = response.data
+            let likes = response.data
             // console.log(likes)
        
             if (likes !== undefined || likes.length !== 0){
@@ -391,7 +391,8 @@ export const useStore = defineStore('MyStore', {
                 alert(e)
             })
         } else {
-            UserDataService.likeNews(post_id)
+            console.log(typeof  JSON.parse(localStorage.getItem('user')).userName)
+            UserDataService.likeNews(post_id, JSON.parse(localStorage.getItem('user')).userName)
             .catch( e => {
                 alert(e)
             })

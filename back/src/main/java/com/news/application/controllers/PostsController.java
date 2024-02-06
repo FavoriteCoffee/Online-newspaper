@@ -203,6 +203,7 @@ public class PostsController {
     @PostMapping("/posts/{post_id}/likes")
     public ResponseEntity<Object> createPostsLike(@PathVariable("post_id") Long post_id, @RequestBody String name) {
         try {
+            System.out.println(name);
             User author = userRepository.findByUserName(name).get();
             PostsLike like = new PostsLike();
             like.setPost(postRepository.findById(post_id).get());

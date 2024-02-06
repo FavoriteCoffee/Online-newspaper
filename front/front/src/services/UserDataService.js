@@ -61,8 +61,9 @@ class UserDataService {
         return http.post(`/posts/${post_id}/post-comment-by-userid/${author_id}`, data)
     }
 
-    likeNews(id) {
-        return http.post(`posts/${id}/likes`)
+    likeNews(id, userName) {
+        console.log("из запроса: ", userName, typeof userName)
+        return http.post(`posts/${id}/likes`, userName)
     }
 
     likeComment(post_id, comment_id, author) {
