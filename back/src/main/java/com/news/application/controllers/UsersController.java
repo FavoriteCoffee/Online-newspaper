@@ -33,7 +33,7 @@ public class UsersController {
     @GetMapping("/users/{name}")
     public ResponseEntity<Object> getUserByName(@PathVariable("name") String name) {
         try {
-            User user = userRepository.findByUserName(name).get();
+            User user = userRepository.findByUserNameEquals(name).get();
             return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);

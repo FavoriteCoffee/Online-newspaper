@@ -203,8 +203,8 @@ public class PostsController {
     @PostMapping("/posts/{post_id}/likes")
     public ResponseEntity<Object> createPostsLike(@PathVariable("post_id") Long post_id, @RequestBody String name) {
         try {
-            System.out.println(name);
-            User author = userRepository.findByUserName(name).get();
+            if (name.charAt(0) == '"'){name = name.substring(1, name.length()-1);}
+            User author = userRepository.findByUserNameEquals(name).get();
             PostsLike like = new PostsLike();
             like.setPost(postRepository.findById(post_id).get());
             like.setAuthor(author);
@@ -252,7 +252,7 @@ public class PostsController {
     @PostMapping("/posts/{post_id}/comments/{comment_id}/likes")
     public ResponseEntity<Object> createCommentsLike(@PathVariable("post_id") Long post_id, @PathVariable("comment_id") Long comment_id, @RequestBody String name) {
         try {
-            User author = userRepository.findByUserName(name).get();
+            User author = userRepository.findByUserNameEquals(name).get();
             CommentsLike like = new CommentsLike();
             like.setComment(commentRepository.findById(comment_id).get());
             like.setAuthor(author);
