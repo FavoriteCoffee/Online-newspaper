@@ -44,6 +44,9 @@ public class UsersController {
     @PostMapping("/users")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         try {
+            if (!userRepository.existsByUserName(user.getName())){
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+            }
             User savedUser = userRepository.save(user);
             return new ResponseEntity<Object>(savedUser, HttpStatus.OK);
         } catch(Exception ex) {
@@ -72,6 +75,16 @@ public class UsersController {
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
             return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/users/{name}/exists")
+    public ResponseEntity<Object> getIfUserExists(@PathVariable("name") String name) {
+        try {
+            return new ResponseEntity<Object>(userRepository.existsByUserName(name), HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 }
