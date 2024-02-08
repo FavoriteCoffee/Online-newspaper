@@ -46,15 +46,17 @@ export const useStore = defineStore('MyStore', {
     // картинки не понятно как хранить и передавать
     
     // когда написал новый комментарий нужно обновить страницу чтобы его увидеть
-    // тоже самое с лайком
+    // готово - тоже самое с лайком
 
     // лайки:
-    // лайкается несколько раз
-    // нет возможности отмены лайка
+    // готово? - лайкается несколько раз - да, но это не отражается на функционале
+    // готово - нет возможности отмены лайка
     // готово - счетчик комментов
+
     // авторство и время комментария
 
-    // лайки комментов не работают
+    // лайки комментов не работают пост запросы (а делит запросы почему-то не падают)
+    // сделать комменты реактивными
 
     // // getters: {
     //     функция для обновления:
@@ -104,11 +106,15 @@ export const useStore = defineStore('MyStore', {
     },
 
     async saveNewsLikes(){
+        for (let news of this.news) {
+            news.likes = []
+        }
+
         for (let news of this.news){
             UserDataService.getNewsLikes(news.id).then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
-                        n.likes = response.data.slice(0)
+                      //  n.likes = response.data.slice(0)
                         console.log("Лайки новостей: ", response.data.slice(0))
                     }
                 } 
@@ -117,10 +123,16 @@ export const useStore = defineStore('MyStore', {
     },
 
 
-    async saveCommentsLikes(){
+    async saveCommentsLikes(){        
+        for (let news of this.news) {
+            for (let comment of news.comments){
+                comment.likes = []
+            }
+        }
+
         for (var news of this.news){
             for (var comment of news.comments) {
-                UserDataService.getCommentsLikes(news.id, comment.id).then(response => {
+                await UserDataService.getCommentsLikes(news.id, comment.id).then(response => {
                     comment.likes = response.data.slice(0)
                     console.log("Лайки комментов: ", response.data.slice(0))
                 })
@@ -149,13 +161,13 @@ export const useStore = defineStore('MyStore', {
 
     async saveAllDataFromDB(){
         this.saveCurrentUser()
-        await this.sleep(1000)
+        await this.sleep(2000)
         this.saveTodayNews()
-        await this.sleep(1000)
+        await this.sleep(2000)
         this.saveComments()
-        await this.sleep(1000)
+        await this.sleep(2000)
         this.saveNewsLikes()
-        await this.sleep(1000)
+        await this.sleep(2000)
         this.saveCommentsLikes()
         
 
@@ -495,8 +507,7 @@ export const useStore = defineStore('MyStore', {
                         return
                     }
                 }
-                //пусть ждет секунду или запихнуть в функцию 
-                //еще дописать очищение локал стораджа при инициалзации generalmainpage
+            
                 if (!isLiked){
                     var name =  JSON.parse(localStorage.getItem('user')).userName
 
@@ -504,10 +515,10 @@ export const useStore = defineStore('MyStore', {
                     .catch( e => {
                     alert(e)
                     })
-                    UserDataService.getNewsLikes(post_id).then( response => {
-                        console.log("ставим лайк ", news.likes)
-                        //news.likes = response.data.splice(0)
-                    })
+                    // UserDataService.getNewsLikes(post_id).then( response => {
+                    //     console.log("ставим лайк ", news.likes)
+                    //     //news.likes = response.data.splice(0)
+                    // })
 
                     let like = {
                         id: 0,
@@ -520,67 +531,82 @@ export const useStore = defineStore('MyStore', {
                 }
               
             }
-        }
+        }        
+    },
 
+    async changeCommentLike(post_id, comment_id){
+        let isLiked = false
+        for (let news of this.news) {
+            if (news.id == post_id) {
+                for (let comment of news.comments) {
+                    if (comment.id == comment_id) {
+                        console.log("comment.likes.length ", comment)
+                        for (let i = 0; i < comment.likes.length; i++) {
+                            if (comment.likes[i].author.userName == this.currentUser.userName) {
+                                isLiked = true
+                                await UserDataService.unlikeComment(post_id, comment_id, comment.likes[i].id)
+                                    .catch( e => {
+                                    alert(e)
+                                })
         
+                                comment.likes.splice(i, 1)
+                            
+                                return
+                            }
+                        }
+                    
+                        if (!isLiked){
+                            var name =  JSON.parse(localStorage.getItem('user')).userName
+        
+                            await UserDataService.likeComment(post_id, comment_id, name)
+                            .catch( e => {
+                            alert(e)
+                            })
+                            // UserDataService.getCommentsLikes(post_id, comment_id).then( response => {
+                            //     console.log("ставим лайк на коммент ", comment.likes)
+                            //     //news.likes = response.data.splice(0)
+                            // })
+        
+                            let like = {
+                                id: 0,
+                                author: { userName: name},
+                                post: {id: post_id}
+                            }
+        
+                            comment.likes.push(like)
+        
+                        }
+                    }
+                }
+            }
+        }        
 
 
-        // var isLiked = false
+        // var isLiked
         // var like_id
 
-        // UserDataService.getNewsLikes(post_id).then(response => {
+        // UserDataService.getCommentsLikes(post_id, comment_id).then(response => {
         //     if (response.data !== undefined || response.data.length !== 0){
         //         for (let like of response.data) {
         //             if (like.author === this.currentUser.userName) {
         //                 isLiked = true
         //                 like_id = like.id
-        //                 console.log('id лайка текущего пользователя для новости: ', like_id)
         //             }
-        //         }
+        //         } 
         //     }
+        // })
        
         // if (isLiked) {
-        //     UserDataService.unlikeNews(post_id, like_id)
+        //     UserDataService.unlikeComment(post_id, comment_id, like_id)
         //     .catch( e => {
         //         alert(e)
         //     })
         // } else {
-        //     console.log(typeof  JSON.parse(localStorage.getItem('user')).userName)
-        //     UserDataService.likeNews(post_id, JSON.parse(localStorage.getItem('user')).userName)
+        //     UserDataService.likeComment(post_id, comment_id)
         //     .catch( e => {
         //         alert(e)
         //     })
         // }
-        // })
-        
-    },
-
-    changeCommentLike(post_id, comment_id){
-        var isLiked
-        var like_id
-
-        UserDataService.getCommentsLikes(post_id, comment_id).then(response => {
-            if (response.data !== undefined || response.data.length !== 0){
-                for (let like of response.data) {
-                    if (like.author === this.currentUser.userName) {
-                        isLiked = true
-                        like_id = like.id
-                    }
-                } 
-            }
-        })
-       
-        if (isLiked) {
-            UserDataService.unlikeComment(post_id, comment_id, like_id)
-            .catch( e => {
-                alert(e)
-            })
-        } else {
-            UserDataService.likeComment(post_id, comment_id)
-            .catch( e => {
-                alert(e)
-            })
-        }
        
         
     },
