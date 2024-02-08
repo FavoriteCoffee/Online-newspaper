@@ -33,6 +33,9 @@ public class UsersController {
     @GetMapping("/users/{name}")
     public ResponseEntity<Object> getUserByName(@PathVariable("name") String name) {
         try {
+            if (!userRepository.existsByUserName(name)){
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+            }
             User user = userRepository.findByUserNameEquals(name).get();
             return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch(Exception ex) {
@@ -44,7 +47,7 @@ public class UsersController {
     @PostMapping("/users")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         try {
-            if (!userRepository.existsByUserName(user.getName())){
+            if (userRepository.existsByUserName(user.getUserName())){
                 return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
             }
             User savedUser = userRepository.save(user);

@@ -35,14 +35,21 @@ export const useStore = defineStore('MyStore', {
     }),
 
     // готово - храним пользователя в локалсторадже
-    // проблемы с асинхронностью: комментарии к новостям приходится добавлять на страницу в ручную иначе они создаются раньше самих овостей
+    // готово - проблемы с асинхронностью: комментарии к новостям приходится добавлять на страницу в ручную иначе они создаются раньше самих овостей
+    // готово - функция загрузки данных из бд в локальное хранилище запускается автоматически при обновлении страницы (saveAllDataFromDB)
+    // готово - функция загркузки тестовых данных в бд запускается при нажатии на лого 
+
+    
     // тоже самое с самими новостями но это на GeneralMainPage
     // картинки не понятно как хранить и передавать
-    // при аутентификации не передается id (возможно причина в том что ответ от сервера bad request но мы это не фиксируем)
+    // готово - при аутентификации не передается id (возможно причина в том что ответ от сервера bad request но мы это не фиксируем)
     // когда написал новый комментарий нужно обновить страницу чтобы его увидеть
     // лайки:
-    // запрос для лайка новости не включает пользователя, так и должно быть? В любом случае там бэд реквест на пост запросе 
-    
+    // готово - запрос для лайка новости не включает пользователя, так и должно быть? В любом случае там бэд реквест на пост запросе 
+    // лайкается несколько раз
+    // нет возможности отмены лайка
+    // готово - счетчик комментов
+    // авторство и время комментария
 
     // // getters: {
     //     функция для обновления:
@@ -82,7 +89,7 @@ export const useStore = defineStore('MyStore', {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.comments = response.data.slice(0)
-                        console.log("новость: ", n)
+                        console.log("из сохранения комментариев, новости номер ", n)
                     }
                 } // почему-то это нужно запустить дважды чтобы заработало, возможно оно выполняется раньше чем переопределение основного массива
             })
@@ -97,7 +104,7 @@ export const useStore = defineStore('MyStore', {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.likedBy = response.data.slice(0)
-                        console.log("Лайки: ", response.data)
+                        console.log("Лайки: ", response.data.slice(0))
                     }
                 } 
             })
@@ -108,10 +115,26 @@ export const useStore = defineStore('MyStore', {
         console.log("today news array: ", this.news)
     },
 
-    async getTodayNews(){
-        await this.saveTodayNews()
-        //await this.saveComments() //почему-то не работает, может что-то с асинхронностью. Приходится вручную вызывать
-        //await this.saveLikes()
+    async sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    },
+
+    async saveAllDataFromDB(){
+        this.saveTodayNews()
+        await this.sleep(2000)
+        this.saveComments()
+        await this.sleep(2000)
+        this.saveLikes()
+
+
+        // this.doThis(this.andThenThis)
+        // this.saveTodayNews().then( () => {
+        //     this.saveComments().then( () => {
+        //         this.saveLikes()
+        //     })
+        // })
+        // await this.saveComments() //почему-то не работает, может что-то с асинхронностью. Приходится вручную вызывать
+        // await this.saveLikes()
     },
 
     getLatestComments(newsId){
@@ -136,6 +159,19 @@ export const useStore = defineStore('MyStore', {
             }
         }
         return false
+    },
+
+    getNumberOfComments(news_id){
+        for (let news of this.news){
+            if (news.id === news_id){
+                if(news.comments !== undefined){
+                    // console.log("количество комментариев в ", news_id)
+                    console.log("количество комментариев в ", news_id, "равно", news.comments.length)
+                    return news.comments.length
+                }
+            }
+        }
+        return 0
     },
 
     getCurrentUserName(){
@@ -222,7 +258,7 @@ export const useStore = defineStore('MyStore', {
         // var data = {
         //     author: "HippoMaru"
         // }
-        const res = await UserDataService.likeNews(newsid)
+        const res = await UserDataService.likeNews(newsid, "Anna")
 
         console.log("типа лайк на первой новости: ", res.data)
     },
@@ -247,7 +283,13 @@ export const useStore = defineStore('MyStore', {
         newsid3 = await this.createTestNews("text 3", "title 3")
         console.log("news 3 id = ", newsid3)
 
-        userid = await this.createTestUser("Anna", "Olaf")
+        await this.createTestUser("Anna", "Olaf").catch( e => {
+            console.log("не создался")
+        })
+        await UserDataService.getUser("Anna").then(response => { 
+            userid = response.data.id
+        })
+        console.log(userid)
 
         commentid1 = await this.createTestComment(newsid1, userid,  "first comment news1")
 
@@ -306,6 +348,7 @@ export const useStore = defineStore('MyStore', {
     },
 
     verificationOfRegistration(){
+        let ex = false
         UserDataService.getAllUsers().then(response => {
             for (let user of response.data) {
                 console.log(user)
@@ -313,6 +356,7 @@ export const useStore = defineStore('MyStore', {
                     console.log("пользователь с таким именем уже существует")
                     return false
                 }
+
             }
             console.log(this.registrationData.enteredName, ' ', this.registrationData.enteredPassword)
             if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== "" ){
@@ -337,32 +381,32 @@ export const useStore = defineStore('MyStore', {
 
     verificationOfAuthentication(){
         var id ;
-
-//что возвращает сервер когда пользовательь не найден по имени?
         if (this.authenticationData.enteredName !== "" &&
-            this.authenticationData.enteredPassword !== "" && 
-            UserDataService.getUser(this.authenticationData.enteredName).then(response => {
-//айдишник не возвращается
-                id = response.data.id
-            }) !== false){
+            this.authenticationData.enteredPassword !== ""){
+                UserDataService.getUser(this.authenticationData.enteredName).then(response => {
+                    id = response.data.id
+                }).catch( e => {
+                    console.log("Неверный логин или пароль")
+                    return
+                })
 
-                this.userIn = true
-                console.log("userIn === true", this.userIn)
+                    this.userIn = true
+                    console.log("userIn === true", this.userIn)
 
-                this.currentUser.userName = this.authenticationData.enteredName
-                this.currentUser.password = this.authenticationData.enteredPassword
-                this.currentUser.id = id
+                    this.currentUser.userName = this.authenticationData.enteredName
+                    this.currentUser.password = this.authenticationData.enteredPassword
+                    this.currentUser.id = id
 
-                let user = {
-                    userName: this.authenticationData.enteredName,
-                    password: this.authenticationData.enteredPassword,
-                    id: this.currentUser.id
-                }
+                    let user = {
+                        userName: this.authenticationData.enteredName,
+                        password: this.authenticationData.enteredPassword,
+                        id: this.currentUser.id
+                    }
 
-                localStorage.setItem('user', JSON.stringify(user))
-                
-                this.gotoAnotherPage('/main')
-                
+                    localStorage.setItem('user', JSON.stringify(user))
+                    
+                    this.gotoAnotherPage('/main')
+                    
         }
     },
 
