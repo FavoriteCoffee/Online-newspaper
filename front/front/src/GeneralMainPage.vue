@@ -47,10 +47,11 @@
   const increase = () => {
     count.value++
   }
-
-  (function () {
-    myStore.pushTestDataToDB()
-  })();
+  
+(function () {
+  localStorage.clear();
+  myStore.saveAllDataFromDB()
+})();
   </script>
   
   <!-- <script>

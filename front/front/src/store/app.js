@@ -38,18 +38,23 @@ export const useStore = defineStore('MyStore', {
     // готово - проблемы с асинхронностью: комментарии к новостям приходится добавлять на страницу в ручную иначе они создаются раньше самих овостей
     // готово - функция загрузки данных из бд в локальное хранилище запускается автоматически при обновлении страницы (saveAllDataFromDB)
     // готово - функция загркузки тестовых данных в бд запускается при нажатии на лого 
-
-    
-    // тоже самое с самими новостями но это на GeneralMainPage
-    // картинки не понятно как хранить и передавать
     // готово - при аутентификации не передается id (возможно причина в том что ответ от сервера bad request но мы это не фиксируем)
-    // когда написал новый комментарий нужно обновить страницу чтобы его увидеть
-    // лайки:
     // готово - запрос для лайка новости не включает пользователя, так и должно быть? В любом случае там бэд реквест на пост запросе 
+    // готово - счетчик комментов
+    // готово - тоже самое с самими новостями но это на GeneralMainPage
+
+    // картинки не понятно как хранить и передавать
+    
+    // когда написал новый комментарий нужно обновить страницу чтобы его увидеть
+    // тоже самое с лайком
+
+    // лайки:
     // лайкается несколько раз
     // нет возможности отмены лайка
     // готово - счетчик комментов
     // авторство и время комментария
+
+    // лайки комментов не работают
 
     // // getters: {
     //     функция для обновления:
@@ -94,21 +99,44 @@ export const useStore = defineStore('MyStore', {
                 } // почему-то это нужно запустить дважды чтобы заработало, возможно оно выполняется раньше чем переопределение основного массива
             })
         }
-        console.log(this.currentUser.userName)
+        console.log(this.currentUser.userName, this.currentUser.id)
         await this.showTodayNews()
     },
 
-    async saveLikes(){
+    async saveNewsLikes(){
         for (let news of this.news){
             UserDataService.getNewsLikes(news.id).then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
-                        n.likedBy = response.data.slice(0)
-                        console.log("Лайки: ", response.data.slice(0))
+                        n.likes = response.data.slice(0)
+                        console.log("Лайки новостей: ", response.data.slice(0))
                     }
                 } 
             })
         }
+    },
+
+
+    async saveCommentsLikes(){
+        for (var news of this.news){
+            for (var comment of news.comments) {
+                UserDataService.getCommentsLikes(news.id, comment.id).then(response => {
+                    comment.likes = response.data.slice(0)
+                    console.log("Лайки комментов: ", response.data.slice(0))
+                })
+            }
+            
+        }
+    },
+
+    async saveCurrentUser(){
+        let name = JSON.parse(localStorage.getItem('user')).userName 
+        UserDataService.getUser(name).then( response => {
+            this.currentUser.userName = response.data.userName
+            this.currentUser.password = response.data.password
+            this.currentUser.id = response.data.id
+            console.log("СОХРАНЕНИЕ ЮЗЕРА", this.currentUser.userName, this.currentUser.id)
+        })
     },
 
     async showTodayNews(){
@@ -120,11 +148,16 @@ export const useStore = defineStore('MyStore', {
     },
 
     async saveAllDataFromDB(){
+        this.saveCurrentUser()
+        await this.sleep(1000)
         this.saveTodayNews()
-        await this.sleep(2000)
+        await this.sleep(1000)
         this.saveComments()
-        await this.sleep(2000)
-        this.saveLikes()
+        await this.sleep(1000)
+        this.saveNewsLikes()
+        await this.sleep(1000)
+        this.saveCommentsLikes()
+        
 
 
         // this.doThis(this.andThenThis)
@@ -175,42 +208,73 @@ export const useStore = defineStore('MyStore', {
     },
 
     getCurrentUserName(){
-        return JSON.parse(localStorage.getItem('user')).userName
+        return JSON.parse(localStorage.getItem('user')).userName 
     },
 
     isNewsLiked(newsId){
-        var likes
-        UserDataService.getNewsLikes(newsId).then(response => {
-            likes = response.data
-            // console.log(likes)
-       
-        if (likes !== undefined || likes.length !== 0){
-            for (let like of likes) {
-                if (like.author === JSON.parse(localStorage.getItem('user')).userName) {
-                    return true
-                }
-            }
-            return false
-        }
-        else return false
-     })
-    },
-
-    isCommentLiked(newsId, commentId){
-        UserDataService.getCommentsLikes(newsId, commentId).then(response => {
-            let likes = response.data
-            // console.log(likes)
-       
-            if (likes !== undefined || likes.length !== 0){
-                for (let like of response.data) {
-                    if (like.author === JSON.parse(localStorage.getItem('user')).userName) {
-                        return true
+        for (let news of this.news) {
+            if (news.id == newsId) {
+                if (news.likes !== undefined && news.likes.length > 0){
+                    for (let like of news.likes) {
+                        if (like.author.userName == this.currentUser.userName) {
+                            return true
+                        }
                     }
                 }
             }
-        })
-    
+        }
+
         return false
+    //     var likes
+    //     UserDataService.getNewsLikes(newsId).then(response => {
+    //         likes = response.data
+    //         console.log("isNewsLiked ", likes)
+       
+    //     if (likes !== undefined || likes.length !== 0){
+    //         for (let like of likes) {
+                
+    //             if (like.author.userName === JSON.parse(localStorage.getItem('user')).userName) {
+    //                 return true
+    //             }
+    //         }
+    //         return false
+    //     }
+    //     else return false
+    //  })
+    },
+
+    isCommentLiked(newsId, commentId){
+        for (let news of this.news) {
+            if (news.id == newsId) {
+                for (let comment of news.comments) {
+                    if (comment.id == commentId) {
+                        if (comment.likes !== undefined && comment.likes.length > 0){
+                            for (let like of comment.likes) {
+                                if (like.author.userName == this.currentUser.userName) {
+                                    return true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false
+        //UserDataService.getCommentsLikes(newsId, commentId).then(response => {
+        //     let likes = response.data
+        //     // console.log(likes)
+       
+        //     if (likes !== undefined || likes.length !== 0){
+        //         for (let like of response.data) {
+        //             if (like.author === JSON.parse(localStorage.getItem('user')).userName) {
+        //                 return true
+        //             }
+        //         }
+        //     }
+        // })
+    
+        // return false
     },
 
     // ---------- >>  MUTATIONS  << --------- //
@@ -326,7 +390,7 @@ export const useStore = defineStore('MyStore', {
             .then(response => {
                 this.currentUser.id = response.data.id
                 this.submitted = true;
-                console.log(response.data.userName, response.data.id)
+                console.log("response.data из saveUser ", response.data.userName, response.data.id)
             })
             .catch( e => {
                 alert(e)
@@ -415,33 +479,79 @@ export const useStore = defineStore('MyStore', {
     },
     
     changeNewsLike(post_id){
-        var isLiked = false
-        var like_id
-
-        UserDataService.getNewsLikes(post_id).then(response => {
-            if (response.data !== undefined || response.data.length !== 0){
-                for (let like of response.data) {
-                    if (like.author === this.currentUser.userName) {
+        let isLiked = false
+        for (let news of this.news) {
+            if (news.id == post_id) {
+                for (let i = 0; i < news.likes.length; i++) {
+                    if (news.likes[i].author.userName == this.currentUser.userName) {
                         isLiked = true
-                        like_id = like.id
-                        console.log('id лайка текущего пользователя для новости: ', like_id)
+                        UserDataService.unlikeNews(post_id, news.likes[i].id)
+                            .catch( e => {
+                            alert(e)
+                            })
+
+                        news.likes.splice(i, 1)
+                    
+                        return
                     }
                 }
+                //пусть ждет секунду или запихнуть в функцию 
+                //еще дописать очищение локал стораджа при инициалзации generalmainpage
+                if (!isLiked){
+                    var name =  JSON.parse(localStorage.getItem('user')).userName
+
+                    UserDataService.likeNews(post_id, name)
+                    .catch( e => {
+                    alert(e)
+                    })
+                    UserDataService.getNewsLikes(post_id).then( response => {
+                        console.log("ставим лайк ", news.likes)
+                        //news.likes = response.data.splice(0)
+                    })
+
+                    let like = {
+                        id: 0,
+                        author: { userName: name},
+                        post: {id: post_id}
+                    }
+
+                    news.likes.push(like)
+
+                }
+              
             }
-       
-        if (isLiked) {
-            UserDataService.unlikeNews(post_id, like_id)
-            .catch( e => {
-                alert(e)
-            })
-        } else {
-            console.log(typeof  JSON.parse(localStorage.getItem('user')).userName)
-            UserDataService.likeNews(post_id, JSON.parse(localStorage.getItem('user')).userName)
-            .catch( e => {
-                alert(e)
-            })
         }
-        })
+
+        
+
+
+        // var isLiked = false
+        // var like_id
+
+        // UserDataService.getNewsLikes(post_id).then(response => {
+        //     if (response.data !== undefined || response.data.length !== 0){
+        //         for (let like of response.data) {
+        //             if (like.author === this.currentUser.userName) {
+        //                 isLiked = true
+        //                 like_id = like.id
+        //                 console.log('id лайка текущего пользователя для новости: ', like_id)
+        //             }
+        //         }
+        //     }
+       
+        // if (isLiked) {
+        //     UserDataService.unlikeNews(post_id, like_id)
+        //     .catch( e => {
+        //         alert(e)
+        //     })
+        // } else {
+        //     console.log(typeof  JSON.parse(localStorage.getItem('user')).userName)
+        //     UserDataService.likeNews(post_id, JSON.parse(localStorage.getItem('user')).userName)
+        //     .catch( e => {
+        //         alert(e)
+        //     })
+        // }
+        // })
         
     },
 
