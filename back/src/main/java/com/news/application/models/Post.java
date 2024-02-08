@@ -21,17 +21,15 @@ public class    Post {
     Date date;
 
     @Column(name = "img")
-    @Lob
-    private Byte[] img;
+    String imgPath;
 
-    public Byte[] getImg() {
-        return img;
+    public  getImgPath() {
+        return imgPath;
     }
 
-    public void setImg(Byte[] img) {
-        this.img = img;
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
-
     public Long getId() {
         return id;
     }
