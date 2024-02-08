@@ -7,7 +7,7 @@
             <v-row style=" padding: 0;">
 
                 <v-col cols="4">
-                    <v-img :src="news.img" alt="это картинка" cover width="100%" />
+                    <v-img :src="news.imgPath" alt="это картинка" cover width="100%" />
                 </v-col>
 
 

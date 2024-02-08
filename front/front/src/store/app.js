@@ -83,7 +83,7 @@ export const useStore = defineStore('MyStore', {
     //каждый час + при обновлении загружать свежие новости
  
     async saveTodayNews(){
-        UserDataService.getRecentNews().then(response => {
+        await UserDataService.getRecentNews().then(response => {
             this.news = response.data.slice(0)
             // console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
         }) 
@@ -92,7 +92,7 @@ export const useStore = defineStore('MyStore', {
 
     async saveComments(){
         for (let news of this.news){
-            UserDataService.getAllComments(news.id).then(response => {
+            await UserDataService.getAllComments(news.id).then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.comments = response.data.slice(0)
@@ -111,10 +111,10 @@ export const useStore = defineStore('MyStore', {
         }
 
         for (let news of this.news){
-            UserDataService.getNewsLikes(news.id).then(response => {
+            await UserDataService.getNewsLikes(news.id).then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
-                      //  n.likes = response.data.slice(0)
+                        n.likes = response.data.slice(0)
                         console.log("Лайки новостей: ", response.data.slice(0))
                     }
                 } 
@@ -143,7 +143,7 @@ export const useStore = defineStore('MyStore', {
 
     async saveCurrentUser(){
         let name = JSON.parse(localStorage.getItem('user')).userName 
-        UserDataService.getUser(name).then( response => {
+        await UserDataService.getUser(name).then( response => {
             this.currentUser.userName = response.data.userName
             this.currentUser.password = response.data.password
             this.currentUser.id = response.data.id
@@ -298,10 +298,11 @@ export const useStore = defineStore('MyStore', {
         this.userIn = false
     },
     
-    async createTestNews(text, title){
+    async createTestNews(text, title, imgPath){
         var data = {
             text: text,
-            title: title
+            title: title,
+            imgPath: imgPath
         }
         const res = await UserDataService.createNews(data)
         // console.log(res)
@@ -352,11 +353,11 @@ export const useStore = defineStore('MyStore', {
         var commentsid2 = new Array(3).fill(null)
         var commentsid3 = new Array(3).fill(null)
 
-        newsid1 = await this.createTestNews("text 1", "title 1")
+        newsid1 = await this.createTestNews("text 1", "title 1", "../img/cat.jpg")
         console.log("news 1 id = ", newsid1)
-        newsid2 = await this.createTestNews("text 2", "title 2")
+        newsid2 = await this.createTestNews("text 2", "title 2", "../img/fon.png")
         console.log("news 2 id = ", newsid2)
-        newsid3 = await this.createTestNews("text 3", "title 3")
+        newsid3 = await this.createTestNews("text 3", "title 3", "../img/home.jpg")
         console.log("news 3 id = ", newsid3)
 
         await this.createTestUser("Anna", "Olaf").catch( e => {
@@ -388,7 +389,7 @@ export const useStore = defineStore('MyStore', {
 
     },
 
-    saveUser(enteredName, enteredPassword) {
+    async saveUser(enteredName, enteredPassword) {
         this.currentUser.userName = enteredName
         this.currentUser.password = enteredPassword
         this.userIn = true
@@ -398,7 +399,7 @@ export const useStore = defineStore('MyStore', {
             password: enteredPassword
         }
         // console.log(data)
-        UserDataService.createUser(data)
+        await UserDataService.createUser(data)
             .then(response => {
                 this.currentUser.id = response.data.id
                 this.submitted = true;
@@ -412,20 +413,20 @@ export const useStore = defineStore('MyStore', {
         
     }, 
 
-    addComment(newsId, user_id, commentText){
+    async addComment(newsId, user_id, commentText){
         var data = {
             text: commentText
         }
         console.log("из функции: ", newsId, user_id, commentText)
-        UserDataService.createComment(newsId, user_id, data)
+        await UserDataService.createComment(newsId, user_id, data)
             .catch( e => {
                 alert(e)
             })
     },
 
-    verificationOfRegistration(){
+    async verificationOfRegistration(){
         let ex = false
-        UserDataService.getAllUsers().then(response => {
+        await UserDataService.getAllUsers().then(response => {
             for (let user of response.data) {
                 console.log(user)
                 if (user.userName === this.registrationData.enteredName) {
@@ -455,11 +456,11 @@ export const useStore = defineStore('MyStore', {
         )
     },
 
-    verificationOfAuthentication(){
+    async verificationOfAuthentication(){
         var id ;
         if (this.authenticationData.enteredName !== "" &&
             this.authenticationData.enteredPassword !== ""){
-                UserDataService.getUser(this.authenticationData.enteredName).then(response => {
+                await UserDataService.getUser(this.authenticationData.enteredName).then(response => {
                     id = response.data.id
                 }).catch( e => {
                     console.log("Неверный логин или пароль")
@@ -490,14 +491,14 @@ export const useStore = defineStore('MyStore', {
         val = !val
     },
     
-    changeNewsLike(post_id){
+    async changeNewsLike(post_id){
         let isLiked = false
         for (let news of this.news) {
             if (news.id == post_id) {
                 for (let i = 0; i < news.likes.length; i++) {
                     if (news.likes[i].author.userName == this.currentUser.userName) {
                         isLiked = true
-                        UserDataService.unlikeNews(post_id, news.likes[i].id)
+                        await UserDataService.unlikeNews(post_id, news.likes[i].id)
                             .catch( e => {
                             alert(e)
                             })
@@ -511,7 +512,7 @@ export const useStore = defineStore('MyStore', {
                 if (!isLiked){
                     var name =  JSON.parse(localStorage.getItem('user')).userName
 
-                    UserDataService.likeNews(post_id, name)
+                    await UserDataService.likeNews(post_id, name)
                     .catch( e => {
                     alert(e)
                     })
@@ -626,12 +627,12 @@ export const useStore = defineStore('MyStore', {
       
     },
 
-    updateUser() {
+    async updateUser() {
         let data = {
             userName:this.currentUser.userName,
             password: this.currentUser.password
         }
-        UserDataService.update(this.currentUser.id, data)
+        await UserDataService.update(this.currentUser.id, data)
             .then(() => {
                 this.message = 'The user was updated successfully!'
             })
@@ -640,8 +641,8 @@ export const useStore = defineStore('MyStore', {
             })
     },
 
-    deleteUser() {
-        UserDataService.delete(this.currentUser.id)
+    async deleteUser() {
+        await UserDataService.delete(this.currentUser.id)
             .then(() => {
                 this.$router.push({name: 'users'})
             })

@@ -23,7 +23,7 @@ public class    Post {
     @Column(name = "img")
     String imgPath;
 
-    public  getImgPath() {
+    public  String getImgPath() {
         return imgPath;
     }
 
