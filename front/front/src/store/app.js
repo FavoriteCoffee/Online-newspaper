@@ -43,9 +43,9 @@ export const useStore = defineStore('MyStore', {
     // готово - счетчик комментов
     // готово - тоже самое с самими новостями но это на GeneralMainPage
 
-    // картинки не понятно как хранить и передавать
+    // готово - картинки не понятно как хранить и передавать
     
-    // когда написал новый комментарий нужно обновить страницу чтобы его увидеть
+    // готово - когда написал новый комментарий нужно обновить страницу чтобы его увидеть
     // готово - тоже самое с лайком
 
     // лайки:
@@ -53,10 +53,14 @@ export const useStore = defineStore('MyStore', {
     // готово - нет возможности отмены лайка
     // готово - счетчик комментов
 
+    // счетчик лайков
+
     // авторство и время комментария
 
-    // лайки комментов не работают пост запросы (а делит запросы почему-то не падают)
-    // сделать комменты реактивными
+    // готово - лайки комментов не работают пост запросы (а делит запросы почему-то не падают)
+    // готово - сделать комменты реактивными
+
+    // аутентификация не работает
 
     // // getters: {
     //     функция для обновления:
@@ -98,7 +102,7 @@ export const useStore = defineStore('MyStore', {
                         n.comments = response.data.slice(0)
                         console.log("из сохранения комментариев, новости номер ", n)
                     }
-                } // почему-то это нужно запустить дважды чтобы заработало, возможно оно выполняется раньше чем переопределение основного массива
+                } 
             })
         }
         console.log(this.currentUser.userName, this.currentUser.id)
@@ -121,7 +125,6 @@ export const useStore = defineStore('MyStore', {
             })
         }
     },
-
 
     async saveCommentsLikes(){        
         for (let news of this.news) {
@@ -169,17 +172,6 @@ export const useStore = defineStore('MyStore', {
         this.saveNewsLikes()
         await this.sleep(2000)
         this.saveCommentsLikes()
-        
-
-
-        // this.doThis(this.andThenThis)
-        // this.saveTodayNews().then( () => {
-        //     this.saveComments().then( () => {
-        //         this.saveLikes()
-        //     })
-        // })
-        // await this.saveComments() //почему-то не работает, может что-то с асинхронностью. Приходится вручную вызывать
-        // await this.saveLikes()
     },
 
     getLatestComments(newsId){
@@ -192,8 +184,6 @@ export const useStore = defineStore('MyStore', {
         }
         return false
     },
-
-    // загрузочная функция загружает только данные новости, необходимо отдельно подгружать лайки и комментарии в местный массив
 
     getComments(newsId){
         for (let news of this.news){
@@ -213,6 +203,17 @@ export const useStore = defineStore('MyStore', {
                     // console.log("количество комментариев в ", news_id)
                     console.log("количество комментариев в ", news_id, "равно", news.comments.length)
                     return news.comments.length
+                }
+            }
+        }
+        return 0
+    },
+
+    getNumberOfNewsLikes(news_id) {
+        for (let news of this.news){
+            if (news.id === news_id){
+                if(news.likes !== undefined){
+                    return news.likes.length
                 }
             }
         }
@@ -417,11 +418,32 @@ export const useStore = defineStore('MyStore', {
         var data = {
             text: commentText
         }
-        console.log("из функции: ", newsId, user_id, commentText)
-        await UserDataService.createComment(newsId, user_id, data)
+
+        var comment
+        var id
+
+        await UserDataService.createComment(newsId, user_id, data).then( response => {
+            console.log("из функции ADDCOMMENT: ", response.data)            
+            id = response.data.id
+        })
             .catch( e => {
                 alert(e)
             })
+
+        var comment = {
+            id: id,
+            text: commentText,
+            author: {id: user_id, userName: this.currentUser.userName},
+            post: newsId,
+            likes: [],
+        }
+
+        for (let news of this.news) {
+            if (news.id == newsId) {
+                news.comments.push(comment)
+                console.log("полный список коментов ", news.comments)   
+            }
+        }     
     },
 
     async verificationOfRegistration(){
@@ -457,16 +479,20 @@ export const useStore = defineStore('MyStore', {
     },
 
     async verificationOfAuthentication(){
+        var c = true
         var id ;
         if (this.authenticationData.enteredName !== "" &&
             this.authenticationData.enteredPassword !== ""){
                 await UserDataService.getUser(this.authenticationData.enteredName).then(response => {
                     id = response.data.id
                 }).catch( e => {
+                    c = false
                     console.log("Неверный логин или пароль")
+                    localStorage.clear()
                     return
                 })
 
+                if (c) {
                     this.userIn = true
                     console.log("userIn === true", this.userIn)
 
@@ -483,7 +509,7 @@ export const useStore = defineStore('MyStore', {
                     localStorage.setItem('user', JSON.stringify(user))
                     
                     this.gotoAnotherPage('/main')
-                    
+                }   
         }
     },
 
