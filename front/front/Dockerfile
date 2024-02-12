@@ -1,7 +1,8 @@
-FROM node:14
-WORKDIR /app/front
-COPY . .
+FROM node:lts-alpine
+WORKDIR /Online-newspaper/front
+COPY front/front/package*.json ./
 RUN npm install
-RUN npm install vite
-RUN npm run build
+
+COPY front/front .
+EXPOSE 3000
 ENTRYPOINT ["npm", "run", "dev"]

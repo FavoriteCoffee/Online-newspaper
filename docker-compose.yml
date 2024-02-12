@@ -33,12 +33,14 @@ services:
       stdin_open: true
       tty: true
     front:
-      build: front/front/
-      #command: http-server ./dist #здесь можно перезаписать CMD из Dockerfile в /client
-      ports:
-        - "3000:3000"
+      build:
+        context: .
+        dockerfile: ./front/front/Dockerfile
       depends_on:
         - back
+      ports:
+        - "3000:3000"
+      restart: always
 
 volumes:
   db:
