@@ -2,6 +2,8 @@ package com.news.application.models;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 public class Comment {
     @Id
@@ -10,6 +12,11 @@ public class Comment {
 
     @Column(name = "text")
     private String text;
+
+    @Column(name = "date")
+    @Temporal(TemporalType.TIMESTAMP)
+    Date date;
+
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "fk_author_id")
@@ -49,5 +56,13 @@ public class Comment {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

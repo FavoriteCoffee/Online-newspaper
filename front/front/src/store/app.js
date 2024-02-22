@@ -42,26 +42,25 @@ export const useStore = defineStore('MyStore', {
     // готово - запрос для лайка новости не включает пользователя, так и должно быть? В любом случае там бэд реквест на пост запросе 
     // готово - счетчик комментов
     // готово - тоже самое с самими новостями но это на GeneralMainPage
-
     // готово - картинки не понятно как хранить и передавать
-    
     // готово - когда написал новый комментарий нужно обновить страницу чтобы его увидеть
     // готово - тоже самое с лайком
-
     // лайки:
-    // готово? - лайкается несколько раз - да, но это не отражается на функционале
     // готово - нет возможности отмены лайка
     // готово - счетчик комментов
 
-    // счетчик лайков
 
-    // авторство и время комментария
+    // счетчик лайков (лайкается несколько раз) (сплит вроде как работает раньше чем надо и запрос не получает нужного индекса лаайка, но я хз на  ифе-то это не отражается)
+    // счетчик лайков комментов
+    // авторство и время комментария (править бэк)
+    // возможности незареганого пользователя (лайки комменты)
+    // аутентификация не работает
+
+    // сделать чтобы на лого можно было не нажимать 
+
 
     // готово - лайки комментов не работают пост запросы (а делит запросы почему-то не падают)
     // готово - сделать комменты реактивными
-
-    // аутентификация не работает
-
     // // getters: {
     //     функция для обновления:
 
@@ -89,7 +88,7 @@ export const useStore = defineStore('MyStore', {
     async saveTodayNews(){
         await UserDataService.getRecentNews().then(response => {
             this.news = response.data.slice(0)
-            // console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
+            console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
         }) 
        
     },
@@ -119,7 +118,7 @@ export const useStore = defineStore('MyStore', {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.likes = response.data.slice(0)
-                        console.log("Лайки новостей: ", response.data.slice(0))
+                        //console.log("Лайки новостей: ", response.data.slice(0))
                     }
                 } 
             })
@@ -137,7 +136,7 @@ export const useStore = defineStore('MyStore', {
             for (var comment of news.comments) {
                 await UserDataService.getCommentsLikes(news.id, comment.id).then(response => {
                     comment.likes = response.data.slice(0)
-                    console.log("Лайки комментов: ", response.data.slice(0))
+                    //console.log("Лайки комментов: ", response.data.slice(0))
                 })
             }
             
@@ -150,12 +149,12 @@ export const useStore = defineStore('MyStore', {
             this.currentUser.userName = response.data.userName
             this.currentUser.password = response.data.password
             this.currentUser.id = response.data.id
-            console.log("СОХРАНЕНИЕ ЮЗЕРА", this.currentUser.userName, this.currentUser.id)
+            // console.log("СОХРАНЕНИЕ ЮЗЕРА", this.currentUser.userName, this.currentUser.id)
         })
     },
 
     async showTodayNews(){
-        console.log("today news array: ", this.news)
+        // console.log("today news array: ", this.news)
     },
 
     async sleep(ms) {
@@ -177,7 +176,7 @@ export const useStore = defineStore('MyStore', {
     getLatestComments(newsId){
         for (let news of this.news){
             if (news.id === newsId){
-                console.log("то что получает компонент News при свернутых комментах : ", news.comments.slice(0, 3))
+                // console.log("то что получает компонент News при свернутых комментах : ", news.comments.slice(0, 3))
                 return news.comments.slice(0, 3)
                 
             }
@@ -188,7 +187,7 @@ export const useStore = defineStore('MyStore', {
     getComments(newsId){
         for (let news of this.news){
             if (news.id === newsId){
-                console.log("то что получает компонент News просто : ", news.comments)
+                // console.log("то что получает компонент News просто : ", news.comments)
                 return news.comments
                 
             }
@@ -201,7 +200,7 @@ export const useStore = defineStore('MyStore', {
             if (news.id === news_id){
                 if(news.comments !== undefined){
                     // console.log("количество комментариев в ", news_id)
-                    console.log("количество комментариев в ", news_id, "равно", news.comments.length)
+                    // console.log("количество комментариев в ", news_id, "равно", news.comments.length)
                     return news.comments.length
                 }
             }
@@ -338,7 +337,7 @@ export const useStore = defineStore('MyStore', {
         // }
         const res = await UserDataService.likeNews(newsid, "Anna")
 
-        console.log("типа лайк на первой новости: ", res.data)
+        // console.log("типа лайк на первой новости: ", res.data)
     },
 
     async pushTestDataToDB(){
@@ -367,7 +366,7 @@ export const useStore = defineStore('MyStore', {
         await UserDataService.getUser("Anna").then(response => { 
             userid = response.data.id
         })
-        console.log(userid)
+        console.log("USER: ", userid)
 
         commentid1 = await this.createTestComment(newsid1, userid,  "first comment news1")
 
@@ -419,12 +418,14 @@ export const useStore = defineStore('MyStore', {
             text: commentText
         }
 
+        var date
         var comment
         var id
 
         await UserDataService.createComment(newsId, user_id, data).then( response => {
             console.log("из функции ADDCOMMENT: ", response.data)            
             id = response.data.id
+            date = response.data.date
         })
             .catch( e => {
                 alert(e)
@@ -432,6 +433,7 @@ export const useStore = defineStore('MyStore', {
 
         var comment = {
             id: id,
+            date: date,
             text: commentText,
             author: {id: user_id, userName: this.currentUser.userName},
             post: newsId,
@@ -519,26 +521,41 @@ export const useStore = defineStore('MyStore', {
     
     async changeNewsLike(post_id){
         let isLiked = false
+        let index = null
+
+        console.log("this.news изначально ", post_id, this.news) 
+
         for (let news of this.news) {
             if (news.id == post_id) {
                 for (let i = 0; i < news.likes.length; i++) {
                     if (news.likes[i].author.userName == this.currentUser.userName) {
                         isLiked = true
-                        await UserDataService.unlikeNews(post_id, news.likes[i].id)
+                        console.log("news до удаления лайка из базы ", post_id, news) 
+                        await UserDataService.unlikeNews(post_id, news.likes[i].id).then(response => {
+                            console.log("news после удаления", post_id, news) 
+                            
+                            console.log("index ", index) 
+                            
+                        })
                             .catch( e => {
+                                console.log("НЕ НАШЕЛ") 
                             alert(e)
                             })
-
-                        news.likes.splice(i, 1)
-                    
-                        return
+                        //console.log("все еще на месте ", post_id, news) 
+                        // news.likes.splice(i, 1)
+                        //console.log("пропал ", post_id, news) 
+                        index = i
                     }
                 }
-            
+
                 if (!isLiked){
                     var name =  JSON.parse(localStorage.getItem('user')).userName
+                    var like
 
-                    await UserDataService.likeNews(post_id, name)
+                    await UserDataService.likeNews(post_id, name).then(response => {
+                        console.log("добавление в стор лайка ", post_id, news.likes) 
+                        like = response.data
+                    })
                     .catch( e => {
                     alert(e)
                     })
@@ -547,18 +564,29 @@ export const useStore = defineStore('MyStore', {
                     //     //news.likes = response.data.splice(0)
                     // })
 
-                    let like = {
-                        id: 0,
-                        author: { userName: name},
-                        post: {id: post_id}
-                    }
 
+                    //console.log("добавление в стор, новость: ", post_id, news.likes)
                     news.likes.push(like)
-
+                    console.log("лайки после добавления: ", news.likes)
                 }
               
             }
-        }        
+        }    
+        if (index !== null) {
+            await this.spliseLike(post_id, index)
+        }
+    },
+
+    async spliseLike(post_id, index){
+
+            for (let news of this.news) {
+                if (news.id == post_id) {
+                    news.likes.splice(index, 1)
+                    console.log("из функции", index)
+                    return
+                }
+            }
+        
     },
 
     async changeCommentLike(post_id, comment_id){

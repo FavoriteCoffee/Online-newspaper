@@ -146,7 +146,10 @@ public class PostsController {
         try {
             comment.setPost(postRepository.findById(post_id).get());
             comment.setAuthor(userRepository.findById(author_id).get());
-            System.out.println(1);
+            Calendar cal = Calendar.getInstance();
+            Date date = cal.getTime();
+            System.out.println(date);
+            comment.setDate(date);
             Comment savedComment = commentRepository.save(comment);
             return new ResponseEntity<Object>(savedComment, HttpStatus.OK);
         } catch(Exception ex) {

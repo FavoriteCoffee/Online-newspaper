@@ -63,7 +63,7 @@
                             <v-col align="end" style="padding-right: 0;">
                                 <!-- <v-btn class="material-icons">language</v-btn> -->
                                 <!-- <p style="color: #950400;"><i @click="myStore.changeNewsLike()" class="material-icons">favorite_border</i></p> -->
-                                <p style="color: #950400;"><i @click="myStore.changeNewsLike(this.news.id)" class="material-icons">favorite_border</i>{{ myStore.getNumberOfNewsLikes(this.news.id) }}</p>
+                                <p style="color: #950400;"><i @click="async () => {await myStore.changeNewsLike(this.news.id)}" class="material-icons">favorite_border</i>{{ myStore.getNumberOfNewsLikes(this.news.id) }}</p>
                             </v-col>
                         </div>
                     </v-row>
