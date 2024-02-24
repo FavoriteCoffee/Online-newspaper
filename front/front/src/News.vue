@@ -50,7 +50,7 @@
                         </v-col>
 
                         <v-col align="end" cols="3" offset="7">
-                            <p @click="changeCommentsVisibility">Комментарии {{ myStore.getNumberOfComments(this.news.id) }} </p>
+                            <p @click="changeCommentsVisibility">Комментарии ({{ myStore.getNumberOfComments(this.news.id) }}) </p>
                         </v-col>
 
                         <div v-if="myStore.isNewsLiked(this.news.id)" >    

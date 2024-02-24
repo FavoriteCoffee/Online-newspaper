@@ -1,13 +1,13 @@
 <template>
     <v-container>
         <v-row>
-            <div :class="['text-subtitle-1', 'pa-2']">{{ comment.author.userName }}</div>        
+            <div :class="['text-subtitle-1', 'pa-2']"><b>{{ comment.author.userName }}</b></div>        
         </v-row>
         <v-row>
             <div :class="['text-body-1', 'pa-2']">{{ comment.text }}</div>
         </v-row>
         <v-row>
-            <div :class="['text-body-1', 'pa-2']">{{ new Date(comment.date).getTime() }}</div>
+            <div :class="['text-body-1', 'pa-2']">{{ new Date(comment.date).toLocaleString() }}</div>
         </v-row>
         <v-row>
             <div v-if="myStore.isCommentLiked(this.newsId, this.comment.id)">
@@ -49,5 +49,4 @@ comment: {
     default: () => {},
 }
 });
-
 </script>

@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const useStore = defineStore('MyStore', {
     state: () => ({
-        news: [{id: 1, likedBy: ["name"], showText:false, date:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: '111bJCHjkbjhvkJhVKUYCJSB:OÏJESPOJSFo;1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
+        news: [{id: 1, likedBy: ["name"], showText:false, date:"01.02.03", img:'./img/cat.jpg', title:"THIS IS SPARTA", text: ' ', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
                  {id: 2, likedBy: ["name"],  showText:false, date:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{likedBy: ["name"], text: "IF you happen to have read another book about Christopher Robin, you may remember that he once had a swan (or the swan had Christopher Robin, I don't know which) and that he used to call this swan Pooh. That was a long time ago, and when we said good-bye, we took the name with us, as we didn't think the swan would want it any more. Well, when Edward Bear said that he would like an exciting name all to himself, Christopher Robin said at once, without stopping to think, that he was Winnie-the-Pooh. And he was. So, as I have explained the Pooh part, I will now explain the rest of it.", id:'1111'}, {text: "2коммент 2 новости", id:'1111'}, {text: "3коммент 2 новости", id:'1111'}]},
             	 {id: 3,  likedBy: [], showText:false, date:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments:[{text: "com11", id: 11}, {text: "com12", id: 12}]}],
         comments: [[{text: "com11", id: 11}, {text: "com12", id: 12}],
@@ -56,10 +56,11 @@ export const useStore = defineStore('MyStore', {
     // возможности незареганого пользователя (лайки комменты)
     // ? - аутентификация не работает
 
-    // дата и время создания комментария распарсить нормально
+    // готово - дата и время создания комментария распарсить нормально
 
     // сделать чтобы на лого можно было не нажимать
      //каждый час + при обновлении загружать свежие новости 
+     // всплывашка с ошибками
 
 
     // готово - лайки комментов не работают пост запросы (а делит запросы почему-то не падают)
@@ -162,13 +163,13 @@ export const useStore = defineStore('MyStore', {
 
     async saveAllDataFromDB(){
         this.saveCurrentUser()
-        await this.sleep(2000)
+        await this.sleep(500)
         this.saveTodayNews()
-        await this.sleep(2000)
+        await this.sleep(500)
         this.saveComments()
-        await this.sleep(2000)
+        await this.sleep(500)
         this.saveNewsLikes()
-        await this.sleep(2000)
+        await this.sleep(500)
         this.saveCommentsLikes()
     },
 
@@ -306,17 +307,11 @@ export const useStore = defineStore('MyStore', {
             text: text,
         }
         const res = await UserDataService.createComment(newsid, user_id, data)
-        // console.log(res)
         return res.data.id
     },
 
     async createTestLike(newsid){
-        // var data = {
-        //     author: "HippoMaru"
-        // }
         const res = await UserDataService.likeNews(newsid, "Anna")
-
-        // console.log("типа лайк на первой новости: ", res.data)
     },
 
     async pushTestDataToDB(){
@@ -458,31 +453,30 @@ export const useStore = defineStore('MyStore', {
 
     async verificationOfAuthentication(){
         var c = true
-        var id 
+        let user
         if (this.authenticationData.enteredName !== "" &&
             this.authenticationData.enteredPassword !== ""){
             await UserDataService.getUser(this.authenticationData.enteredName).then(response => {
-                id = response.data.id
+                if (this.authenticationData.enteredPassword !== response.data.password) {
+                    c = false
+                    console.log("Неверный пароль")
+                }
+                user = response.data
             }).catch( e => {
                 c = false
-                console.log("Неверный логин или пароль")
+                console.log("Неверный логин")
                 localStorage.clear()
                 return
             })
 
             if (c) {
                 this.userIn = true
+
                 console.log("userIn === true", this.userIn)
 
-                this.currentUser.userName = this.authenticationData.enteredName
-                this.currentUser.password = this.authenticationData.enteredPassword
-                this.currentUser.id = id
-
-                let user = {
-                    userName: this.authenticationData.enteredName,
-                    password: this.authenticationData.enteredPassword,
-                    id: this.currentUser.id
-                }
+                this.currentUser.userName = user.userName
+                this.currentUser.password = user.password
+                this.currentUser.id = user.id
 
                 localStorage.setItem('user', JSON.stringify(user))
                 
