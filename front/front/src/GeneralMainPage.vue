@@ -49,7 +49,8 @@
   }
   
 (function () {
-  localStorage.clear();
+  localStorage.clear()
+  myStore.userIn = false
   myStore.saveAllDataFromDB()
 })();
   </script>
