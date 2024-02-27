@@ -87,19 +87,21 @@ export const useStore = defineStore('MyStore', {
    
  
     async saveTodayNews(){
-        await UserDataService.getRecentNews().then(response => {
+        await UserDataService.getRecentNews()
+        .then(response => {
             this.news = response.data.slice(0)
-            // console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
+           // console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
         }) 
     },
 
     async saveComments(){
         for (let news of this.news){
-            await UserDataService.getAllComments(news.id).then(response => {
+            await UserDataService.getAllComments(news.id)
+            .then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.comments = response.data.slice(0)
-                        console.log("из сохранения комментариев, новости номер ", n)
+                        //console.log("из сохранения комментариев, новости номер ", n)
                     }
                 } 
             })
@@ -115,7 +117,8 @@ export const useStore = defineStore('MyStore', {
         }
 
         for (let news of this.news){
-            await UserDataService.getNewsLikes(news.id).then(response => {
+            await UserDataService.getNewsLikes(news.id)
+            .then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.likes = response.data.slice(0)
@@ -135,7 +138,8 @@ export const useStore = defineStore('MyStore', {
 
         for (var news of this.news){
             for (var comment of news.comments) {
-                await UserDataService.getCommentsLikes(news.id, comment.id).then(response => {
+                await UserDataService.getCommentsLikes(news.id, comment.id)
+                .then(response => {
                     comment.likes = response.data.slice(0)
                     //console.log("Лайки комментов: ", response.data.slice(0))
                 })
@@ -144,33 +148,30 @@ export const useStore = defineStore('MyStore', {
     },
 
     async saveCurrentUser(){
-        let name = JSON.parse(localStorage.getItem('user')).userName 
-        await UserDataService.getUser(name).then( response => {
-            this.currentUser.userName = response.data.userName
-            this.currentUser.password = response.data.password
-            this.currentUser.id = response.data.id
-            // console.log("СОХРАНЕНИЕ ЮЗЕРА", this.currentUser.userName, this.currentUser.id)
-        })
+        let user = JSON.parse(localStorage.getItem('user'))
+        if (user !== null){
+            let name = user.userName 
+            await UserDataService.getUser(name)
+            .then( response => {
+                this.currentUser.userName = response.data.userName
+                this.currentUser.password = response.data.password
+                this.currentUser.id = response.data.id
+                //console.log("СОХРАНЕНИЕ ЮЗЕРА", this.currentUser.userName, this.currentUser.id)
+            })
+        }
     },
 
     async showTodayNews(){
-        // console.log("today news array: ", this.news)
-    },
-
-    async sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        console.log("today news array: ", this.news)
     },
 
     async saveAllDataFromDB(){
-        this.saveCurrentUser()
-        await this.sleep(500)
-        this.saveTodayNews()
-        await this.sleep(500)
-        this.saveComments()
-        await this.sleep(500)
-        this.saveNewsLikes()
-        await this.sleep(500)
-        this.saveCommentsLikes()
+        await this.saveCurrentUser()
+        await this.saveTodayNews()        
+        await this.saveComments()        
+        await this.saveNewsLikes()        
+        await this.saveCommentsLikes()
+        await this.showTodayNews()
     },
 
     getLatestComments(newsId){
@@ -337,7 +338,8 @@ export const useStore = defineStore('MyStore', {
         await this.createTestUser("Anna", "Olaf").catch( e => {
             console.log("не создался")
         })
-        await UserDataService.getUser("Anna").then(response => { 
+        await UserDataService.getUser("Anna")
+        .then(response => { 
             userid = response.data.id
         })
         console.log("USER: ", userid)
@@ -393,14 +395,15 @@ export const useStore = defineStore('MyStore', {
         var comment
         var id
 
-        await UserDataService.createComment(newsId, user_id, data).then( response => {
+        await UserDataService.createComment(newsId, user_id, data)
+        .then( response => {
             console.log("из функции ADDCOMMENT: ", response.data)            
             id = response.data.id
             date = response.data.date
         })
-            .catch( e => {
-                alert(e)
-            })
+        .catch( e => {
+            alert(e)
+        })
 
         var comment = {
             id: id,
@@ -421,7 +424,8 @@ export const useStore = defineStore('MyStore', {
 
     async verificationOfRegistration(){
         let ex = false
-        await UserDataService.getAllUsers().then(response => {
+        await UserDataService.getAllUsers()
+        .then(response => {
             for (let user of response.data) {
                 console.log(user)
                 if (user.userName === this.registrationData.enteredName) {
@@ -456,7 +460,8 @@ export const useStore = defineStore('MyStore', {
         let user
         if (this.authenticationData.enteredName !== "" &&
             this.authenticationData.enteredPassword !== ""){
-            await UserDataService.getUser(this.authenticationData.enteredName).then(response => {
+            await UserDataService.getUser(this.authenticationData.enteredName)
+            .then(response => {
                 if (this.authenticationData.enteredPassword !== response.data.password) {
                     c = false
                     console.log("Неверный пароль")
@@ -516,7 +521,8 @@ export const useStore = defineStore('MyStore', {
                         var name = user.userName 
                         var like
 
-                        await UserDataService.likeNews(post_id, name).then(response => {
+                        await UserDataService.likeNews(post_id, name)
+                        .then(response => {
                             console.log("добавление в стор лайка ", post_id, news.likes) 
                             like = response.data
                         })
@@ -572,7 +578,8 @@ export const useStore = defineStore('MyStore', {
                             if (!isLiked){
                                 var name =  user.userName
                                 var like 
-                                await UserDataService.likeComment(post_id, comment_id, name).then(response => {
+                                await UserDataService.likeComment(post_id, comment_id, name)
+                                .then(response => {
                                     like = response.data
                                 })
                                 .catch( e => {

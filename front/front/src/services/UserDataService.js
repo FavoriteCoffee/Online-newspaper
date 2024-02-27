@@ -29,7 +29,6 @@ class UserDataService {
         return http.get(`/comments/${id}`)
     }
 
-    //не нужны
     getRecentComments(id) {
         return http.get(`/posts/${id}/comments/recent`) 
     }
@@ -57,12 +56,10 @@ class UserDataService {
     }
 
     createComment(post_id, author_id, data) {
-        // console.log("из запроса: ", data)
         return http.post(`/posts/${post_id}/post-comment-by-userid/${author_id}`, data)
     }
 
     likeNews(id, userName) {
-        // console.log("из запроса: ", userName, typeof userName)
         return http.post(`posts/${id}/likes`, userName)
     }
 

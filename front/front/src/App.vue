@@ -1,5 +1,4 @@
 <template>
-<!-- <v-btn @click="myStore.pushTestDataToDB()">загрузить</v-btn> -->
    <router-view /> 
 </template>
 
