@@ -48,25 +48,56 @@ class UserDataService {
     // ---- >>  << ---- //
 
     createUser(data) {
-        return http.post('/users', data)
+        return http.post('/users', data, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     createNews(data) {
-        return http.post('/posts', data)
+        let token = localStorage.getItem('token')
+        return http.post('/posts', data, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     createComment(post_id, author_id, data) {
-        return http.post(`/posts/${post_id}/post-comment-by-userid/${author_id}`, data)
+        let token = localStorage.getItem('token')
+        return http.post(`/posts/${post_id}/post-comment-by-userid/${author_id}`, data, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     likeNews(id, userName) {
-        return http.post(`posts/${id}/likes`, userName)
+        let token = localStorage.getItem('token')
+        return http.post(`posts/${id}/likes`, userName, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     likeComment(post_id, comment_id, author) {
-        return http.post(`/posts/${post_id}/comments/${comment_id}/likes`, author)
+        let token = localStorage.getItem('token')
+        return http.post(`/posts/${post_id}/comments/${comment_id}/likes`, author, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
+    signIn(request) {
+        return http.post(`/auth/sign-in`, request)
+    }
+
+    signUp(request) {
+        return http.post(`/auth/sign-up`, request)
+    }
 
     // ---- >>  << ---- //
 

@@ -294,11 +294,11 @@ export const useStore = defineStore('MyStore', {
     },
 
     async createTestUser(name, pass){
-        var data = {
-            userName: name,
+        var request = {
+            username: name,
             password: pass
         }
-        const res = await UserDataService.createUser(data)
+        const res = await UserDataService.signUp(request)
         // console.log(res)
         return res.data.id
     },
@@ -423,55 +423,27 @@ export const useStore = defineStore('MyStore', {
     },
 
     async verificationOfRegistration(){
-        let ex = false
-        await UserDataService.getAllUsers()
-        .then(response => {
-            for (let user of response.data) {
-                console.log(user)
-                if (user.userName === this.registrationData.enteredName) {
-                    console.log("пользователь с таким именем уже существует")
-                    return false
-                }
-            }
-
-            console.log(this.registrationData.enteredName, ' ', this.registrationData.enteredPassword)
-
-            if (this.registrationData.enteredName !== "" && this.registrationData.enteredPassword !== "" ){
-                this.saveUser(this.registrationData.enteredName, this.registrationData.enteredPassword)
-                this.userIn = true
-                console.log(this.currentUser.userName, this.currentUser.id)
-    
-                let user = {
-                    userName: this.registrationData.enteredName,
-                    password: this.registrationData.enteredPassword,
-                    id: this.currentUser.id
-                }
-
-                localStorage.setItem('user', JSON.stringify(user))
-
-                this.gotoAnotherPage('/main')
-            }
-            return true
-        })
-    },
-
-    async verificationOfAuthentication(){
         var c = true
         let user
-        if (this.authenticationData.enteredName !== "" &&
-            this.authenticationData.enteredPassword !== ""){
-            await UserDataService.getUser(this.authenticationData.enteredName)
-            .then(response => {
-                if (this.authenticationData.enteredPassword !== response.data.password) {
+        let request = {
+            username: this.registrationData.enteredName,
+            password: this.registrationData.enteredPassword
+        }
+        if (this.registrationData.enteredName !== "" &&
+            this.registrationData.enteredPassword !== ""){
+                await UserDataService.signUp(request)
+                .then(response => {
+                    localStorage.setItem("token", response.data.token)
+                })
+                .catch( e => {
                     c = false
-                    console.log("Неверный пароль")
-                }
+                    console.log("Ошибка регистрации")
+                    return
+                })
+            }
+         await UserDataService.getUser(this.registrationData.enteredName)
+            .then(response => {
                 user = response.data
-            }).catch( e => {
-                c = false
-                console.log("Неверный логин")
-                localStorage.clear()
-                return
             })
 
             if (c) {
@@ -487,7 +459,47 @@ export const useStore = defineStore('MyStore', {
                 
                 this.gotoAnotherPage('/main')
             }   
+        
+    },
+
+    async verificationOfAuthentication(){
+        var c = true
+        let user
+        let request = {
+            username: this.authenticationData.enteredName,
+            password: this.authenticationData.enteredPassword
         }
+        if (this.authenticationData.enteredName !== "" &&
+            this.authenticationData.enteredPassword !== ""){
+                await UserDataService.signIn(request)
+                .then(response => {
+                    localStorage.setItem("token", response.data.token)
+                })
+                .catch( e => {
+                    c = false
+                    console.log("Неверный логин")
+                    //localStorage.clear()
+                    return
+                })
+            }
+         await UserDataService.getUser(this.authenticationData.enteredName)
+            .then(response => {
+                user = response.data
+            })
+
+            if (c) {
+                this.userIn = true
+
+                console.log("userIn === true", this.userIn)
+
+                this.currentUser.userName = user.userName
+                this.currentUser.password = user.password
+                this.currentUser.id = user.id
+
+                localStorage.setItem('user', JSON.stringify(user))
+                
+                this.gotoAnotherPage('/main')
+            }   
     },
 
     changeVisibility(val){
@@ -502,7 +514,7 @@ export const useStore = defineStore('MyStore', {
             let index = null
 
             for (let news of this.news) {
-                if (news.id == post_id && news.likes !== []) {
+                if (news.id == post_id && news.likes != []) {
                     for (let i = 0; i < news.likes.length; i++) {
                         if (news.likes[i].author.userName == this.currentUser.userName) {
                             isLiked = true
