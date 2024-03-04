@@ -8,6 +8,7 @@ import com.news.application.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,12 +22,12 @@ public class AuthController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/sign-up")
+    @PostMapping(path="/sign-up", consumes= MediaType.APPLICATION_JSON_VALUE)
     public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
         return authenticationService.signUp(request);
     }
 
-    @PostMapping("/sign-in")
+    @PostMapping(path="/sign-in", consumes= MediaType.APPLICATION_JSON_VALUE)
     public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
         return authenticationService.signIn(request);
     }
