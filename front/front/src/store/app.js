@@ -281,6 +281,7 @@ export const useStore = defineStore('MyStore', {
         this.currentUser.id = null
         this.userIn = false
         localStorage.removeItem("user")
+        localStorage.removeItem("token")
     },
     
     async createTestNews(text, title, imgPath){
@@ -401,6 +402,8 @@ export const useStore = defineStore('MyStore', {
         await this.createTestLike(newsid1)
         await this.createTestLike(newsid2)
         await this.createTestLike(newsid3)
+
+        localStorage.removeItem("token")
     },
 
     async loadData(){
