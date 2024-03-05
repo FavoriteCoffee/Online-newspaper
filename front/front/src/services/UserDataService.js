@@ -48,6 +48,7 @@ class UserDataService {
     // ---- >>  << ---- //
 
     createUser(data) {
+        let token = localStorage.getItem('token')
         return http.post('/users', data, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -102,37 +103,77 @@ class UserDataService {
     // ---- >>  << ---- //
 
     updateUser(id, data) {
-        return http.put(`/users/${id}`, data)
+        let token = localStorage.getItem('token')
+        return http.put(`/users/${id}`, data, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     updateNews(id, data) {
-        return http.put(`/posts/${id}`, data)
+        let token = localStorage.getItem('token')
+        return http.put(`/posts/${id}`, data, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     updateComments(id, data) {
-        return http.put(`/comments/${id}`, data)
+        let token = localStorage.getItem('token')
+        return http.put(`/comments/${id}`, data, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     // ---- >>  << ---- //
 
     deleteUser(id) {
-        return http.delete(`/users/${id}`)
+        let token = localStorage.getItem('token')
+        return http.delete(`/users/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     deleteNews(id) {
-        return http.delete(`/posts/${id}`)
+        let token = localStorage.getItem('token')
+        return http.delete(`/posts/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 
     deleteComment(id, comment_id) {
-        return http.delete(`/posts/${id}/comments/${comment_id}`)
+        let token = localStorage.getItem('token')
+        return http.delete(`/posts/${id}/comments/${comment_id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
     
     unlikeNews(post_id, like_id) {
-        return http.delete(`/posts/${post_id}/likes/${like_id}`)   
+        let token = localStorage.getItem('token')
+        return http.delete(`/posts/${post_id}/likes/${like_id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })   
     }
 
     unlikeComment(post_id, comment_id, like_id) {
-        return http.delete(`/posts/${post_id}/comments/${comment_id}/likes/${like_id}`)
+        let token = localStorage.getItem('token')
+        return http.delete(`/posts/${post_id}/comments/${comment_id}/likes/${like_id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 }
 

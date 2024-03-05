@@ -90,7 +90,7 @@ export const useStore = defineStore('MyStore', {
         await UserDataService.getRecentNews()
         .then(response => {
             this.news = response.data.slice(0)
-           // console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
+            console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
         }) 
     },
 
@@ -280,6 +280,7 @@ export const useStore = defineStore('MyStore', {
         this.currentUser.userName = null
         this.currentUser.id = null
         this.userIn = false
+        localStorage.removeItem("user")
     },
     
     async createTestNews(text, title, imgPath){
@@ -298,9 +299,34 @@ export const useStore = defineStore('MyStore', {
             username: name,
             password: pass
         }
-        const res = await UserDataService.signUp(request)
-        // console.log(res)
+        await UserDataService.signUp(request)
+        .then(response => {
+            localStorage.setItem("token", response.data.token)
+        })
+        .catch( e => {
+            c = false
+            console.log("Неверный логин")
+            return
+        })
+        
         return res.data.id
+    },
+
+    async authalizeTestUser(name, pass){
+        var request = {
+            username: name,
+            password: pass
+        }
+
+        await UserDataService.signIn(request)
+        .then(response => {
+            localStorage.setItem("token", response.data.token)
+        })
+        .catch( e => {
+            c = false
+            console.log("Неверный логин")
+            return
+        })
     },
     
     async createTestComment(newsid, user_id, text){
@@ -316,6 +342,15 @@ export const useStore = defineStore('MyStore', {
     },
 
     async pushTestDataToDB(){
+        let dataNeeded = true
+        await UserDataService.getRecentNews().then( response => {
+            if(response.data.slice(0).length != 0){
+                dataNeeded = false
+            }
+        })
+
+        if(!dataNeeded) {return}
+
         var newsid1
         var newsid2
         var newsid3
@@ -328,21 +363,26 @@ export const useStore = defineStore('MyStore', {
         var commentsid2 = new Array(3).fill(null)
         var commentsid3 = new Array(3).fill(null)
 
+        await this.createTestUser("Anna", "Olaf").catch( e => {
+            console.log("не создался")
+        })
+
+        await this.authalizeTestUser("Anna", "Olaf").catch( e => {
+            console.log("не авторизовался")
+        })
+
+        await UserDataService.getUser("Anna")
+        .then(response => { 
+            userid = response.data.id
+        })
+        console.log("USER: ", userid)
+
         newsid1 = await this.createTestNews("text 1", "title 1", "../img/cat.jpg")
         console.log("news 1 id = ", newsid1)
         newsid2 = await this.createTestNews("text 2", "title 2", "../img/fon.png")
         console.log("news 2 id = ", newsid2)
         newsid3 = await this.createTestNews("text 3", "title 3", "../img/home.jpg")
         console.log("news 3 id = ", newsid3)
-
-        await this.createTestUser("Anna", "Olaf").catch( e => {
-            console.log("не создался")
-        })
-        await UserDataService.getUser("Anna")
-        .then(response => { 
-            userid = response.data.id
-        })
-        console.log("USER: ", userid)
 
         commentid1 = await this.createTestComment(newsid1, userid,  "first comment news1")
 
@@ -361,6 +401,11 @@ export const useStore = defineStore('MyStore', {
         await this.createTestLike(newsid1)
         await this.createTestLike(newsid2)
         await this.createTestLike(newsid3)
+    },
+
+    async loadData(){
+        await this.pushTestDataToDB()
+        await this.saveAllDataFromDB()
     },
 
     async saveUser(enteredName, enteredPassword) {

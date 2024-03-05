@@ -3,14 +3,12 @@
   <v-card 
     width="100%"
     height="80px"
-    style=";background-image: url('./img/top.png');
+    style="background-image: url('./img/top.png');
     padding-left: 14%;
     padding-right: 14%">
       <v-row>
         <v-col cols="8">
           <div 
-            @dblclick="myStore.pushTestDataToDB()"
-            @contextmenu="myStore.saveComments()"
             style="float: left;">
             <b><h1 style="
               color: #fff;
@@ -73,6 +71,6 @@ const change = () => {
 }
 
 (function () {
-  myStore.saveAllDataFromDB()
+  myStore.loadData()
 })();
 </script>

@@ -8,7 +8,7 @@
     padding-right: 14%">
     <v-row>
       <v-col cols="8">
-        <div @click="myStore.pushTestDataToDB()"
+        <div 
         style="float: left;">
           <b><h1 style="color: #fff; font-size: 5em;">LOGO</h1></b>
         </div>
@@ -61,8 +61,7 @@
   }
   
 (function () {
-  localStorage.clear()
-  myStore.userIn = false
-  myStore.saveAllDataFromDB()
+  localStorage.removeItem("user")
+  myStore.loadData()
 })();
   </script>
