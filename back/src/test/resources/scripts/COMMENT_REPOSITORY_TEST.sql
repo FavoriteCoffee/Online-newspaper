@@ -9,4 +9,4 @@ VALUES(101, CURRENT_DATE, 101, 101);
 INSERT INTO public."Comment"(id, date, fk_author_id, fk_post_id)
 VALUES(102, CURRENT_DATE, 101, 101);
 INSERT INTO public."Comment"(id, date, fk_author_id, fk_post_id)
-VALUES(102, CURRENT_DATE, 101, 102);
+VALUES(103, CURRENT_DATE, 101, 102);

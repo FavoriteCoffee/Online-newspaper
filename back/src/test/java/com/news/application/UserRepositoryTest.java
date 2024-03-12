@@ -1,12 +1,15 @@
 package com.news.application;
 
 
+import com.news.application.models.User;
 import com.news.application.repo.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,5 +31,12 @@ class UserRepositoryTest {
     void shouldReturnFalseForNotExistingUser() {
         boolean mustBeFalse = userRepository.existsByUserName("Pikachu");
         assertFalse(mustBeFalse);
+    }
+
+    @Test
+    @Sql("/scripts/USER_REPOSITORY_TEST.sql")
+    void shouldFindUser() {
+        Optional<User> user = userRepository.findByUserNameEquals("Ivan");
+        assertFalse(user.isEmpty());
     }
 }
