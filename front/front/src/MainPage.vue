@@ -72,5 +72,6 @@ const change = () => {
 
 (function () {
   myStore.loadData()
+  myStore.userIn = true
 })();
 </script>

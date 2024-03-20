@@ -33,53 +33,6 @@ export const useStore = defineStore('MyStore', {
 
         userIn: true
     }),
-
-    // готово - храним пользователя в локалсторадже
-    // готово - проблемы с асинхронностью: комментарии к новостям приходится добавлять на страницу в ручную иначе они создаются раньше самих овостей
-    // готово - функция загрузки данных из бд в локальное хранилище запускается автоматически при обновлении страницы (saveAllDataFromDB)
-    // готово - функция загркузки тестовых данных в бд запускается при нажатии на лого 
-    // готово - при аутентификации не передается id (возможно причина в том что ответ от сервера bad request но мы это не фиксируем)
-    // готово - запрос для лайка новости не включает пользователя, так и должно быть? В любом случае там бэд реквест на пост запросе 
-    // готово - счетчик комментов
-    // готово - тоже самое с самими новостями но это на GeneralMainPage
-    // готово - картинки не понятно как хранить и передавать
-    // готово - когда написал новый комментарий нужно обновить страницу чтобы его увидеть
-    // готово - тоже самое с лайком
-    // лайки:
-    // готово - нет возможности отмены лайка
-    // готово - счетчик комментов
-
-
-    // готово - счетчик лайков (лайкается несколько раз) (сплит вроде как работает раньше чем надо и запрос не получает нужного индекса лаайка, но я хз на  ифе-то это не отражается)
-    // готово - счетчик лайков комментов
-    // готово - авторство и время комментария (править бэк)
-    // возможности незареганого пользователя (лайки комменты)
-    // ? - аутентификация не работает
-
-    // готово - дата и время создания комментария распарсить нормально
-
-    // сделать чтобы на лого можно было не нажимать
-     //каждый час + при обновлении загружать свежие новости 
-     // всплывашка с ошибками
-
-
-    // готово - лайки комментов не работают пост запросы (а делит запросы почему-то не падают)
-    // готово - сделать комменты реактивными
-    // // getters: {
-    //     функция для обновления:
-
-    //     поиск пользователя по лог и паролю в базе
-    //      
-    //     добавление нового пользователя 
-    //     поиск последних новостей за 24 часа
-    //     поиск последних 3х комментариев
-    //     поиск всех комментариев данной новости
-    //     поставил пользователь лайк или нет
-    //     запись постановки/снятия лайка с новости
-    //     запись постановки/снятия лайка с комментария
-    //     запись нового комментария
-
-
     
     actions: {
     
@@ -284,130 +237,130 @@ export const useStore = defineStore('MyStore', {
         localStorage.removeItem("token")
     },
     
-    async createTestNews(text, title, imgPath){
-        var data = {
-            text: text,
-            title: title,
-            imgPath: imgPath
-        }
-        const res = await UserDataService.createNews(data)
-        // console.log(res)
-        return res.data.id
-    },
+    // async createTestNews(text, title, imgPath){
+    //     var data = {
+    //         text: text,
+    //         title: title,
+    //         imgPath: imgPath
+    //     }
+    //     const res = await UserDataService.createNews(data)
+    //     // console.log(res)
+    //     return res.data.id
+    // },
 
-    async createTestUser(name, pass){
-        var request = {
-            username: name,
-            password: pass
-        }
-        await UserDataService.signUp(request)
-        .then(response => {
-            localStorage.setItem("token", response.data.token)
-        })
-        .catch( e => {
-            c = false
-            console.log("Неверный логин")
-            return
-        })
+    // async createTestUser(name, pass){
+    //     var request = {
+    //         username: name,
+    //         password: pass
+    //     }
+    //     await UserDataService.signUp(request)
+    //     .then(response => {
+    //         localStorage.setItem("token", response.data.token)
+    //     })
+    //     .catch( e => {
+    //         c = false
+    //         console.log("Неверный логин")
+    //         return
+    //     })
         
-        return res.data.id
-    },
+    //     return res.data.id
+    // },
 
-    async authalizeTestUser(name, pass){
-        var request = {
-            username: name,
-            password: pass
-        }
+    // async authalizeTestUser(name, pass){
+    //     var request = {
+    //         username: name,
+    //         password: pass
+    //     }
 
-        await UserDataService.signIn(request)
-        .then(response => {
-            localStorage.setItem("token", response.data.token)
-        })
-        .catch( e => {
-            c = false
-            console.log("Неверный логин")
-            return
-        })
-    },
+    //     await UserDataService.signIn(request)
+    //     .then(response => {
+    //         localStorage.setItem("token", response.data.token)
+    //     })
+    //     .catch( e => {
+    //         c = false
+    //         console.log("Неверный логин")
+    //         return
+    //     })
+    // },
     
-    async createTestComment(newsid, user_id, text){
-        var data = {
-            text: text,
-        }
-        const res = await UserDataService.createComment(newsid, user_id, data)
-        return res.data.id
-    },
+    // async createTestComment(newsid, user_id, text){
+    //     var data = {
+    //         text: text,
+    //     }
+    //     const res = await UserDataService.createComment(newsid, user_id, data)
+    //     return res.data.id
+    // },
 
-    async createTestLike(newsid){
-        const res = await UserDataService.likeNews(newsid, "Anna")
-    },
+    // async createTestLike(newsid){
+    //     const res = await UserDataService.likeNews(newsid, "Anna")
+    // },
 
-    async pushTestDataToDB(){
-        let dataNeeded = true
-        await UserDataService.getRecentNews().then( response => {
-            if(response.data.slice(0).length != 0){
-                dataNeeded = false
-            }
-        })
+    // async pushTestDataToDB(){
+    //     let dataNeeded = true
+    //     await UserDataService.getRecentNews().then( response => {
+    //         if(response.data.slice(0).length != 0){
+    //             dataNeeded = false
+    //         }
+    //     })
 
-        if(!dataNeeded) {return}
+    //     if(!dataNeeded) {return}
 
-        var newsid1
-        var newsid2
-        var newsid3
+    //     var newsid1
+    //     var newsid2
+    //     var newsid3
 
-        var userid
+    //     var userid
 
-        var commentid1
+    //     var commentid1
 
-        var commentsid1 = new Array(3).fill(null)
-        var commentsid2 = new Array(3).fill(null)
-        var commentsid3 = new Array(3).fill(null)
+    //     var commentsid1 = new Array(3).fill(null)
+    //     var commentsid2 = new Array(3).fill(null)
+    //     var commentsid3 = new Array(3).fill(null)
 
-        await this.createTestUser("Anna", "Olaf").catch( e => {
-            console.log("не создался")
-        })
+    //     await this.createTestUser("Anna", "Olaf").catch( e => {
+    //         console.log("не создался")
+    //     })
 
-        await this.authalizeTestUser("Anna", "Olaf").catch( e => {
-            console.log("не авторизовался")
-        })
+    //     await this.authalizeTestUser("Anna", "Olaf").catch( e => {
+    //         console.log("не авторизовался")
+    //     })
 
-        await UserDataService.getUser("Anna")
-        .then(response => { 
-            userid = response.data.id
-        })
-        console.log("USER: ", userid)
+    //     await UserDataService.getUser("Anna")
+    //     .then(response => { 
+    //         userid = response.data.id
+    //     })
+    //     console.log("USER: ", userid)
 
-        newsid1 = await this.createTestNews("text 1", "title 1", "../img/cat.jpg")
-        console.log("news 1 id = ", newsid1)
-        newsid2 = await this.createTestNews("text 2", "title 2", "../img/fon.png")
-        console.log("news 2 id = ", newsid2)
-        newsid3 = await this.createTestNews("text 3", "title 3", "../img/home.jpg")
-        console.log("news 3 id = ", newsid3)
+    //     newsid1 = await this.createTestNews("text 1", "title 1", "../img/cat.jpg")
+    //     console.log("news 1 id = ", newsid1)
+    //     newsid2 = await this.createTestNews("text 2", "title 2", "../img/fon.png")
+    //     console.log("news 2 id = ", newsid2)
+    //     newsid3 = await this.createTestNews("text 3", "title 3", "../img/home.jpg")
+    //     console.log("news 3 id = ", newsid3)
 
-        commentid1 = await this.createTestComment(newsid1, userid,  "first comment news1")
+    //     commentid1 = await this.createTestComment(newsid1, userid,  "first comment news1")
 
-        for (let i = 0; i < commentsid1.length; ++i){
-            commentsid1[i] = await this.createTestComment(newsid1, userid, "comment news1")
-        }
+    //     for (let i = 0; i < commentsid1.length; ++i){
+    //         commentsid1[i] = await this.createTestComment(newsid1, userid, "comment news1")
+    //     }
  
-        for (let i = 0; i < commentsid2.length; ++i){
-            commentsid1[i] = await this.createTestComment(newsid2, userid, "comment news2")
-        }
+    //     for (let i = 0; i < commentsid2.length; ++i){
+    //         commentsid1[i] = await this.createTestComment(newsid2, userid, "comment news2")
+    //     }
 
-        for (let i = 0; i < commentsid3.length; ++i){
-            commentsid1[i] = await this.createTestComment(newsid3, userid, "comment news3")
-        }
+    //     for (let i = 0; i < commentsid3.length; ++i){
+    //         commentsid1[i] = await this.createTestComment(newsid3, userid, "comment news3")
+    //     }
 
-        await this.createTestLike(newsid1)
-        await this.createTestLike(newsid2)
-        await this.createTestLike(newsid3)
+    //     await this.createTestLike(newsid1)
+    //     await this.createTestLike(newsid2)
+    //     await this.createTestLike(newsid3)
 
-        localStorage.removeItem("token")
-    },
+    //     localStorage.removeItem("token")
+    // },
 
     async loadData(){
-        await this.pushTestDataToDB()
+        //await this.pushTestDataToDB()
         await this.saveAllDataFromDB()
     },
 
