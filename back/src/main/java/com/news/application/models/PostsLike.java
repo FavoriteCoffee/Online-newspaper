@@ -3,6 +3,7 @@ package com.news.application.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "`PostsLike`")
 public class PostsLike {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

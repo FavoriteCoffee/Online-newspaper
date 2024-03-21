@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "`Comment`")
 public class Comment {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
