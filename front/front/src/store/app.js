@@ -100,10 +100,17 @@ export const useStore = defineStore('MyStore', {
         }
     },
 
+    jwt_decode(token){
+        const decode = decodeURIComponent(atob(token.split('.')[1].replace('-', '+').replace('_', '/')).split('').map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`).join(''));
+        return decode
+    },
+    
     async saveCurrentUser(){
-        let user = JSON.parse(localStorage.getItem('user'))
+        let user = JSON.parse(this.jwt_decode(localStorage.getItem('token')))
+        console.log("USER = ", user)
         if (user !== null){
-            let name = user.userName 
+            let name = user.sub
+            console.log(name)
             await UserDataService.getUser(name)
             .then( response => {
                 this.currentUser.userName = response.data.userName
@@ -456,7 +463,7 @@ export const useStore = defineStore('MyStore', {
                 this.currentUser.password = user.password
                 this.currentUser.id = user.id
 
-                localStorage.setItem('user', JSON.stringify(user))
+                //localStorage.setItem('user', JSON.stringify(user))
                 
                 this.gotoAnotherPage('/main')
             }   

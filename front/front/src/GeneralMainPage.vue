@@ -62,7 +62,6 @@
   
 (function () {
   myStore.loadData()
-  localStorage.removeItem("user")
   myStore.userIn = false
 })();
   </script>
