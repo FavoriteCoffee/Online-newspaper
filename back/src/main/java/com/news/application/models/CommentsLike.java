@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "`CommentsLike`")
 public class CommentsLike {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

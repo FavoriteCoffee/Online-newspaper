@@ -8,7 +8,7 @@ import java.util.Date;
 @Table(name = "`Post`")
 public class    Post {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "title")

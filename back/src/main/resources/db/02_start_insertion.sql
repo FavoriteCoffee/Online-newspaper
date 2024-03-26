@@ -1,13 +1,13 @@
 -- users insertion
 
-INSERT INTO public."User"(id, password, user_name, role)
-VALUES (1, 'password', 'Anna', 'ROLE_USER');
+INSERT INTO public."User"(password, user_name, role)
+VALUES ('password', 'Anna', 'ROLE_USER');
 
 -- posts insertion
 
 INSERT INTO public."Post"(
-    id, date, img, text, title)
-    VALUES (1, CURRENT_DATE, '../img/cat.jpg',
+    date, img, text, title)
+    VALUES (CURRENT_DATE, '../img/cat.jpg',
     'Ну вот, перед вами Винни-Пух.
 
      Как видите, он спускается по лестнице вслед за своим другом Кристофером Робином, головой вниз, пересчитывая ступеньки собственным затылком: бум-бум-бум. Другого способа сходить с лестницы он пока не знает. Иногда ему, правда, кажется, что можно бы найти какой-то другой способ, если бы он только мог на минутку перестать бумкать и как следует сосредоточиться. Но увы — сосредоточиться-то ему и некогда.
@@ -28,8 +28,8 @@ INSERT INTO public."Post"(
     'ГЛАВА ПЕРВАЯ, в которой мы знакомимся с Винни-Пухом и несколькими пчёлами');
 
 INSERT INTO public."Post"(
-    id, date, img, text, title)
-    VALUES (2, CURRENT_DATE, '../img/fon.png',
+    date, img, text, title)
+    VALUES (CURRENT_DATE, '../img/fon.png',
     'Как-то днем известный своим друзьям, а значит, теперь и вам, Винни-Пух (кстати, иногда для краткости его звали просто Пух) не спеша прогуливался по Лесу с довольно важным видом, ворча себе под нос новую песенку.
 
      Ему было чем гордиться — ведь эту песенку-ворчалку он сам сочинил только сегодня утром, занимаясь, как обычно, утренней гимнастикой перед зеркалом. Надо вам сказать, что Винни-Пух очень хотел похудеть и потому старательно занимался гимнастикой. Он поднимался на носки, вытягивался изо всех сил и в это время пел так:
@@ -54,109 +54,109 @@ INSERT INTO public."Post"(
     'ГЛАВА ВТОРАЯ, в которой Винни-Пух пошёл в гости, а попал в безвыходное положение');
 
 INSERT INTO public."Post"(
-    id, date, img, text, title)
-    VALUES (3, CURRENT_DATE, '../img/home.jpg', 'текст третьей новости', 'заголовок третьей новости');
+    date, img, text, title)
+    VALUES (CURRENT_DATE, '../img/home.jpg', 'текст третьей новости', 'заголовок третьей новости');
 
 INSERT INTO public."Post"(
-    id, date, img, text, title)
-    VALUES (4, CURRENT_DATE, '../img/fon.png', 'текст четвертой новости', 'заголовок четвертой новости');
+    date, img, text, title)
+    VALUES (CURRENT_DATE, '../img/fon.png', 'текст четвертой новости', 'заголовок четвертой новости');
 
 -- comments insertion
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (1, CURRENT_DATE, 'Веселая и всеми любимая сказка о Винни-Пухе не подчиняется законам сказочного жанра. Сказка лишена отрицательных персонажей, борьбы добрых и злых сил. Главные герои сказки — Игрушки мальчика Кристофера, с которыми приключаются забавные ситуации', 1, 1);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'Веселая и всеми любимая сказка о Винни-Пухе не подчиняется законам сказочного жанра. Сказка лишена отрицательных персонажей, борьбы добрых и злых сил. Главные герои сказки — Игрушки мальчика Кристофера, с которыми приключаются забавные ситуации', 1, 1);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (2, CURRENT_DATE, 'ЁЖИК В ТУМАНЕ ЛУЧШЕ', 1, 1);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'ЁЖИК В ТУМАНЕ ЛУЧШЕ', 1, 1);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (3, CURRENT_DATE, 'Первые иллюстрации и эскизы книги были сделаны известным карикатуристом Эрнестом Шепардом. Аукционный дом Sotheby’s неоднократно продавал его рисунки к сказке Алана Милна: так, 10 июля 2013 года шесть эскизов (первоначально предполагалось реализовать восемь работ) были проданы почти за полмиллиона фунтов стерлингов.
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'Первые иллюстрации и эскизы книги были сделаны известным карикатуристом Эрнестом Шепардом. Аукционный дом Sotheby’s неоднократно продавал его рисунки к сказке Алана Милна: так, 10 июля 2013 года шесть эскизов (первоначально предполагалось реализовать восемь работ) были проданы почти за полмиллиона фунтов стерлингов.
 
                               По утверждению Ж. С. Куйота, «Пух стал самым знаменитым и любимым медведем в литературе». По словам другого критика, «это высказывание часто повторяли, но никто ещё его не опроверг»', 1, 1);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (4, CURRENT_DATE, 'В Пухе совмещено сразу несколько образов — плюшевый мишка, живой медвежонок и грозный Медведь', 1, 1);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'В Пухе совмещено сразу несколько образов — плюшевый мишка, живой медвежонок и грозный Медведь', 1, 1);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (5, CURRENT_DATE, 'текст первого комментария второй новости', 1, 2);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст первого комментария второй новости', 1, 2);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (6, CURRENT_DATE, 'текст второго комментария второй новости', 1, 2);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст второго комментария второй новости', 1, 2);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (7, CURRENT_DATE, 'текст третьего комментария второй новости', 1, 2);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст третьего комментария второй новости', 1, 2);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (8, CURRENT_DATE, 'текст четвертого комментария второй новости', 1, 2);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст четвертого комментария второй новости', 1, 2);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (9, CURRENT_DATE, 'текст первого комментария третьей новости', 1, 3);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст первого комментария третьей новости', 1, 3);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (10, CURRENT_DATE, 'текст второго комментария третьей новости', 1, 3);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст второго комментария третьей новости', 1, 3);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (11, CURRENT_DATE, 'текст третьего комментария третьей новости', 1, 3);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст третьего комментария третьей новости', 1, 3);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (12, CURRENT_DATE, 'текст четвертого комментария третьей новости', 1, 3);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст четвертого комментария третьей новости', 1, 3);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (13, CURRENT_DATE, 'текст первого комментария четвертой новости', 1, 4);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст первого комментария четвертой новости', 1, 4);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (14, CURRENT_DATE, 'текст второго комментария четвертой новости', 1, 4);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст второго комментария четвертой новости', 1, 4);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (15, CURRENT_DATE, 'текст третьего комментария четвертой новости', 1, 4);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст третьего комментария четвертой новости', 1, 4);
 
 INSERT INTO public."Comment"(
-    id, date, text, fk_author_id, fk_post_id)
-    VALUES (16, CURRENT_DATE, 'текст четвертого комментария четвертой новости', 1, 4);
+    date, text, fk_author_id, fk_post_id)
+    VALUES (CURRENT_DATE, 'текст четвертого комментария четвертой новости', 1, 4);
 
 -- posts_likes insertion
 
 INSERT INTO public."PostsLike"(
-    id, fk_author_id, fk_post_id)
-    VALUES (1, 1, 2);
+    fk_author_id, fk_post_id)
+    VALUES (1, 2);
 
 INSERT INTO public."PostsLike"(
-    id, fk_author_id, fk_post_id)
-    VALUES (2, 1, 3);
+    fk_author_id, fk_post_id)
+    VALUES (1, 3);
 
 -- comments_likes insertion
 
 INSERT INTO public."CommentsLike"(
-    id, fk_author_id, fk_comment_id)
-    VALUES (1, 1, 1);
+    fk_author_id, fk_comment_id)
+    VALUES (1, 1);
 
 INSERT INTO public."CommentsLike"(
-    id, fk_author_id, fk_comment_id)
-    VALUES (2, 1, 3);
+    fk_author_id, fk_comment_id)
+    VALUES (1, 3);
 
 INSERT INTO public."CommentsLike"(
-    id, fk_author_id, fk_comment_id)
-    VALUES (3, 1, 6);
+    fk_author_id, fk_comment_id)
+    VALUES (1, 6);
 
 INSERT INTO public."CommentsLike"(
-    id, fk_author_id, fk_comment_id)
-    VALUES (4, 1, 10);
+    fk_author_id, fk_comment_id)
+    VALUES (1, 10);
 
 INSERT INTO public."CommentsLike"(
-    id, fk_author_id, fk_comment_id)
-    VALUES (5, 1, 15);
+    fk_author_id, fk_comment_id)
+    VALUES (1, 15);
