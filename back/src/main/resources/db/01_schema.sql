@@ -16,11 +16,11 @@ SET default_table_access_method = heap;
 
 
 CREATE TABLE public."Comment" (
-    id bigint NOT NULL,
+    id SERIAL PRIMARY KEY,
     date timestamp(6) without time zone,
     text text,
-    fk_author_id bigint NOT NULL,
-    fk_post_id bigint NOT NULL
+    fk_author_id SERIAL NOT NULL,
+    fk_post_id SERIAL NOT NULL
 );
 
 
@@ -29,9 +29,9 @@ ALTER TABLE public."Comment" OWNER TO postgres;
 
 
 CREATE TABLE public."CommentsLike" (
-    id bigint NOT NULL,
-    fk_author_id bigint NOT NULL,
-    fk_comment_id bigint NOT NULL
+    id SERIAL PRIMARY KEY,
+    fk_author_id SERIAL NOT NULL,
+    fk_comment_id SERIAL NOT NULL
 );
 
 
@@ -40,7 +40,7 @@ ALTER TABLE public."CommentsLike" OWNER TO postgres;
 
 
 CREATE TABLE public."Post" (
-    id bigint NOT NULL,
+    id SERIAL PRIMARY KEY,
     date date,
     img character varying(255),
     text text,
@@ -53,9 +53,9 @@ ALTER TABLE public."Post" OWNER TO postgres;
 
 
 CREATE TABLE public."PostsLike" (
-    id bigint NOT NULL,
-    fk_author_id bigint,
-    fk_post_id bigint
+    id SERIAL PRIMARY KEY,
+    fk_author_id SERIAL,
+    fk_post_id SERIAL
 );
 
 
@@ -64,7 +64,7 @@ ALTER TABLE public."PostsLike" OWNER TO postgres;
 
 
 CREATE TABLE public."User" (
-    id bigint NOT NULL,
+    id SERIAL PRIMARY KEY,
     password character varying(255),
     user_name character varying(128),
     role character varying(255) NOT NULL,
@@ -73,36 +73,6 @@ CREATE TABLE public."User" (
 
 
 ALTER TABLE public."User" OWNER TO postgres;
-
-
-
-
-ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_pkey" PRIMARY KEY (id);
-
-
-
-
-ALTER TABLE ONLY public."CommentsLike"
-    ADD CONSTRAINT "CommentsLike_pkey" PRIMARY KEY (id);
-
-
-
-
-ALTER TABLE ONLY public."Post"
-    ADD CONSTRAINT "Post_pkey" PRIMARY KEY (id);
-
-
-
-
-ALTER TABLE ONLY public."PostsLike"
-    ADD CONSTRAINT "PostsLike_pkey" PRIMARY KEY (id);
-
-
-
-
-ALTER TABLE ONLY public."User"
-    ADD CONSTRAINT "User_pkey" PRIMARY KEY (id);
 
 
 ALTER TABLE ONLY public."User"
