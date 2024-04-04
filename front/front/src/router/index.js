@@ -3,6 +3,7 @@ import MainPage from "@/MainPage.vue";
 import GeneralMainPage from "@/GeneralMainPage.vue";
 import Authentication from "@/Authentication.vue";
 import Registration from "@/Registration.vue";
+import Admin from "@/Admin";
 
 
 export default createRouter({
@@ -12,5 +13,6 @@ export default createRouter({
     { path: '/authentication', component: Authentication},
     { path: '/registration', component: Registration},
     { path: '/generalmain', component: GeneralMainPage, alias: '/'},
+    { path: '/admin', component: Admin},
   ]
 })

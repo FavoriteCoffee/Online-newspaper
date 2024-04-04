@@ -106,18 +106,21 @@ export const useStore = defineStore('MyStore', {
     },
     
     async saveCurrentUser(){
-        let user = JSON.parse(this.jwt_decode(localStorage.getItem('token')))
-        console.log("USER = ", user)
-        if (user !== null){
-            let name = user.sub
-            console.log(name)
-            await UserDataService.getUser(name)
-            .then( response => {
-                this.currentUser.userName = response.data.userName
-                this.currentUser.password = response.data.password
-                this.currentUser.id = response.data.id
-                //console.log("СОХРАНЕНИЕ ЮЗЕРА", this.currentUser.userName, this.currentUser.id)
-            })
+        let token = localStorage.getItem('token')
+        if (token !== null){
+            let user = JSON.parse(this.jwt_decode(token))
+            console.log("USER = ", user)
+            if (user !== null){
+                let name = user.sub
+                console.log(name)
+                await UserDataService.getUser(name)
+                .then( response => {
+                    this.currentUser.userName = response.data.userName
+                    this.currentUser.password = response.data.password
+                    this.currentUser.id = response.data.id
+                    //console.log("СОХРАНЕНИЕ ЮЗЕРА", this.currentUser.userName, this.currentUser.id)
+                })
+            }
         }
     },
 
@@ -194,7 +197,13 @@ export const useStore = defineStore('MyStore', {
     },
 
     getCurrentUserName(){
-        return JSON.parse(localStorage.getItem('user')).userName 
+        let token = localStorage.getItem('token')
+        if (token !== null){
+            let user = JSON.parse(this.jwt_decode(token))
+            return user.sub
+        }
+        else 
+            return null
     },
 
     isNewsLiked(newsId){
@@ -504,7 +513,7 @@ export const useStore = defineStore('MyStore', {
                 this.currentUser.password = user.password
                 this.currentUser.id = user.id
 
-                localStorage.setItem('user', JSON.stringify(user))
+                //localStorage.setItem('user', JSON.stringify(user))
                 
                 this.gotoAnotherPage('/main')
             }   
@@ -515,7 +524,12 @@ export const useStore = defineStore('MyStore', {
     },
     
     async changeNewsLike(post_id){
-        let user = JSON.parse(localStorage.getItem('user'))
+        let token = localStorage.getItem('token')
+        let user
+        if (token !== null){
+            user = JSON.parse(this.jwt_decode(token))
+        }
+
         if (user !== null && this.currentUser.userName !== null){
 
             let isLiked = false
@@ -538,7 +552,7 @@ export const useStore = defineStore('MyStore', {
                     }
 
                     if (!isLiked){
-                        var name = user.userName 
+                        var name = user.sub
                         var like
 
                         await UserDataService.likeNews(post_id, name)
@@ -573,7 +587,11 @@ export const useStore = defineStore('MyStore', {
     },
 
     async changeCommentLike(post_id, comment_id){
-        let user = JSON.parse(localStorage.getItem('user'))
+        let user
+        let token = localStorage.getItem('token')
+        if (token !== null){
+            user = JSON.parse(this.jwt_decode(token))
+        }
         if (user !== null && this.currentUser.userName !== null){
             let isLiked = false
             for (let news of this.news) {
@@ -596,7 +614,7 @@ export const useStore = defineStore('MyStore', {
                             }
                         
                             if (!isLiked){
-                                var name =  user.userName
+                                var name =  user.sub
                                 var like 
                                 await UserDataService.likeComment(post_id, comment_id, name)
                                 .then(response => {
