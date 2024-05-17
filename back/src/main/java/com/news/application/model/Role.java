@@ -1,4 +1,4 @@
-package com.news.application.models;
+package com.news.application.model;
 
 public enum Role {
     ROLE_USER,

@@ -1,8 +1,9 @@
-package com.news.application.controllers;
+package com.news.application.controller;
 
-import com.news.application.models.Role;
-import com.news.application.models.User;
+import com.news.application.model.Role;
+import com.news.application.model.User;
 import com.news.application.repo.UserRepository;
+import com.news.application.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +28,7 @@ public class UsersControllerTest {
     UsersController usersController;
 
     @Mock
-    UserRepository userRepository;
+    UserService userService;
 
     @Test
     public void getAllUsersTest(){
@@ -37,35 +38,34 @@ public class UsersControllerTest {
         User user3 = new User();
         user3.setRole(Role.ROLE_ADMIN);
 
-        when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2, user3));
+        when(userService.findAll()).thenReturn(Arrays.asList(user1, user2, user3));
 
         ResponseEntity<Object> result = usersController.getAllUsers();
         assertThat(result.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
         assertThat(((List<?>) Objects.requireNonNull(result.getBody())).size())
                 .isEqualTo(3);
-        assertThat(((User)((List<?>) Objects.requireNonNull(result.getBody())).get(1)).getUserName())
+        assertThat(((User)((List<?>) Objects.requireNonNull(result.getBody())).get(1)).getUsername())
                 .isEqualTo("Ivan");
         assertThat(((User)((List<?>) Objects.requireNonNull(result.getBody())).get(2)).getRole())
                 .isEqualTo(Role.ROLE_ADMIN);
     }
 
     @Test
-    public void createUserTest(){
+    public void createUserTest() throws Exception {
         User user1 = new User();
         user1.setUserName("Ivan");
         user1.setRole(Role.ROLE_ADMIN);
         User user2 = new User();
         user2.setUserName("Boris");
 
-        when(userRepository.existsByUserName(eq("Ivan"))).thenReturn(false);
-        when(userRepository.existsByUserName(eq("Boris"))).thenReturn(true);
-        when(userRepository.save(any())).thenReturn(user1);
+        when(userService.createUser(user1)).thenReturn(user1);
+        when(userService.createUser(user2)).thenThrow(new Exception("Пользователь с таким именем уже существует"));
 
         ResponseEntity<Object> result1 = usersController.createUser(user1);
         assertThat(result1.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
-        assertThat(((User) Objects.requireNonNull(result1.getBody())).getUserName())
+        assertThat(((User) Objects.requireNonNull(result1.getBody())).getUsername())
                 .isEqualTo("Ivan");
         assertThat(((User) Objects.requireNonNull(result1.getBody())).getRole())
                 .isEqualTo(Role.ROLE_ADMIN);

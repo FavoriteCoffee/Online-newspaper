@@ -1,5 +1,5 @@
 package com.news.application.repo;
-import com.news.application.models.CommentsLike;
+import com.news.application.model.CommentsLike;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;

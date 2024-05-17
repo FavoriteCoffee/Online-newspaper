@@ -1,7 +1,7 @@
 package com.news.application.service;
 
-import com.news.application.models.Role;
-import com.news.application.models.User;
+import com.news.application.model.Role;
+import com.news.application.model.User;
 import com.news.application.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     /**
      * Сохранение пользователя
@@ -20,7 +20,7 @@ public class UserService {
      * @return сохраненный пользователь
      */
     public User save(User user) {
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
 
@@ -30,7 +30,7 @@ public class UserService {
      * @return созданный пользователь
      */
     public User create(User user) {
-        if (repository.existsByUserName(user.getUsername())) {
+        if (userRepository.existsByUserName(user.getUsername())) {
             // Заменить на свои исключения
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
@@ -44,9 +44,9 @@ public class UserService {
      * @return пользователь
      */
     public User getByUsername(String username) {
-        return repository.findByUserNameEquals(username)
+        if (username.charAt(0) == '"'){username = username.substring(1, username.length()-1);}
+        return userRepository.findByUserNameEquals(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-
     }
 
     /**
@@ -82,5 +82,33 @@ public class UserService {
         var user = getCurrentUser();
         user.setRole(Role.ROLE_ADMIN);
         save(user);
+    }
+
+    public User findById(Long id){
+        return userRepository.findById(id).get();
+    }
+
+    public Iterable<User> findAll(){
+        return userRepository.findAll();
+    }
+
+    public User createUser(User user) throws Exception {
+        if (existsByUserName(user.getUsername())){
+            throw new Exception("Пользователь с таким именем уже существует");
+        }
+        return userRepository.save(user);
+    }
+
+    public User updateUser(Long id, User user){
+        user.setId(id);
+        return userRepository.save(user);
+    }
+
+    public void deleteById(Long id){
+        userRepository.deleteById(id);
+    }
+
+    public boolean existsByUserName(String name){
+        return userRepository.existsByUserName(name);
     }
 }

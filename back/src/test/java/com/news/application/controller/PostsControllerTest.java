@@ -1,7 +1,8 @@
-package com.news.application.controllers;
+package com.news.application.controller;
 
-import com.news.application.models.Post;
+import com.news.application.model.Post;
 import com.news.application.repo.PostRepository;
+import com.news.application.service.PostService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -26,7 +24,8 @@ public class PostsControllerTest {
     PostsController postsController;
 
     @Mock
-    PostRepository postRepository;
+    PostService postService;
+
 
     @Test
     public void getAllPosts(){
@@ -36,7 +35,7 @@ public class PostsControllerTest {
         Post post3 = new Post();
         post3.setText("test text");
 
-        when(postRepository.findAll()).thenReturn(Arrays.asList(post1, post2, post3));
+        when(postService.findAll()).thenReturn(Arrays.asList(post1, post2, post3));
 
         ResponseEntity<Object> result = postsController.getAllPosts();
         assertThat(result.getStatusCode())
@@ -50,14 +49,14 @@ public class PostsControllerTest {
     }
 
     @Test
-    public void getPostByIdTest(){
+    public void getPostByIdTest () throws Exception {
         Post post = new Post();
         post.setId((long) 1);
         post.setTitle("test title");
         post.setText("test text");
 
-        when(postRepository.findById(eq((long) 1))).thenReturn(Optional.of(post));
-        when(postRepository.findById(eq((long) 2))).thenReturn(Optional.empty());
+        when(postService.findById(eq((long) 1))).thenReturn(Optional.of(post).get());
+        when(postService.findById(eq((long) 2))).thenThrow(new NoSuchElementException());
 
         ResponseEntity<Object> result1 = postsController.getPostById((long) 1);
         assertThat(result1.getStatusCode())
@@ -79,7 +78,7 @@ public class PostsControllerTest {
         post.setTitle("test title");
         post.setText("test text");
 
-        when(postRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+        when(postService.createPost(any())).thenAnswer(i -> i.getArguments()[0]);
 
         ResponseEntity<Object> result = postsController.createPost(post);
         assertThat(result.getStatusCode())

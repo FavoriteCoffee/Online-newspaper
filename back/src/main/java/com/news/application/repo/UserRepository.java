@@ -1,6 +1,6 @@
 package com.news.application.repo;
 
-import com.news.application.models.User;
+import com.news.application.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

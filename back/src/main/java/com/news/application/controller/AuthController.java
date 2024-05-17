@@ -1,4 +1,4 @@
-package com.news.application.controllers;
+package com.news.application.controller;
 
 import com.news.application.dto.JwtAuthenticationResponse;
 import com.news.application.dto.SignInRequest;

@@ -1,7 +1,8 @@
-package com.news.application.controllers;
+package com.news.application.controller;
 
-import com.news.application.models.User;
+import com.news.application.model.User;
 import com.news.application.repo.UserRepository;
+import com.news.application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +15,14 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     private final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
     @GetMapping("/users")
     public ResponseEntity<Object> getAllUsers(){
         try {
-            Iterable<User> users = userRepository.findAll();
+            Iterable<User> users = userService.findAll();
             return new ResponseEntity<Object>(users, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -32,10 +33,7 @@ public class UsersController {
     @GetMapping("/users/{name}")
     public ResponseEntity<Object> getUserByName(@PathVariable("name") String name) {
         try {
-            if (!userRepository.existsByUserName(name)){
-                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-            }
-            User user = userRepository.findByUserNameEquals(name).get();
+            User user = userService.getByUsername(name);
             return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -46,10 +44,7 @@ public class UsersController {
     @PostMapping("/users")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         try {
-            if (userRepository.existsByUserName(user.getUserName())){
-                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-            }
-            User savedUser = userRepository.save(user);
+            User savedUser = userService.createUser(user);
             return new ResponseEntity<Object>(savedUser, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -60,8 +55,7 @@ public class UsersController {
     @PutMapping("/users/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
         try {
-            user.setId(id);
-            User savedUser = userRepository.save(user);
+            User savedUser = userService.updateUser(id, user);
             return new ResponseEntity<Object>(savedUser, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -72,7 +66,7 @@ public class UsersController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         try {
-            userRepository.deleteById(id);
+            userService.deleteById(id);
             return new ResponseEntity<HttpStatus>(HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -83,7 +77,8 @@ public class UsersController {
     @GetMapping("/users/{name}/exists")
     public ResponseEntity<Object> getIfUserExists(@PathVariable("name") String name) {
         try {
-            return new ResponseEntity<Object>(userRepository.existsByUserName(name), HttpStatus.OK);
+            boolean ifExists = userService.existsByUserName(name);
+            return new ResponseEntity<Object>(ifExists, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
