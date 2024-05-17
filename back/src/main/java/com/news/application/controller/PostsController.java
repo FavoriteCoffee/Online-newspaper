@@ -6,24 +6,26 @@ import com.news.application.service.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class PostsController {
-    private PostService postService;
 
-    private CommentService commentService;
+    private final PostService postService;
 
-    private PostsLikeService postsLikeService;
+    private final CommentService commentService;
 
-    private CommentsLikeService commentsLikeService;
+    private final PostsLikeService postsLikeService;
 
-    private UserService userService;
+    private final CommentsLikeService commentsLikeService;
+
+    private final UserService userService;
 
     private final Logger logger = LoggerFactory.getLogger(PostsController.class);
 

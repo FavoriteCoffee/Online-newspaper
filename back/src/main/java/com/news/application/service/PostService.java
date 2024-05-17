@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+
     public Iterable<Post> findAll(){
         return postRepository.findAll();
     }
