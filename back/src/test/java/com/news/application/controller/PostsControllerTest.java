@@ -49,7 +49,7 @@ public class PostsControllerTest {
     }
 
     @Test
-    public void getPostByIdTest(){
+    public void getPostByIdTest () throws Exception {
         Post post = new Post();
         post.setId((long) 1);
         post.setTitle("test title");

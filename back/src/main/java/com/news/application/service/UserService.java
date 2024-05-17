@@ -93,7 +93,7 @@ public class UserService {
     }
 
     public User createUser(User user) throws Exception {
-        if (userRepository.existsByUserName(user.getUsername())){
+        if (existsByUserName(user.getUsername())){
             throw new Exception("Пользователь с таким именем уже существует");
         }
         return userRepository.save(user);
