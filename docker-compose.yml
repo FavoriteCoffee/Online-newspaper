@@ -1,0 +1,41 @@
+version: '3.8'
+
+services: 
+    postgresqldb:
+      image: postgres:latest
+      container_name: news_db
+      hostname: news_db
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: news_db
+        POSTGRES_PASSWORD: 1234
+        POSTGRES_SCHEMA: PUBLIC
+      volumes:
+        - ./back/src/main/resources/db/:/docker-entrypoint-initdb.d/
+      ports:
+        - "5432:5432"
+      restart: always
+    back:
+      depends_on:
+        - postgresqldb
+      build: ./back
+      restart: on-failure
+      env_file: ./.env
+      ports:
+        - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      volumes:
+        - .m2:/root/.m2
+      stdin_open: true
+      tty: true
+    front:
+      build:
+        context: .
+        dockerfile: ./front/front/Dockerfile
+      depends_on:
+        - back
+      ports:
+        - "3000:3000"
+      restart: always
+
+volumes:
+  db:
