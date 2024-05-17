@@ -67,6 +67,8 @@ CREATE TABLE public."User" (
     id SERIAL PRIMARY KEY,
     password character varying(255),
     user_name character varying(128),
+    name character varying(128),
+    surname character varying(128),
     role character varying(255) NOT NULL,
     CONSTRAINT "User_role_check" CHECK (((role)::text = ANY ((ARRAY['ROLE_USER'::character varying, 'ROLE_ADMIN'::character varying])::text[])))
 );

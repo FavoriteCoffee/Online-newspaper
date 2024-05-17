@@ -1,7 +1,7 @@
 -- users insertion
 
-INSERT INTO public."User"(password, user_name, role)
-VALUES ('password', 'Anna', 'ROLE_USER');
+INSERT INTO public."User"(password, user_name, name, surname, role)
+VALUES ('password', 'anna@ya.ru', 'Anna', 'Moreva', 'ROLE_USER');
 
 -- posts insertion
 

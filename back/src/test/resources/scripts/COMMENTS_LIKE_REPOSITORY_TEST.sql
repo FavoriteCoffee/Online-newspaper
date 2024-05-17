@@ -1,7 +1,7 @@
-INSERT INTO public."User"(id, password, user_name, role)
-VALUES (101, 'testpassword', 'Ivan', 'ROLE_USER');
-INSERT INTO public."User"(id, password, user_name, role)
-VALUES (102, 'testpassword', 'Elena', 'ROLE_USER');
+INSERT INTO public."User"(id, password, user_name, name, surname, role)
+VALUES (101, 'testpassword', 'hippomaru@ya.ru', 'Ivan', 'Smirnov', 'ROLE_USER');
+INSERT INTO public."User"(id, password, user_name, name, surname, role)
+VALUES (102, 'testpassword', 'lenka@s.ru', 'Elena', 'Moreva',  'ROLE_USER');
 INSERT INTO public."Post"(id, date)
 VALUES(101, TO_DATE('07/03/2002', 'DD/MM/YYYY'));
 INSERT INTO public."Comment"(id, date, fk_author_id, fk_post_id)

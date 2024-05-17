@@ -22,21 +22,21 @@ class UserRepositoryTest {
     @Test
     @Sql("/scripts/USER_REPOSITORY_TEST.sql")
     void shouldReturnTrueForExistingUser() {
-        boolean mustBeTrue = userRepository.existsByUserName("Ivan");
+        boolean mustBeTrue = userRepository.existsByUserName("hippomaru@ya.ru");
         assertTrue(mustBeTrue);
     }
 
     @Test
     @Sql("/scripts/USER_REPOSITORY_TEST.sql")
     void shouldReturnFalseForNotExistingUser() {
-        boolean mustBeFalse = userRepository.existsByUserName("Pikachu");
+        boolean mustBeFalse = userRepository.existsByUserName("Pikachu@s.ru");
         assertFalse(mustBeFalse);
     }
 
     @Test
     @Sql("/scripts/USER_REPOSITORY_TEST.sql")
     void shouldFindUser() {
-        Optional<User> user = userRepository.findByUserNameEquals("Ivan");
+        Optional<User> user = userRepository.findByUserNameEquals("hippomaru@ya.ru");
         assertFalse(user.isEmpty());
     }
 }

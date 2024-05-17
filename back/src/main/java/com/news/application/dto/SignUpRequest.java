@@ -8,6 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequest {
+    private String name;
+    private String surname;
     private String username;
     private String password;
 }
