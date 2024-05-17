@@ -1,6 +1,6 @@
 package com.news.application.service;
 
-import com.news.application.models.User;
+import com.news.application.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

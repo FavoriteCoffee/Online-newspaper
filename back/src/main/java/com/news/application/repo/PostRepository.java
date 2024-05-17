@@ -1,6 +1,6 @@
 package com.news.application.repo;
 
-import com.news.application.models.Post;
+import com.news.application.model.Post;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Date;

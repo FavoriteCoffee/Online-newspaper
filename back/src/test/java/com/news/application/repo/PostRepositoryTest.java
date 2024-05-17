@@ -1,7 +1,7 @@
 package com.news.application.repo;
 
 
-import com.news.application.models.Post;
+import com.news.application.model.Post;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
