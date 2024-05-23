@@ -7,8 +7,8 @@
     width="50%"
     title="Аутентификация">
       <v-text-field 
-        @blur="myStore.authenticationData.enteredName = $event.target.value"
-        label="Введите nick"/>
+        @blur="myStore.authenticationData.enteredUserName = $event.target.value"
+        label="Введите электронную почту"/>
       <v-text-field 
         @blur="myStore.authenticationData.enteredPassword = $event.target.value"
         label="Введите пароль"/>

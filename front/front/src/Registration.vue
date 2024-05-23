@@ -8,7 +8,13 @@
     title="Регистрация">
       <v-text-field 
         @blur="myStore.registrationData.enteredName = $event.target.value"
-        label="Введите nick"/>
+        label="Введите имя"/>
+        <v-text-field 
+        @blur="myStore.registrationData.enteredSurname = $event.target.value"
+        label="Введите фамилию"/>
+        <v-text-field 
+        @blur="myStore.registrationData.enteredUserName = $event.target.value"
+        label="Введите электронную почту"/>
       <v-text-field
         @blur="myStore.registrationData.enteredPassword = $event.target.value" 
         label="Введите пароль"/>

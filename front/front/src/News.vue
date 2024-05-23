@@ -93,7 +93,7 @@
                         <div v-if="myStore.isNewsLiked(this.news.id)" >    
                             <v-col align="end" style="padding-right: 0;">
                                 <p style="color: #950400;">
-                                    <i @click="myStore.changeNewsLike(this.news.id)"
+                                    <i @click="async () => {await myStore.changeNewsLike(this.news.id)}"
                                         class="material-icons">favorite</i>
                                     {{ myStore.getNumberOfNewsLikes(this.news.id) }}
                                 </p>
@@ -103,7 +103,7 @@
                             <v-col align="end" style="padding-right: 0;">
                                 <p style="color: #950400;">
                                     <i @click="async () => {await myStore.changeNewsLike(this.news.id)}" 
-                                    class="material-icons">favorite_border</i>
+                                        class="material-icons">favorite_border</i>
                                     {{ myStore.getNumberOfNewsLikes(this.news.id) }}
                                 </p>
                             </v-col>
