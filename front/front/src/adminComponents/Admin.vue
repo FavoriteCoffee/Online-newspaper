@@ -116,4 +116,8 @@
     import AdminDeleteCommentsList from './AdminDeleteCommentsList.vue';
     const myStore = useStore();
 
+    (function () {
+        myStore.loadData()
+        myStore.userIn = true
+    })();
 </script>

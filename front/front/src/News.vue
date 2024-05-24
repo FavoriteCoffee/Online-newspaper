@@ -90,7 +90,7 @@
                             </p>
                         </v-col>
 
-                        <div v-if="myStore.isNewsLiked(this.news.id)" >    
+                        <div v-if="myStore.isNewsLiked(this.news.id) && myStore.userIn" >    
                             <v-col align="end" style="padding-right: 0;">
                                 <p style="color: #950400;">
                                     <i @click="async () => {await myStore.changeNewsLike(this.news.id)}"

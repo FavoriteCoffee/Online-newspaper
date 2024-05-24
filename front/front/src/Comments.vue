@@ -16,7 +16,7 @@
             </div>
         </v-row>
         <v-row>
-            <div v-if="myStore.isCommentLiked(this.newsId, this.comment.id)">
+            <div v-if="myStore.isCommentLiked(this.newsId, this.comment.id) && myStore.userIn">
                 <v-col width="100%" align="end">
                     <p @click="async () => {await myStore.changeCommentLike(this.newsId, this.comment.id)}" 
                        style="color: #950400;">

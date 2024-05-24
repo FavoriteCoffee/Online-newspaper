@@ -56,7 +56,7 @@ class UserDataService {
         })
     }
 
-    createNews(data) {
+    createPost(data) {
         let token = localStorage.getItem('token')
         return http.post('/posts', data, {
             headers: {

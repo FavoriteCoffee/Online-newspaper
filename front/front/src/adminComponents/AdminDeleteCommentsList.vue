@@ -5,7 +5,8 @@
     
     <DeleteComment v-if="show"
         v-for="comment of this.news.comments"
-        :comment="comment">
+        :comment="comment" 
+        :newsId="this.news.id">
     </DeleteComment>
 </template>
 
@@ -24,6 +25,4 @@
             default: () => {},
         }
     });
-
-
 </script>

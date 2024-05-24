@@ -4,7 +4,7 @@
            {{ this.comment.text }}
        </v-card-text>
        <v-card-actions>
-           <v-btn @click="myStore.deleteComment(this.comment.id)">
+           <v-btn @click="myStore.deleteComment(this.newsId, this.comment.id)">
                x 
            </v-btn>
        </v-card-actions>
@@ -20,6 +20,11 @@
            type: Object,
            required: true,
            default: () => {},
-       }
+       },
+       newsId: {
+        type: Number,
+        required: true,
+        default: null
+       } 
    });
 </script>

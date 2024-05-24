@@ -1,12 +1,19 @@
 <template>
     <v-card>
-        <v-card-title>
-            {{ this.news.title }}
-        </v-card-title>
         <v-card-actions>
-            <v-btn @click="myStore.deleteNews(this.news.id)">
-                x 
-            </v-btn>
+            <v-conteiner>
+                <v-row>
+                    <v-col>
+                        {{ this.news.title }}
+                    </v-col>
+                    <v-col>
+                        <v-btn @click="myStore.deleteNews(this.news.id)">
+                            x 
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-conteiner>
+            
         </v-card-actions>
     </v-card>
 </template>

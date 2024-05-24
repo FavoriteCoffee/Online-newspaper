@@ -11,6 +11,8 @@ export const useStore = defineStore('MyStore', {
         comments: [[{text: "com11", id: 11}, {text: "com12", id: 12}],
                    {text: "com2", id: 1},
                    {text: "com3", id: 1}],
+        users: [{id: 0, username: "first", name: "F", surname: "Ff"}],
+        
         authenticationData: {
             enteredUserName: "",
             enteredPassword: "",
@@ -66,7 +68,7 @@ export const useStore = defineStore('MyStore', {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.comments = response.data.slice(0)
-                        //console.log("из сохранения комментариев, новости номер ", n)
+                        console.log("из сохранения комментариев, новости номер ", n.comments)
                     }
                 } 
             })
@@ -127,7 +129,7 @@ export const useStore = defineStore('MyStore', {
                 console.log(name)
                 await UserDataService.getUser(name)
                 .then( response => {
-                    this.currentUser.userName = response.data.userName
+                    this.currentUser.userName = response.data.username
                     this.currentUser.password = response.data.password
                     this.currentUser.name = response.data.name
                     this.currentUser.surname = response.data.surname
@@ -137,6 +139,14 @@ export const useStore = defineStore('MyStore', {
             }
         }
     },
+
+    async saveUsers(){
+        await UserDataService.getAllUsers()
+        .then(response => {
+            this.users = response.data.slice(0)
+            console.log("то что присылает сервер:", response.data, "то что записано в this.users:", this.users)
+        }) 
+    }, 
 
     async showTodayNews(){
         console.log("today news array: ", this.news)
@@ -148,6 +158,7 @@ export const useStore = defineStore('MyStore', {
         await this.saveComments()        
         await this.saveNewsLikes()        
         await this.saveCommentsLikes()
+        await this.saveUsers()
         await this.showTodayNews()
     },
 
@@ -431,6 +442,22 @@ export const useStore = defineStore('MyStore', {
         return true
     }, 
 
+    async addPost(text, title, img){
+        var data = {
+            text: text,
+            title: title,
+            imgPath: img,
+        }
+
+        await UserDataService.createPost(data)
+        .then( response => {
+            console.log("создан новый пост", response.data)
+        })
+        .catch( e => {
+            console.log("Ошибка создания поста!!!")
+        })
+    },
+
     async addComment(newsId, user_id, commentText){
         var data = {
             text: commentText
@@ -550,6 +577,7 @@ export const useStore = defineStore('MyStore', {
          await UserDataService.getUser(this.authenticationData.enteredUserName)
             .then(response => {
                 user = response.data
+                console.log("USER: ", user)
             })
 
             if (c) {
@@ -558,6 +586,7 @@ export const useStore = defineStore('MyStore', {
                 console.log("userIn === true", this.userIn)
 
                 this.currentUser.userName = user.username
+                console.log("authenticationData.enteredUserName: ", this.authenticationData.enteredUserName, "user.username: ", user.username, "this.currentUser.userName", this.currentUser.userName)
                 this.currentUser.password = user.password
                 this.currentUser.name = user.name
                 this.currentUser.surname = user.surname
@@ -721,11 +750,26 @@ export const useStore = defineStore('MyStore', {
             alert(e)
         })
     },
+    async deleteUser(userId) {
+        await UserDataService.deleteUser(userId)
+        .then(() => {
+            console.log("пользователь", userId, "успешно удален")
+        })
+        .catch(e => {
+            alert(e)
+        })
+    },
      async deleteNews(newsId){
         console.log(newsId)
         await UserDataService.deleteNews(newsId)
         .catch(e => {
             alert(e)
         })
-     }
+     },
+     async deleteComment(newsId, commentId){
+        await UserDataService.deleteComment(newsId, commentId)
+        .then(() => {
+            console.log("комментарий", commentId, "успешно удален")
+        })
+     },
 }});

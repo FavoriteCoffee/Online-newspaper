@@ -4,7 +4,7 @@
             {{ this.user.username }}
         </v-card-title>
         <v-card-actions>
-            <v-btn >
+            <v-btn @click="myStore.deleteUser(user.id)">
                 x 
             </v-btn>
         </v-card-actions>
@@ -12,14 +12,14 @@
 </template>
 
 <script setup>
-import { useStore } from "../store/app.js";
-const myStore = useStore();
+    import { useStore } from "../store/app.js";
+    const myStore = useStore();
 
-const props = defineProps({
-user33: {
-type: Object,
-required: true,
-default: () => {},
-}
-});
+    const props = defineProps({
+    user: {
+        type: Object,
+        required: true,
+        default: () => {},
+    }
+    });
 </script>
