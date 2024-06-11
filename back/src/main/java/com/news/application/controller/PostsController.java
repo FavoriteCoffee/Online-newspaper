@@ -1,7 +1,6 @@
 package com.news.application.controller;
 
 import com.news.application.model.*;
-import com.news.application.repo.*;
 import com.news.application.service.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,6 +25,8 @@ public class PostsController {
     private final CommentsLikeService commentsLikeService;
 
     private final UserService userService;
+
+    private CategoryService categoryService;
 
     private final Logger logger = LoggerFactory.getLogger(PostsController.class);
 
@@ -253,6 +254,18 @@ public class PostsController {
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
             return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("posts/by_category/{category_name}")
+    public ResponseEntity<Object> getPostsCategories(@PathVariable("category_name") String category_name) {
+        try {
+            Category category = categoryService.findByName(category_name);
+            Iterable<Post> posts= postService.findByCategory(category);
+            return new ResponseEntity<Object>(posts, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 }

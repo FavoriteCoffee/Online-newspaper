@@ -1,7 +1,6 @@
 package com.news.application.controller;
 
 import com.news.application.model.User;
-import com.news.application.repo.UserRepository;
 import com.news.application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

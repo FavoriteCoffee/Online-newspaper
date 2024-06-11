@@ -1,5 +1,6 @@
 package com.news.application.service;
 
+import com.news.application.model.Category;
 import com.news.application.model.Post;
 import com.news.application.repo.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +47,7 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    public Iterable<Post> findByCategory(Category category){
+        return postRepository.findByCategoriesContains(category);
+    }
 }

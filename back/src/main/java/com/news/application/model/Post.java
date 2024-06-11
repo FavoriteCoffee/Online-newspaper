@@ -1,8 +1,10 @@
 package com.news.application.model;
 
+import com.news.application.service.CategoryService;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.util.*;
+
 import lombok.*;
 
 
@@ -30,4 +32,22 @@ public class    Post {
     @Column(name = "img")
     private String imgPath;
 
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "post_category",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories=new HashSet<>();
+
+    public void addCategory(Category category){
+        this.categories.add(category);
+        category.getPosts().add(this);
+    }
+    public void removeCategory(Category category){
+        this.categories.remove(category);
+        category.getPosts().remove(this);
+    }
 }
