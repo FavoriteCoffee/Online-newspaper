@@ -15,10 +15,10 @@
     const myStore = useStore();
  
     const props = defineProps({
-    user: {
-        type: Object,
-        required: true,
-        default: () => {},
+        user: {
+            type: Object,
+            required: true,
+            default: () => {},
         }
     });
 

@@ -31,12 +31,12 @@
 </template>
 
 <script setup>
-import { useStore } from "../store/app.js";
-import { ref, computed } from 'vue';
-const myStore = useStore();
+    import { useStore } from "../store/app.js";
+    import { ref, computed } from 'vue';
+    const myStore = useStore();
 
-const text = ref("")
-const title = ref("")
-const img = ref("")
+    const text = ref("")
+    const title = ref("")
+    const img = ref("")
 
 </script>

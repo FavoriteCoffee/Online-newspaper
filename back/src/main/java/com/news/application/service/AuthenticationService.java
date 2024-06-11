@@ -26,7 +26,7 @@ public class AuthenticationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signUp(SignUpRequest request) {
+    public JwtAuthenticationResponse signUp(@org.jetbrains.annotations.NotNull SignUpRequest request) {
 
         var user = User.builder()
                 .name(request.getName())

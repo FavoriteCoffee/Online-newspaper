@@ -17,14 +17,14 @@
 
    const props = defineProps({
        comment: {
-           type: Object,
-           required: true,
-           default: () => {},
+            type: Object,
+            required: true,
+            default: () => {},
        },
        newsId: {
-        type: Number,
-        required: true,
-        default: null
+            type: Number,
+            required: true,
+            default: null
        } 
    });
 </script>

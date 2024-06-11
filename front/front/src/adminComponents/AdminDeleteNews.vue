@@ -20,11 +20,11 @@
     const myStore = useStore();
     
     const props = defineProps({
-    news: {
-    type: Object,
-    required: true,
-    default: () => {},
-    }
+        news: {
+            type: Object,
+            required: true,
+            default: () => {},
+        }
     });
 
     (function () {

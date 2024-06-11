@@ -31,6 +31,7 @@ public class CommentService {
         Date date = cal.getTime();
         System.out.println(date);
         comment.setDate(date);
+        commentRepository.save(comment);
         return comment;
     }
 

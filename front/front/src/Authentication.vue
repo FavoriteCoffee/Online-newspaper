@@ -1,12 +1,14 @@
 <template>
   <v-card
     style="
+    border:3cm ; border-color:#F00;
     padding: 10px;
     margin-left:25%;
     margin-top:50px;"
     width="50%"
     title="Аутентификация">
       <v-text-field 
+        style="border:5px; border-color:#F00"
         @blur="myStore.authenticationData.enteredUserName = $event.target.value"
         label="Введите электронную почту"/>
       <v-text-field 
