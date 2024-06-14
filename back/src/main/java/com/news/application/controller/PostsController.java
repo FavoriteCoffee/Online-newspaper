@@ -26,7 +26,7 @@ public class PostsController {
 
     private final UserService userService;
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     private final Logger logger = LoggerFactory.getLogger(PostsController.class);
 
@@ -263,6 +263,18 @@ public class PostsController {
             Category category = categoryService.findByName(category_name);
             Iterable<Post> posts= postService.findByCategory(category);
             return new ResponseEntity<Object>(posts, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("posts/{post_id}/add_category/{category_name}")
+    public ResponseEntity<Object> addCategoryToPost(@PathVariable("post_id") Long post_id, @PathVariable("category_name") String category_name) {
+        try {
+            Category category = categoryService.findByName(category_name);
+            Post updatedPost = postService.addCategoryToPost(post_id, category);
+            return new ResponseEntity<Object>(updatedPost, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

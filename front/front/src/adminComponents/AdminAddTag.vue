@@ -4,10 +4,9 @@
             Создайте категорию
         </v-card-title>
         <v-card-actions>
-            <v-text-field>
-                Введите название 
-            </v-text-field>
-            <v-btn >
+            <v-text-field v-model="text"
+                label="Введите название"/>
+            <v-btn @click="myStore.addTag(text)">
                 Создать
             </v-btn>
         </v-card-actions>
@@ -16,6 +15,8 @@
 
 <script setup>
     import { useStore } from "../store/app.js";
+    import { ref, computed } from 'vue';
     const myStore = useStore();
 
+    const text = ref("")
 </script>

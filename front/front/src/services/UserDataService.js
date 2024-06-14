@@ -17,6 +17,14 @@ class UserDataService {
         return http.get(`posts/${id}/comments`)
     }
 
+    getAllCategories() {
+        return http.get(`/categories`)
+    }
+
+    getAllNewsWithCategory(category) {
+        return http.get(`/posts/by_category${category}`)
+    }
+
     getUser(name) {
         return http.get(`/users/${name}`)
     }
@@ -44,6 +52,8 @@ class UserDataService {
     getCommentsLikes(post_id, comment_id) {
         return http.get(`/posts/${post_id}/comments/${comment_id}/likes`)
     }
+
+
     
     // ---- >>  << ---- //
 
@@ -100,6 +110,14 @@ class UserDataService {
         return http.post(`/auth/sign-up`, request)
     }
 
+    createCategory(category) {
+        let token = localStorage.getItem('token')
+        return http.post(`/categories`, category, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+    }
     // ---- >>  << ---- //
 
     updateUser(id, data) {
@@ -171,6 +189,15 @@ class UserDataService {
         let token = localStorage.getItem('token')
         return http.delete(`/posts/${post_id}/comments/${comment_id}/likes/${like_id}`, {
             headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+    }
+
+    deleteCategory(id) {
+        let token = localStorage.getItem('token')
+        return http.delete(`/categories/${id}`, {
+            headers:{
                 'Authorization': `Bearer ${token}`
             }
         })

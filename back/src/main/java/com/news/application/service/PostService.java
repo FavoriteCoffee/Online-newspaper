@@ -43,6 +43,13 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Post addCategoryToPost(Long id, Category category) throws Exception {
+        Post post = findById(id);
+        System.out.println(post.getId());
+        post.addCategory(category);
+        return postRepository.save(post);
+    }
+
     public void deleteById(Long id){
         postRepository.deleteById(id);
     }

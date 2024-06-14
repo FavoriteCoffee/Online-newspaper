@@ -496,6 +496,23 @@ export const useStore = defineStore('MyStore', {
         }     
     },
 
+    async addTag(text){
+        var id
+
+        var category = {
+            name: text,
+        }
+
+        await UserDataService.createCategory(category)
+        .then( response => {
+            //тут добавление нового тега в стор для реактивности id + text
+        })
+        .catch( e => {
+            alert(e)
+            console.log("Ошибка создания категории!!!") 
+        })
+    },
+
     async verificationOfRegistration(){
         var c = true
         let user
@@ -750,6 +767,7 @@ export const useStore = defineStore('MyStore', {
             alert(e)
         })
     },
+
     async deleteUser(userId) {
         await UserDataService.deleteUser(userId)
         .then(() => {
@@ -759,6 +777,7 @@ export const useStore = defineStore('MyStore', {
             alert(e)
         })
     },
+
      async deleteNews(newsId){
         console.log(newsId)
         await UserDataService.deleteNews(newsId)
@@ -766,10 +785,22 @@ export const useStore = defineStore('MyStore', {
             alert(e)
         })
      },
+
      async deleteComment(newsId, commentId){
         await UserDataService.deleteComment(newsId, commentId)
         .then(() => {
             console.log("комментарий", commentId, "успешно удален")
+        })
+     },
+
+     async deleteTag(id){
+        await UserDataService.deleteTag(id)
+        .then( response => {
+            //удаление из стора для реактивности
+        })
+        .catch( e => {
+            alert(e)
+            console.log("Ошибка удаления категории!!!")
         })
      },
 }});

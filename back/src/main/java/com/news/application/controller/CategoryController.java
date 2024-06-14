@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class CategoryController {
-    private CategoryService categoryService;
+
+    private final CategoryService categoryService;
     private final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
     @PostMapping("/categories")
@@ -40,7 +41,7 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<Object> getCategories(@RequestBody Category category) {
+    public ResponseEntity<Object> getCategories() {
         try {
             Iterable<Category> allCategories = categoryService.getCategories();
             return new ResponseEntity<Object>(allCategories, HttpStatus.OK);

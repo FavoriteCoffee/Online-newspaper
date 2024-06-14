@@ -107,6 +107,11 @@
 
 </template>
 
+<style> 
+    v-btn{
+        margin: 20px;
+    }
+</style>
 
 <script setup>
     import { ref, computed } from 'vue';

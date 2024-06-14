@@ -32,7 +32,8 @@ public class    Post {
     @Column(name = "img")
     private String imgPath;
 
-    @ManyToMany(cascade = {
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
