@@ -13,7 +13,22 @@ SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
+CREATE TABLE public."Category" (
+    id SERIAL PRIMARY KEY,
+    name character varying(255)
+);
 
+ALTER TABLE public."Category" OWNER TO postgres;
+
+CREATE TABLE public.post_category (
+    post_id bigint NOT NULL,
+    category_id bigint NOT NULL
+);
+
+ALTER TABLE public.post_category OWNER TO postgres;
+
+ALTER TABLE ONLY public.post_category
+    ADD CONSTRAINT post_category_pkey PRIMARY KEY (post_id, category_id);
 
 CREATE TABLE public."Comment" (
     id SERIAL PRIMARY KEY,
@@ -23,10 +38,7 @@ CREATE TABLE public."Comment" (
     fk_post_id SERIAL NOT NULL
 );
 
-
 ALTER TABLE public."Comment" OWNER TO postgres;
-
-
 
 CREATE TABLE public."CommentsLike" (
     id SERIAL PRIMARY KEY,
@@ -80,35 +92,26 @@ ALTER TABLE public."User" OWNER TO postgres;
 ALTER TABLE ONLY public."User"
     ADD CONSTRAINT uk_bxs8c2q8tbrkh2hdweuly6psa UNIQUE (user_name);
 
+ALTER TABLE ONLY public.post_category
+    ADD CONSTRAINT "FK2lkn8ha959tr7xqgvpv6nf6aw" FOREIGN KEY (post_id) REFERENCES public."Post"(id);
 
+ALTER TABLE ONLY public.post_category
+    ADD CONSTRAINT "FKahunv173a0tb04euwv04jd6o8" FOREIGN KEY (category_id) REFERENCES public."Category"(id);
 
 ALTER TABLE ONLY public."Comment"
     ADD CONSTRAINT "FK6ahpivagmdi11eusrs40yhrc0" FOREIGN KEY (fk_author_id) REFERENCES public."User"(id);
 
-
-
-
 ALTER TABLE ONLY public."PostsLike"
     ADD CONSTRAINT "FKgcqbekmoubbr6v8ikprcoqcx9" FOREIGN KEY (fk_author_id) REFERENCES public."User"(id);
-
-
 
 ALTER TABLE ONLY public."PostsLike"
     ADD CONSTRAINT "FKlhykrnyaimsx3i1mg5lw1fhb0" FOREIGN KEY (fk_post_id) REFERENCES public."Post"(id);
 
-
-
 ALTER TABLE ONLY public."CommentsLike"
     ADD CONSTRAINT "FKmv3c1skvo150hxwb0g1qjh9vh" FOREIGN KEY (fk_comment_id) REFERENCES public."Comment"(id);
 
-
-
-
 ALTER TABLE ONLY public."CommentsLike"
     ADD CONSTRAINT "FKp40rx5gehvp5acfy8784igc7v" FOREIGN KEY (fk_author_id) REFERENCES public."User"(id);
-
-
-
 
 ALTER TABLE ONLY public."Comment"
     ADD CONSTRAINT "FKqp8ws620j9rersbh0s9pcbof8" FOREIGN KEY (fk_post_id) REFERENCES public."Post"(id);
