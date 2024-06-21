@@ -3,6 +3,8 @@ package com.news.application.controller;
 import com.news.application.model.*;
 import com.news.application.service.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
+import org.h2.util.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,7 +260,7 @@ public class PostsController {
     }
 
     @GetMapping("posts/by_category/{category_name}")
-    public ResponseEntity<Object> getPostsCategories(@PathVariable("category_name") String category_name) {
+    public ResponseEntity<Object> getPostsByCategory(@PathVariable("category_name") String category_name) {
         try {
             Category category = categoryService.findByName(category_name);
             Iterable<Post> posts = postService.findByCategory(category);
@@ -268,12 +270,28 @@ public class PostsController {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("posts/by_categories/{category_names}")
-    public ResponseEntity<Object> getPostsCategories(@PathVariable("category_names") List<String> category_names) {
+
+    @GetMapping("posts/by_categories")
+    public ResponseEntity<Object> getPostsByCategories(@RequestParam(value = "categoryNames") String categoryNamesJSON) {
         try {
-            List<Category> categories = categoryService.findByNames(category_names);
+            JSONArray jsonArray = new JSONArray(categoryNamesJSON);
+            String[] categoryNames = JSONParser
+            List<String> categoryNamesList = List.of(categoryNames);
+            List<Category> categories = categoryService.findByNames(categoryNamesList);
+            System.out.println(categories);
             Iterable<Post> posts = postService.findByCategories(categories);
             return new ResponseEntity<Object>(posts, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("posts/{post_id}/categories")
+    public ResponseEntity<Object> getPostsCategories(@PathVariable("post_id") Long post_id) {
+        try {
+            Iterable<Category> categories = postService.getCategories(post_id);
+            return new ResponseEntity<Object>(categories, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

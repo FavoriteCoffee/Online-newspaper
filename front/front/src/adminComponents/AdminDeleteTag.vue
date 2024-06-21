@@ -1,7 +1,7 @@
 <template>
     <div> 
          <DeleteTag
-                                 v-for="tag of myStore.tags"
+                                 v-for="tag of myStore.categories"
                                  :key="tag"
                                  :tag="tag"/>
      </div>
@@ -19,5 +19,9 @@
             default: () => {},
         }
     });
+
+    (function () {
+        myStore.loadData()
+    })();
 </script>
 

@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
 import UserDataService from "../services/UserDataService";
+import { defineStore } from "pinia";
 import axios from "axios";
 
 
@@ -12,6 +12,10 @@ export const useStore = defineStore('MyStore', {
                    {text: "com2", id: 1},
                    {text: "com3", id: 1}],
         users: [{id: 0, username: "first", name: "F", surname: "Ff"}],
+
+        categories: [{id: 1, name:"A"}],
+
+        selectedCategories: [],
         
         authenticationData: {
             enteredUserName: "",
@@ -39,16 +43,117 @@ export const useStore = defineStore('MyStore', {
                 {userName: "HippoMaru3", password: "3333"},],
 
 
-        userIn: true
+        userIn: true,
+
+        showErrMsg: false,
+
+        errMasages: {regErr: "Ошибка регистрации"},
+
+        currentErrMsg: null,
+
+        // Данные для поиска ----------------
+
+          loading: false,
+          search: '',
+          selected: [],
+
+        //   ------------------------
+        
     }),
-    
-
-// TODO поправить лайки
-
-
 
 
     actions: {
+
+    // --------- >> Методы для поиска << --------- //
+
+    allSelected() {
+        return this.selected.length === this.categories.length
+      },
+
+      tags() {
+        const search = this.search.toLowerCase()
+
+        if (!search) return this.categories
+
+        return this.categories.filter(category => {
+          const text = category.name.toLowerCase()
+
+          return text.indexOf(search) > -1
+        })
+      },
+
+      selections() {
+        const selections = []
+
+        for (const selection of this.selected) {
+          selections.push(selection)
+        }
+
+        return selections
+      },
+
+     async searchByCategories(){
+        //сравниваем полученные с сервера с текущими и удаляем несовпавшие
+        let res = []
+
+        let selected = []
+
+        for (let tag of this.selected){
+            selected.push(tag.name)
+        }
+        let names = {
+            categoryNames: selected,
+        }
+
+
+        await UserDataService.getNewsByCategories(names)
+        .then( response => {
+            console.log("то что отправляем", names)
+            console.log("то что получили", response.data)
+            res = response.data
+        })
+        .catch( e => {
+            console.log(names)
+            console.log("Ошибка получения новостей по категории")
+        })
+
+        let find = false
+
+        for (let i = 0; i < this.news.length; ++i){
+            for (let n of res) {
+                if( news[i].id == n.id) 
+                    find = true
+                    break
+            }
+            if (!find){
+                this.news.splice(i, 1)
+                find = false
+            }
+        }
+
+        console.log("ПОИСК", this.news)
+      },
+
+    // watch 
+
+    //   selected() {
+    //     this.search = ''
+    //   },
+
+
+    // methods
+      next() {
+        this.loading = true
+
+        setTimeout(() => {
+          this.search = ''
+          this.selected = []
+          this.loading = false
+        }, 2000)
+      },
+  
+
+
     
     // ---------- >>  GETTERS  << --------- //
    
@@ -148,6 +253,30 @@ export const useStore = defineStore('MyStore', {
         }) 
     }, 
 
+    async saveCategories(){
+    await UserDataService.getAllCategories()
+    .then( response => {
+        this.categories = response.data.slice(0)
+        console.log ("ВСЕ КАТЕГОРИИ:", this.categories)
+    })
+    .catch( e => {
+        console.log("ОШИБКА ПОЛУЧЕНИЯ КАТЕГОРИЙ С СЕРВЕРА")
+        console.log(e)
+    }) 
+
+    for (let news of this.news){
+            await UserDataService.getNewsCategories(news.id)
+            .then(response => {
+                for (let n of this.news){
+                    if (n.id === news.id) {
+                        n.categories = response.data.slice(0)
+                        console.log("из сохранения категорий, новости номер ", n.categories)
+                    }
+                } 
+            })
+        }
+    },
+
     async showTodayNews(){
         console.log("today news array: ", this.news)
     },
@@ -159,6 +288,7 @@ export const useStore = defineStore('MyStore', {
         await this.saveNewsLikes()        
         await this.saveCommentsLikes()
         await this.saveUsers()
+        await this.saveCategories()
         await this.showTodayNews()
     },
 
@@ -237,6 +367,14 @@ export const useStore = defineStore('MyStore', {
         }
         else 
             return null
+    },
+
+    getCategoriesNames(){
+        let res = []
+        for (let tag of this.categories){
+            res.push(tag.name)
+        }
+        return res
     },
 
     isNewsLiked(newsId){
@@ -448,14 +586,25 @@ export const useStore = defineStore('MyStore', {
             title: title,
             imgPath: img,
         }
+        let id
 
         await UserDataService.createPost(data)
         .then( response => {
             console.log("создан новый пост", response.data)
+            id = response.data.id
         })
         .catch( e => {
             console.log("Ошибка создания поста!!!")
         })
+
+        for(let category_name of this.selectedCategories){
+            await UserDataService.addCategoryForNews(id, category_name)
+            .catch( e => {
+                console.log("Ошибка добавления категории: ",category_name)
+            })
+        }
+        
+        this.selectedCategories = []
     },
 
     async addComment(newsId, user_id, commentText){
@@ -529,10 +678,14 @@ export const useStore = defineStore('MyStore', {
                 await UserDataService.signUp(request)
                 .then(response => {
                     localStorage.setItem("token", response.data.token)
+                    this.showErrMsg = false
+                    this.currentErrMsg = null
                 })
                 .catch( e => {
                     c = false
                     console.log("Ошибка регистрации")
+                    this.showErrMsg = true
+                    this.currentErrMsg = this.errMasages.regErr
                     return
                 })
             }
@@ -794,7 +947,7 @@ export const useStore = defineStore('MyStore', {
      },
 
      async deleteTag(id){
-        await UserDataService.deleteTag(id)
+        await UserDataService.deleteCategory(id)
         .then( response => {
             //удаление из стора для реактивности
         })

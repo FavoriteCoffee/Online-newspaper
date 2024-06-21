@@ -21,10 +21,19 @@ class UserDataService {
         return http.get(`/categories`)
     }
 
+    getNewsCategories(news_id) {
+        return http.get(`posts/${news_id}/categories`)
+    }
+
     getAllNewsWithCategory(category) {
         return http.get(`/posts/by_category${category}`)
     }
 
+    getNewsByCategories(category_names) {
+        console.log(category_names)
+        return http.get(`posts/by_categories`, category_names)
+    }
+    
     getUser(name) {
         return http.get(`/users/${name}`)
     }
@@ -118,7 +127,17 @@ class UserDataService {
             }
         })
     }
+
     // ---- >>  << ---- //
+
+    addCategoryForNews(post_id, category_name) {
+        let token = localStorage.getItem('token')
+        return http.put(`posts/${post_id}/add_category/${category_name}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+    }
 
     updateUser(id, data) {
         let token = localStorage.getItem('token')

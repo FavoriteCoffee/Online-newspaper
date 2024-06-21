@@ -30,7 +30,7 @@ public class CategoryController {
         }
     }
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<HttpStatus> deletePost(@PathVariable("id") Long id) {
+    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") Long id) {
         try {
             categoryService.deleteById(id);
             return new ResponseEntity<HttpStatus>(HttpStatus.OK);
@@ -61,4 +61,5 @@ public class CategoryController {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
+
 }

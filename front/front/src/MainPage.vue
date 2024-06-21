@@ -48,12 +48,17 @@
   </v-card>
   
   <div>
+    <Search/>
+  </div>
+
+  <div>
     <News v-for="news of myStore.news" :key="news.id" :news="news"/>
   </div>  
 </template>
 
 <script setup>
 import News from './News.vue'
+import Search from './Search.vue'
 import { ref, computed } from 'vue';
 import { useStore } from "./store/app.js";
 const myStore = useStore();
@@ -74,4 +79,4 @@ const change = () => {
   myStore.loadData()
   myStore.userIn = true
 })();
-</script>
+ </script>

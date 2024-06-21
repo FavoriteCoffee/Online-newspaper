@@ -47,7 +47,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:6.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:6.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:6.2.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.h2database:h2:2.2.224" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:2.2.224" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-validation:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-el:10.1.17" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate.validator:hibernate-validator:8.0.1.Final" level="project" />

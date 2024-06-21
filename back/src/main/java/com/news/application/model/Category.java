@@ -1,5 +1,6 @@
 package com.news.application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Category {
     @Column(name = "name")
     private String name;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories")
     private Set<Post> posts=new HashSet<>();
 }

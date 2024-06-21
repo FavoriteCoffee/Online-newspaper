@@ -25,6 +25,11 @@
       <router-link to="/registration" class="nav-link">
         <v-btn>Регистрация</v-btn>
       </router-link>
+
+      <router-link to="/admin" class="nav-link"
+      style="float: right;">
+        <a>Войти как администратор</a>
+      </router-link>
   </v-card>
 </template>
 

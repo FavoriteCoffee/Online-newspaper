@@ -35,9 +35,11 @@ public class CategoryService {
 
     public List<Category> findByNames(List<String> names){
         List<Category> categories = new ArrayList<>();
+        System.out.println(1);
         for (String name : names){
             categories.add(categoryRepository.findByName(name));
         }
+        System.out.println(2);
         return categories;
     }
 }

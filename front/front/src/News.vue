@@ -29,7 +29,7 @@
                             <div style="
                                 font-size: 2em;
                                 font-family: Georgia, 'Times New Roman', Times, serif;">
-                                {{ news.id }} {{ news.title }}
+                                {{ news.title }}
                             </div>
                         </v-col>
 
@@ -39,6 +39,34 @@
                             </div>
                         </v-col>
                     </v-row>
+
+                    <!-- КАТЕГОРИИ -->
+
+                    <div
+                    style="margin-bottom: 10px;">
+                        <v-row>
+                            <v-col
+                                v-for="(selection, i) in this.news.categories"
+                                :key="selection.name"
+                                class="py-1 pe-0"
+                                cols="auto"
+                                >
+                                <v-chip
+                                variant="flat"
+                            
+                                style="
+                                font-size: small;
+                                color:black;
+                                
+                                background-color: #DCD2F2;"
+                                >
+                                <!-- <v-icon :icon="selection.icon" start></v-icon> -->
+                    
+                                {{ selection.name }}
+                                </v-chip>
+                            </v-col>
+                        </v-row>
+                    </div>
 
                     <!-- ТЕКСТ -->
 
@@ -135,7 +163,10 @@
 
                     <v-row style="padding-right: 6%; ; padding-left: 4%;">
                         <v-col  align="end" cols="8" offset="4">
-                            <v-btn @click="changeAllCommentsVisibility">
+                            <v-btn          
+                                color="#8674AF"
+                                variant="text"
+                                @click="changeAllCommentsVisibility">
                                 <p class="material-icons">expand_less</p> Свернуть комментарии
                             </v-btn>
                         </v-col>
@@ -158,7 +189,10 @@
 
                     <v-row style="padding-right: 6%; ; padding-left: 4%;">
                         <v-col align="end" cols="8" offset="4">
-                            <v-btn @click="changeAllCommentsVisibility">
+                            <v-btn 
+                                color="#8674AF"
+                                variant="text"
+                                @click="changeAllCommentsVisibility">
                                 <p class="material-icons">expand_more</p> Еще комментарии
                             </v-btn>
                         </v-col>

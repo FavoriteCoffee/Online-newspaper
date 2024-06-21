@@ -48,6 +48,11 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Iterable<Category> getCategories(Long id) throws Exception {
+        Post post = findById(id);
+        return post.getCategories();
+    }
+
     public void deleteById(Long id){
         postRepository.deleteById(id);
     }
@@ -62,6 +67,8 @@ public class PostService {
         iter.forEachRemaining(postsSet::add);
         Set<Post> tempSet = new HashSet<>();
         for (Category category : categories){
+            postsSet.forEach(System.out::println);
+            System.out.println();
             iter = postRepository.findByCategoriesContains(category).iterator();
             iter.forEachRemaining(tempSet::add);
             postsSet.retainAll(tempSet);

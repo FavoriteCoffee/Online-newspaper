@@ -10,6 +10,8 @@ import AdminDeleteComment from "@/adminComponents/AdminDeleteComment";
 import AdminDeleteTag from "@/adminComponents/AdminDeleteTag";
 import AdminAddTag from "@/adminComponents/AdminAddTag";
 import AdminAddNews from "@/adminComponents/AdminAddNews";
+import Search from "@/Search.vue";
+
 
 export default createRouter({
   history: createWebHistory(),
@@ -25,5 +27,6 @@ export default createRouter({
     { path: '/admin/delete_tag', component: AdminDeleteTag},
     { path: '/admin/add_tag', component: AdminAddTag},
     { path: '/admin/add_news', component: AdminAddNews},
+    { path: '/search', component: Search },
   ]
 })

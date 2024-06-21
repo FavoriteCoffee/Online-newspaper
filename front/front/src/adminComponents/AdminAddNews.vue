@@ -10,7 +10,14 @@
                 label="Заголовок"/>
             </v-row>
             <v-row>
-                <v-text-field label="Категории"/>
+                <!-- <v-text-field label="Категории"/> -->
+                <v-select
+                chips
+                label="Категории"
+                v-model="myStore.selectedCategories"
+                :items="myStore.getCategoriesNames()"
+                multiple
+                ></v-select>
             </v-row>
             <v-row>
                 <v-text-field v-model="text"
@@ -35,8 +42,13 @@
     import { ref, computed } from 'vue';
     const myStore = useStore();
 
+    (function () {
+        myStore.loadData()
+    })();
+
     const text = ref("")
     const title = ref("")
     const img = ref("")
+
 
 </script>
