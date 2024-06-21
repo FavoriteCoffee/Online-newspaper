@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -261,7 +261,18 @@ public class PostsController {
     public ResponseEntity<Object> getPostsCategories(@PathVariable("category_name") String category_name) {
         try {
             Category category = categoryService.findByName(category_name);
-            Iterable<Post> posts= postService.findByCategory(category);
+            Iterable<Post> posts = postService.findByCategory(category);
+            return new ResponseEntity<Object>(posts, HttpStatus.OK);
+        } catch(Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("posts/by_categories/{category_names}")
+    public ResponseEntity<Object> getPostsCategories(@PathVariable("category_names") List<String> category_names) {
+        try {
+            List<Category> categories = categoryService.findByNames(category_names);
+            Iterable<Post> posts = postService.findByCategories(categories);
             return new ResponseEntity<Object>(posts, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);

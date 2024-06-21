@@ -6,9 +6,7 @@ import com.news.application.repo.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +54,19 @@ public class PostService {
 
     public Iterable<Post> findByCategory(Category category){
         return postRepository.findByCategoriesContains(category);
+    }
+
+    public Iterable<Post> findByCategories(List<Category> categories){
+        Iterator<Post> iter = findAll().iterator();
+        Set<Post> postsSet = new HashSet<>();
+        iter.forEachRemaining(postsSet::add);
+        Set<Post> tempSet = new HashSet<>();
+        for (Category category : categories){
+            iter = postRepository.findByCategoriesContains(category).iterator();
+            iter.forEachRemaining(tempSet::add);
+            postsSet.retainAll(tempSet);
+            tempSet.clear();
+        }
+        return postsSet;
     }
 }

@@ -5,6 +5,9 @@ import com.news.application.repo.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -28,5 +31,13 @@ public class CategoryService {
 
     public Category findByName(String name){
         return categoryRepository.findByName(name);
+    }
+
+    public List<Category> findByNames(List<String> names){
+        List<Category> categories = new ArrayList<>();
+        for (String name : names){
+            categories.add(categoryRepository.findByName(name));
+        }
+        return categories;
     }
 }
