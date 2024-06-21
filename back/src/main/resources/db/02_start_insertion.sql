@@ -61,6 +61,32 @@ INSERT INTO public."Post"(
     date, img, text, title)
     VALUES (CURRENT_DATE, '../img/fon.png', 'текст четвертой новости', 'заголовок четвертой новости');
 
+-- categories insertion
+
+INSERT INTO public."Category"(
+    name)
+    VALUES("Category 1")
+
+INSERT INTO public."Category"(
+    name)
+    VALUES("Category 2")
+
+INSERT INTO public."post_category"(
+    post_id, category_id)
+    VALUES(1, 1)
+
+INSERT INTO public."post_category"(
+    post_id, category_id)
+    VALUES(1, 2)
+
+INSERT INTO public."post_category"(
+    post_id, category_id)
+    VALUES(2, 1)
+
+INSERT INTO public."post_category"(
+    post_id, category_id)
+    VALUES(3, 2)
+
 -- comments insertion
 
 INSERT INTO public."Comment"(
