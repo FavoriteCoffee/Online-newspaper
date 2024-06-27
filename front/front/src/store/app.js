@@ -8,6 +8,8 @@ export const useStore = defineStore('MyStore', {
         news: [{id: 1, likedBy: ["name"], showText:false, date:"01.02.03", img:'./img/cat.jpg', title:" t1", text: ' ', comments: [{text: "1коммент 1 новости", id:'1111'}, {text: "2коммент 1 новости", id:'1111'}, {text: "3коммент 1 новости", id:'1111'}]},
                  {id: 2, likedBy: ["name"],  showText:false, date:"01.02.03", img:'#', title:"title2", text: '2News', comments: [{likedBy: ["name"], text: " ", id:'1111'}, {text: "2коммент 2 новости", id:'1111'}, {text: "3коммент 2 новости", id:'1111'}]},
             	 {id: 3,  likedBy: [], showText:false, date:"01.02.03", img:'./img/castle.jpeg', title:"title3", text: '3News', comments:[{text: "com11", id: 11}, {text: "com12", id: 12}]}],
+        
+        temp: [{}],
         comments: [[{text: "com11", id: 11}, {text: "com12", id: 12}],
                    {text: "com2", id: 1},
                    {text: "com3", id: 1}],
@@ -47,7 +49,7 @@ export const useStore = defineStore('MyStore', {
 
         showErrMsg: false,
 
-        errMasages: {regErr: "Ошибка регистрации"},
+        errMasages: {regErr: "Ошибка регистрации", authErr: "Ошибка аутентификации"},
 
         currentErrMsg: null,
 
@@ -92,7 +94,7 @@ export const useStore = defineStore('MyStore', {
         return selections
       },
 
-     async searchByCategories(){
+    async searchByCategories(){
         //сравниваем полученные с сервера с текущими и удаляем несовпавшие
         let res = []
 
@@ -101,35 +103,59 @@ export const useStore = defineStore('MyStore', {
         for (let tag of this.selected){
             selected.push(tag.name)
         }
-        let names = {
-            categoryNames: selected,
-        }
 
 
-        await UserDataService.getNewsByCategories(names)
+        await UserDataService.getNewsByCategories(selected)
         .then( response => {
-            console.log("то что отправляем", names)
+            console.log("то что отправляем", selected)
             console.log("то что получили", response.data)
             res = response.data
         })
         .catch( e => {
-            console.log(names)
+            console.log(selected)
             console.log("Ошибка получения новостей по категории")
         })
 
-        let find = false
+        await this.loadData()
 
-        for (let i = 0; i < this.news.length; ++i){
-            for (let n of res) {
-                if( news[i].id == n.id) 
-                    find = true
-                    break
+        console.log("NEWS", this.news)
+        console.log("RES", res)        
+        let del = []
+        let found = false
+
+        this.news.push({id: 10, showText:false, date:"01.02.03", img:'./img/cat.jpg', title:" t1", text: ' ;;;;;;;;;;;;;;;;'})
+
+        for (let news of this.news){
+            for (let n of res){
+                if (news.id == n.id){
+                    found = true
+                    console.log(news.id, "==", n.id)
+                }
             }
-            if (!find){
-                this.news.splice(i, 1)
-                find = false
+            if(!found){
+                let ind = this.news.indexOf(news)
+                this.news.splice(ind, 1)
+                console.log("ИНДЕКС", ind)
             }
+            found = false
         }
+
+       
+
+        // let find = false
+
+        // for (let i = 0; i < this.news.length; ++i){
+        //     for (let n of res) {
+        //         if( news[i].id == n.id) 
+        //             find = true
+        //             break
+        //     }
+        //     if (!find){
+        //         this.news.splice(i, 1)
+                
+        //     }
+        //     find = false
+        // }
 
         console.log("ПОИСК", this.news)
       },
@@ -173,7 +199,7 @@ export const useStore = defineStore('MyStore', {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.comments = response.data.slice(0)
-                        console.log("из сохранения комментариев, новости номер ", n.comments)
+                        // console.log("из сохранения комментариев, новости номер ", n.comments)
                     }
                 } 
             })
@@ -740,6 +766,8 @@ export const useStore = defineStore('MyStore', {
                 .catch( e => {
                     c = false
                     console.log("Неверный логин")
+                    this.showErrMsg = true
+                    this.currentErrMsg = this.errMasages.authErr
                     //localStorage.clear()
                     return
                 })

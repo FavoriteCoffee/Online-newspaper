@@ -1,4 +1,21 @@
 <template>
+    <v-card 
+    v-if="myStore.showErrMsg"
+    style="
+    color:#fff;
+    background-color: #a00;
+    height: 50px;
+    padding-left: 10px; 
+    margin-left:25%; 
+    margin-top:20px;
+    margin-bottom: -30px;"
+    width="50%"
+    :title="myStore.currentErrMsg">
+    <v-container>
+        <!-- {{ myStore.currentErrMsg }} -->
+    </v-container>
+  </v-card>
+
   <v-card
     style="
     border:3cm ; border-color:#F00;
@@ -36,6 +53,10 @@
 <script setup>
 import { useStore } from "./store/app.js";
 const myStore = useStore();
+
+(function () {
+  myStore.showErrMsg = false
+})();
 </script>
 
 <style scoped>

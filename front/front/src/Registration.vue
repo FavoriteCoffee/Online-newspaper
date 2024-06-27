@@ -50,6 +50,10 @@
 <script setup>
 import { useStore } from "./store/app.js";
 const myStore = useStore();
+
+(function () {
+  myStore.showErrMsg = false
+})();
 </script>
 
 <style scoped>

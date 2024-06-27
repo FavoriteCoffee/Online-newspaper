@@ -62,18 +62,30 @@ public class PostService {
     }
 
     public Iterable<Post> findByCategories(List<Category> categories){
-        Iterator<Post> iter = findAll().iterator();
-        Set<Post> postsSet = new HashSet<>();
-        iter.forEachRemaining(postsSet::add);
-        Set<Post> tempSet = new HashSet<>();
+        Iterator<Post> iter = findRecent().iterator();
+        Set<Long> postsIdSet = new HashSet<>();
+        iter.forEachRemaining((x) -> postsIdSet.add(x.getId()));
+        Set<Long> tempSet = new HashSet<>();
+        System.out.println(categories);
         for (Category category : categories){
-            postsSet.forEach(System.out::println);
+            System.out.println("POSTS:");
+            postsIdSet.forEach(System.out::println);
             System.out.println();
             iter = postRepository.findByCategoriesContains(category).iterator();
-            iter.forEachRemaining(tempSet::add);
-            postsSet.retainAll(tempSet);
+            iter.forEachRemaining((x -> tempSet.add(x.getId())));
+            System.out.println("TEMPSET:");
+            tempSet.forEach(System.out::println);
+            postsIdSet.retainAll(tempSet);
             tempSet.clear();
         }
+        Set<Post> postsSet = new HashSet<>();
+        postsIdSet.forEach((x -> {
+            try {
+                postsSet.add(findById(x));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
         return postsSet;
     }
 }

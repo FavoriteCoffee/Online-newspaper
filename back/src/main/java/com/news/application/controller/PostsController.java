@@ -272,13 +272,10 @@ public class PostsController {
     }
 
     @GetMapping("posts/by_categories")
-    public ResponseEntity<Object> getPostsByCategories(@RequestParam(value = "categoryNames") String categoryNamesJSON) {
+    public ResponseEntity<Object> getPostsByCategories(@RequestParam(value = "categoryName") String[] categoryNames) {
         try {
-            JSONArray jsonArray = new JSONArray(categoryNamesJSON);
-            String[] categoryNames = JSONParser
             List<String> categoryNamesList = List.of(categoryNames);
             List<Category> categories = categoryService.findByNames(categoryNamesList);
-            System.out.println(categories);
             Iterable<Post> posts = postService.findByCategories(categories);
             return new ResponseEntity<Object>(posts, HttpStatus.OK);
         } catch(Exception ex) {

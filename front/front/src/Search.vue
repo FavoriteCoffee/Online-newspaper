@@ -50,7 +50,7 @@
         </v-row>
         <v-spacer></v-spacer>
   
-        <div v-if="show">
+    <div v-if="show">
       <v-container style="padding: 0;">
         <v-row align="center" justify="start">
           <v-col
@@ -85,7 +85,8 @@
           <v-col cols="1">
             <v-btn 
             icon="mdi-magnify" 
-            @click="myStore.searchByCategories()"
+            @click="searchByCategories()"
+
            />
           </v-col>
         </v-row>
@@ -112,7 +113,7 @@
   
       <v-divider></v-divider>
       
-</div>
+    </div>
     </v-card>
   </template>
   
@@ -124,5 +125,10 @@
   const myStore = useStore();
 
   const show = ref(false)
+
+  const searchByCategories = () => {
+    show.value = false
+    myStore.searchByCategories()
+  }
   
   </script>
