@@ -198,7 +198,7 @@ export const useStore = defineStore('MyStore', {
             .then(response => {
                 for (let n of this.news){
                     if (n.id === news.id) {
-                        n.comments = response.data.slice(0)
+                        n.comments = response.data.slice(0).reverse()
                         // console.log("из сохранения комментариев, новости номер ", n.comments)
                     }
                 } 
@@ -665,7 +665,7 @@ export const useStore = defineStore('MyStore', {
 
         for (let news of this.news) {
             if (news.id == newsId) {
-                news.comments.push(comment)
+                news.comments.unshift(comment)
                 console.log("полный список коментов ", news.comments)   
             }
         }     
