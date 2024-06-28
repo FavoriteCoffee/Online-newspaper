@@ -208,7 +208,7 @@
                             <v-textarea
                                 @blur="changeCommentText($event.target.value)"
                                 label="Оставьте комментарий"
-                                maxlength="20"
+                                maxlength="1000"
                                 single-line/>
                             <v-btn @click="myStore.addComment(this.news.id, myStore.currentUser.id, getCommentText())"
                                 width="100%">
