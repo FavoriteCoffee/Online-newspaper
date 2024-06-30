@@ -276,6 +276,7 @@ public class PostsController {
         try {
             List<String> categoryNamesList = List.of(categoryNames);
             List<Category> categories = categoryService.findByNames(categoryNamesList);
+            System.out.println(categories);
             Iterable<Post> posts = postService.findByCategories(categories);
             return new ResponseEntity<Object>(posts, HttpStatus.OK);
         } catch(Exception ex) {

@@ -32,7 +32,7 @@
                 color="#8674AF"
                 variant="text"
                 @click="show=false"
-                style="float: right;"
+                style="float: right; padding: 0;"
                 >
                 Свернуть
                 </v-btn>
@@ -42,7 +42,7 @@
                 color="#8674AF"
                 variant="text"
                 @click="show=true"
-                style="float: right;"
+                style="float: right; float: top; padding: 0;"
                 >
                 Искать
                 </v-btn>
@@ -83,34 +83,36 @@
           </v-col>
 
           <v-col cols="1">
-            <v-btn 
+            <v-btn style="float: top; margin: 0;"
             icon="mdi-magnify" 
-            @click="searchByCategories()"
-
-           />
+            @click="searchByCategories()"/>
           </v-col>
         </v-row>
       </v-container>
   
-      <v-divider v-if="!myStore.allSelected()"></v-divider>
-  
-      <v-list>
-        <template v-for="item in myStore.tags()">
-          <v-list-item
-            v-if="!myStore.selected.includes(item)"
-            :key="item.name"
-            :disabled="myStore.loading"
-            @click="myStore.selected.push(item)"
-          >
-            <template v-slot:prepend>
-              <!-- <v-icon :disabled="myStore.loading" :icon="item.icon"></v-icon> -->
-            </template>
-  
-            <v-list-item-title v-text="item.name"></v-list-item-title>
-          </v-list-item>
-        </template>
-      </v-list>
-  
+      <v-container style="padding: 0; margin: 0;">
+        <v-row>
+          <v-col cols="11">
+            <v-divider v-if="!myStore.allSelected()"></v-divider>
+            <v-list>
+              <template v-for="item in myStore.tags()">
+                <v-list-item
+                  v-if="!myStore.selected.includes(item)"
+                  :key="item.name"
+                  :disabled="myStore.loading"
+                  @click="myStore.selected.push(item)"
+                >
+                  <template v-slot:prepend>
+                    <!-- <v-icon :disabled="myStore.loading" :icon="item.icon"></v-icon> -->
+                  </template>
+        
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-col>
+        </v-row>
+      </v-container>
       <v-divider></v-divider>
       
     </div>

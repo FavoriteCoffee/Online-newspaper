@@ -1,20 +1,27 @@
 <template>
-    <v-card>
-        <v-card-actions>
+        <div
+        style="
+        padding: 0px;
+        padding-left: 10px;
+        padding-right: 15px;">
             <v-conteiner>
                 <v-row>
-                    <v-col>
-                        {{ this.tag.name }}
+                    <v-col cols="11">
+                        <p style="margin: 15px;">{{ this.tag.name }}</p>
                     </v-col>
-                    <v-col>
-                        <v-btn @click="myStore.deleteTag(this.tag.id)">
-                            x 
+                    <v-col cols="1">
+                        <v-btn
+                        variant="text" 
+                        @click="myStore.deleteTag(this.tag.id)"
+                        icon="mdi-delete-outline"
+                        style="color: #8674AF;">
+                            
                         </v-btn>
                     </v-col>
                 </v-row>
+                <v-divider ></v-divider>
             </v-conteiner>
-        </v-card-actions>
-    </v-card>
+        </div>
 </template>
 
 <script setup>

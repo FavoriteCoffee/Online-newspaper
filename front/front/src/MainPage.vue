@@ -1,6 +1,6 @@
 <template>
   <router-view /> 
-  <v-card 
+  <!-- <v-card 
     width="100%"
     height="80px"
     style="background-image: url('./img/top.png');
@@ -45,7 +45,9 @@
           </router-link>
       </v-col>
     </v-row>
-  </v-card>
+  </v-card> -->
+
+  <Header></Header>
   
   <div>
     <Search/>
@@ -59,6 +61,7 @@
 <script setup>
 import News from './News.vue'
 import Search from './Search.vue'
+import Header from './Header.vue';
 import { ref, computed } from 'vue';
 import { useStore } from "./store/app.js";
 const myStore = useStore();

@@ -1,3 +1,29 @@
+// let router = new Router({
+//   routes: [
+//         { path: '/main', component: MainPage},
+//         { path: '/authentication', component: Authentication},
+//         { path: '/registration', component: Registration},
+//         { path: '/generalmain', component: GeneralMainPage, alias: '/'},
+//         { path: '/admin', component: Admin},
+//         { path: '/admin/delete_news', component: AdminDeleteNews},
+//         { path: '/admin/delete_user', component: AdminDeleteUser},
+//         { path: '/admin/delete_comment', component: AdminDeleteComment},
+//         { path: '/admin/delete_tag', component: AdminDeleteTag},
+//         { path: '/admin/add_tag', component: AdminAddTag},
+//         { path: '/admin/add_news', component: AdminAddNews},
+//         { path: '/search', component: Search },
+//       ]
+// })
+
+// router.beforeEach((from, to, next) => {
+
+// })
+// router.beforeEach((to, from, next) => {
+//   if (to.name == 'Admin') next(error)
+//   else next()
+// })
+
+
 import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from "@/MainPage.vue";
 import GeneralMainPage from "@/GeneralMainPage.vue";

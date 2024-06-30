@@ -439,6 +439,16 @@ export const useStore = defineStore('MyStore', {
         return false
     },
 
+    isUserAnAdmin(){
+        let token = localStorage.getItem('token')
+        if (token !== null){
+            let user = JSON.parse(this.jwt_decode(token))
+            return user.role == "ROLE_ADMIN"
+        }
+        else 
+            return false
+    },
+
     // ---------- >>  MUTATIONS  << --------- //
 
     exit(){
@@ -686,6 +696,10 @@ export const useStore = defineStore('MyStore', {
             alert(e)
             console.log("Ошибка создания категории!!!") 
         })
+    },
+
+    logInAsAdmin(){
+
     },
 
     async verificationOfRegistration(){
@@ -957,6 +971,12 @@ export const useStore = defineStore('MyStore', {
         .catch(e => {
             alert(e)
         })
+
+        for (let i = 0; i < this.users.length; ++i){
+            if (this.users[i].id == userId){
+                this.users.splice(i, 1)
+            }
+        }
     },
 
      async deleteNews(newsId){
@@ -972,12 +992,29 @@ export const useStore = defineStore('MyStore', {
         .then(() => {
             console.log("комментарий", commentId, "успешно удален")
         })
+
+        for (let i = 0; i < this.news.length; ++i){
+            if(this.news[i].id == newsId){
+                if (this.news[i].comments != [] &&  this.news[i].comments.length !== 0){
+                    for(let j = 0; j < this.news[i].comments.length; ++j){
+                        if (this.news[i].comments[j].id === commentId){
+                            this.news[i].comments.splice(j, 1)
+                        }
+                    }
+                }
+            }
+        }
      },
 
      async deleteTag(id){
         await UserDataService.deleteCategory(id)
         .then( response => {
             //удаление из стора для реактивности
+            for (let i = 0; i < this.categories.length; ++i){
+                if (this.categories[i].id == id){
+                    this.categories.splice(i, 1)
+                }
+            }
         })
         .catch( e => {
             alert(e)

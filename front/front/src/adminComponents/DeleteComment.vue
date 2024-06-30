@@ -1,14 +1,25 @@
 <template>
-    <v-card>
-       <v-card-text>
-           {{ this.comment.text }}
-       </v-card-text>
-       <v-card-actions>
-           <v-btn @click="myStore.deleteComment(this.newsId, this.comment.id)">
-               x 
-           </v-btn>
-       </v-card-actions>
-   </v-card>
+    <div
+    style="
+        padding: 0px;
+        padding-left: 10px;
+        padding-right: 15px;">
+        <v-container>
+            <v-row>
+                <v-col cols="11">
+                    <p style="margin: 15px;">{{ this.comment.text }}</p>
+                </v-col>                
+                <v-col cols="1">
+                    <v-btn 
+                        @click="myStore.deleteComment(this.newsId, this.comment.id)"
+                        variant="text" 
+                        icon="mdi-delete-outline"
+                        style="color: #8674AF;"/>
+                </v-col>
+            </v-row>
+        <v-divider ></v-divider>
+        </v-container>         
+    </div>
 </template>
 
 <script setup>

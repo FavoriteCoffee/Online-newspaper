@@ -1,21 +1,26 @@
 <template>
-    <v-card>
-        <v-card-actions>
-            <v-conteiner>
+    <div 
+        style="
+        padding: 0px;
+        padding-left: 10px;
+        padding-right: 15px;">
+        
+            <v-container>
                 <v-row>
-                    <v-col>
+                    <v-col cols="11">
                         {{ this.news.title }}
                     </v-col>
-                    <v-col>
-                        <v-btn @click="myStore.deleteNews(this.news.id)">
-                            x 
-                        </v-btn>
+                    <v-col cols="1">
+                        <v-btn
+                        @click="myStore.deleteNews(this.news.id)"
+                        variant="text" 
+                        icon="mdi-delete-outline"
+                        style="color: #8674AF;"/> 
                     </v-col>
                 </v-row>
-            </v-conteiner>
-            
-        </v-card-actions>
-    </v-card>
+                <v-divider ></v-divider>
+            </v-container>
+            </div>
 </template>
 
 <script setup>
