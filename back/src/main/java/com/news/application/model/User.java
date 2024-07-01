@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+
 import lombok.*;
 
 
@@ -38,6 +40,8 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @OneToMany(mappedBy = "author", cascade=CascadeType.ALL,orphanRemoval=true)
+    private Set<Comment> comments;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,5 +71,6 @@ public class User implements UserDetails {
     public String getUsername() {
         return userName;
     }
+
 
 }

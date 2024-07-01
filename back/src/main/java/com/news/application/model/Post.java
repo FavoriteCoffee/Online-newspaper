@@ -43,6 +43,9 @@ public class    Post {
     )
     private Set<Category> categories=new HashSet<>();
 
+    @OneToMany(mappedBy = "post", cascade=CascadeType.ALL,orphanRemoval=true)
+    private Set<Comment> comments;
+
     public void addCategory(Category category){
         this.categories.add(category);
         category.getPosts().add(this);

@@ -2,7 +2,7 @@
     <Header></Header>
 
     <v-card
-    v-if="!myStore.isUserAnAdmin()"
+    v-if="myStore.isUserAnAdmin()"
     width="72%"
         style="
         margin: 10px;
@@ -93,7 +93,7 @@
                     class="adminbtn"
                     color="#8674AF"
                     variant="text">
-                        Удалить ктегорию
+                        Удалить категорию
                     </v-btn> 
                 </router-link>
             </v-row>

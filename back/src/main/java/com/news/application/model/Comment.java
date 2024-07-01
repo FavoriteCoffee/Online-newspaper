@@ -24,7 +24,7 @@ public class Comment {
     private Date date;
 
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne( optional = false)
     @JoinColumn(name = "fk_author_id")
     private User author;
 

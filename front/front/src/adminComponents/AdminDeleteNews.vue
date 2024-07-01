@@ -4,7 +4,7 @@
     </div>
 
     <v-card
-     v-if="!myStore.isUserAnAdmin()"
+     v-if="myStore.isUserAnAdmin()"
     width="72%"
         style="
         margin: 10px;

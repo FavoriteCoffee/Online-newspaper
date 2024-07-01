@@ -2,7 +2,7 @@
  <Header></Header>
 
     <v-card
-     v-if="!myStore.isUserAnAdmin()"
+     v-if="myStore.isUserAnAdmin()"
     width="72%"
         style="
         margin: 10px;
@@ -12,9 +12,7 @@
         padding-right: 15px;
         border: solid;
         border-color: #b4c987;
-        background-color: #fff;
-        text-align: left !important;
-        float: center;">
+        background-color: #fff;">
         <div>
             <AdminDeleteCommentsList 
                                 v-for="news of myStore.news"
