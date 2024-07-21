@@ -68,27 +68,27 @@ INSERT INTO public."Post"(
 
 INSERT INTO public."Category"(
     name)
-    VALUES("Category 1")
+    VALUES('Category 1');
 
 INSERT INTO public."Category"(
     name)
-    VALUES("Category 2")
+    VALUES('Category 2');
 
 INSERT INTO public."post_category"(
     post_id, category_id)
-    VALUES(1, 1)
+    VALUES(1, 1);
 
 INSERT INTO public."post_category"(
     post_id, category_id)
-    VALUES(1, 2)
+    VALUES(1, 2);
 
 INSERT INTO public."post_category"(
     post_id, category_id)
-    VALUES(2, 1)
+    VALUES(2, 1);
 
 INSERT INTO public."post_category"(
     post_id, category_id)
-    VALUES(3, 2)
+    VALUES(3, 2);
 
 -- comments insertion
 
