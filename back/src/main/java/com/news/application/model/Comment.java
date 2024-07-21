@@ -1,7 +1,11 @@
 package com.news.application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import lombok.*;
 
 
@@ -23,6 +27,9 @@ public class  Comment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "comment", cascade=CascadeType.ALL,orphanRemoval=true)
+    private Set<CommentsLike> commentsLikes=new HashSet<>();
 
     @ManyToOne( optional = false)
     @JoinColumn(name = "fk_author_id")

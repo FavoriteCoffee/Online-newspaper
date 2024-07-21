@@ -46,6 +46,14 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "author", cascade=CascadeType.ALL,orphanRemoval=true)
     private Set<Comment> comments = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade=CascadeType.ALL,orphanRemoval=true)
+    private Set<CommentsLike> commentsLikes=new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade=CascadeType.ALL,orphanRemoval=true)
+    private Set<PostsLike> postsLikes=new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

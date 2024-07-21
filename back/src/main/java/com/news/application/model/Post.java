@@ -48,6 +48,10 @@ public class    Post {
     @OneToMany(mappedBy = "post", cascade=CascadeType.ALL,orphanRemoval=true)
     private Set<Comment> comments=new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", cascade=CascadeType.ALL,orphanRemoval=true)
+    private Set<PostsLike> postsLikes=new HashSet<>();
+
     public void addCategory(Category category){
         this.categories.add(category);
         category.getPosts().add(this);
