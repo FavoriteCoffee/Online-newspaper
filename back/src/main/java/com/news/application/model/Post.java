@@ -1,5 +1,6 @@
 package com.news.application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.news.application.service.CategoryService;
 import jakarta.persistence.*;
 
@@ -43,8 +44,9 @@ public class    Post {
     )
     private Set<Category> categories=new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade=CascadeType.ALL,orphanRemoval=true)
-    private Set<Comment> comments;
+    private Set<Comment> comments=new HashSet<>();
 
     public void addCategory(Category category){
         this.categories.add(category);

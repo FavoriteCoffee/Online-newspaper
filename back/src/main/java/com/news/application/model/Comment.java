@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "`Comment`")
-public class Comment {
+public class  Comment {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
