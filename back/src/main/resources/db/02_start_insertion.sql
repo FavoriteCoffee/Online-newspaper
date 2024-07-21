@@ -3,6 +3,9 @@
 INSERT INTO public."User"(password, user_name, name, surname, role)
 VALUES ('password', 'anna@ya.ru', 'Anna', 'Moreva', 'ROLE_USER');
 
+INSERT INTO public."User"(password, user_name, name, surname, role)
+VALUES ('$2a$10$4AyaUfaGw5e7DhiJWCS2VeJLuYl5nHkjLvpoptET6zh0omwTQ61sG', 'admin@ya.ru', 'Admin', 'Admin', 'ROLE_ADMIN');
+
 -- posts insertion
 
 INSERT INTO public."Post"(
