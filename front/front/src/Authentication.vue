@@ -43,10 +43,7 @@
         <v-btn>Регистрация</v-btn>
       </router-link>
 
-      <router-link to="/admin" class="nav-link"
-      style="float: right;">
-        <a @click="logInAsAdmin()">Войти как администратор</a>
-      </router-link>
+      <a style="float: right;" @click="myStore.logInAsAdmin()">Войти как администратор</a>
   </v-card>
 </template>
 

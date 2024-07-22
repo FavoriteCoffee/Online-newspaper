@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="12">
+            <v-col>
                 <v-btn
                     v-model="show" 
                     @click="show = !show"
@@ -16,7 +16,7 @@
         </v-row>
         <v-divider ></v-divider>
         <v-row>
-            <v-col cols="12">
+            <v-col>
                 <DeleteComment v-if="show"
                     v-for="comment of this.news.comments"
                     :comment="comment" 
@@ -34,7 +34,7 @@
     import DeleteComment from "./DeleteComment.vue";
     import AdminDeleteComment from "./AdminDeleteComment.vue";
     const myStore = useStore();
-    const show = ref(true);
+    const show = ref(false);
 
     const props = defineProps({
         news: {

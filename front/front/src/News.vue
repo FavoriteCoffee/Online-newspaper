@@ -243,7 +243,6 @@ const commentText = ref("")
 
 const changeCommentText = (newText) => {
     commentText.value = newText
-    console.log(newText, myStore.currentUser.id, commentText.value)
 }
 
 const getCommentText = () => {

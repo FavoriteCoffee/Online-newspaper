@@ -30,7 +30,6 @@ class UserDataService {
     }
 
     getNewsByCategories(category_names) {
-        console.log(category_names)
         return http.get(`posts/by_categories?${category_names.map((v, index) => `categoryName=${v}`).join('&')}`)
     }
     

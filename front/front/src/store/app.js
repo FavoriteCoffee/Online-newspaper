@@ -107,67 +107,31 @@ export const useStore = defineStore('MyStore', {
 
         await UserDataService.getNewsByCategories(selected)
         .then( response => {
-            console.log("то что отправляем", selected)
-            console.log("то что получили", response.data)
             res = response.data
         })
         .catch( e => {
-            console.log(selected)
             console.log("Ошибка получения новостей по категории")
         })
 
         await this.loadData()
-
-        console.log("NEWS", this.news)
-        console.log("RES", res)        
+       
         let del = []
         let found = false
-
-        this.news.push({id: 10, showText:false, date:"01.02.03", img:'./img/cat.jpg', title:" t1", text: ' ;;;;;;;;;;;;;;;;'})
 
         for (let news of this.news){
             for (let n of res){
                 if (news.id == n.id){
                     found = true
-                    console.log(news.id, "==", n.id)
                 }
             }
             if(!found){
                 let ind = this.news.indexOf(news)
                 this.news.splice(ind, 1)
-                console.log("ИНДЕКС", ind)
             }
             found = false
         }
-
-       
-
-        // let find = false
-
-        // for (let i = 0; i < this.news.length; ++i){
-        //     for (let n of res) {
-        //         if( news[i].id == n.id) 
-        //             find = true
-        //             break
-        //     }
-        //     if (!find){
-        //         this.news.splice(i, 1)
-                
-        //     }
-        //     find = false
-        // }
-
-        console.log("ПОИСК", this.news)
       },
 
-    // watch 
-
-    //   selected() {
-    //     this.search = ''
-    //   },
-
-
-    // methods
       next() {
         this.loading = true
 
@@ -188,7 +152,6 @@ export const useStore = defineStore('MyStore', {
         await UserDataService.getRecentNews()
         .then(response => {
             this.news = response.data.slice(0)
-            console.log("то что присылает сервер:", response.data, "то что записано в tis.news:", this.news)
         }) 
     },
 
@@ -199,13 +162,12 @@ export const useStore = defineStore('MyStore', {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.comments = response.data.slice(0).reverse()
-                        // console.log("из сохранения комментариев, новости номер ", n.comments)
                     }
                 } 
             })
         }
 
-        console.log(this.currentUser.userName, this.currentUser.id, this.currentUser.name, this.currentUser.surname)
+        // console.log(this.currentUser.userName, this.currentUser.id, this.currentUser.name, this.currentUser.surname)
         await this.showTodayNews()
     },
 
@@ -254,10 +216,8 @@ export const useStore = defineStore('MyStore', {
         let token = localStorage.getItem('token')
         if (token !== null){
             let user = JSON.parse(this.jwt_decode(token))
-            console.log("USER = ", user)
             if (user !== null){
                 let name = user.sub
-                console.log(name)
                 await UserDataService.getUser(name)
                 .then( response => {
                     this.currentUser.userName = response.data.username
@@ -275,7 +235,6 @@ export const useStore = defineStore('MyStore', {
         await UserDataService.getAllUsers()
         .then(response => {
             this.users = response.data.slice(0)
-            console.log("то что присылает сервер:", response.data, "то что записано в this.users:", this.users)
         }) 
     }, 
 
@@ -283,7 +242,6 @@ export const useStore = defineStore('MyStore', {
     await UserDataService.getAllCategories()
     .then( response => {
         this.categories = response.data.slice(0)
-        console.log ("ВСЕ КАТЕГОРИИ:", this.categories)
     })
     .catch( e => {
         console.log("ОШИБКА ПОЛУЧЕНИЯ КАТЕГОРИЙ С СЕРВЕРА")
@@ -296,7 +254,7 @@ export const useStore = defineStore('MyStore', {
                 for (let n of this.news){
                     if (n.id === news.id) {
                         n.categories = response.data.slice(0)
-                        console.log("из сохранения категорий, новости номер ", n.categories)
+                        // console.log("из сохранения категорий, новости", n.categories)
                     }
                 } 
             })
@@ -461,128 +419,6 @@ export const useStore = defineStore('MyStore', {
         localStorage.removeItem("user")
         localStorage.removeItem("token")
     },
-    
-    // async createTestNews(text, title, imgPath){
-    //     var data = {
-    //         text: text,
-    //         title: title,
-    //         imgPath: imgPath
-    //     }
-    //     const res = await UserDataService.createNews(data)
-    //     // console.log(res)
-    //     return res.data.id
-    // },
-
-    // async createTestUser(name, pass){
-    //     var request = {
-    //         username: name,
-    //         password: pass
-    //     }
-    //     await UserDataService.signUp(request)
-    //     .then(response => {
-    //         localStorage.setItem("token", response.data.token)
-    //     })
-    //     .catch( e => {
-    //         c = false
-    //         console.log("Неверный логин")
-    //         return
-    //     })
-        
-    //     return res.data.id
-    // },
-
-    // async authalizeTestUser(name, pass){
-    //     var request = {
-    //         username: name,
-    //         password: pass
-    //     }
-
-    //     await UserDataService.signIn(request)
-    //     .then(response => {
-    //         localStorage.setItem("token", response.data.token)
-    //     })
-    //     .catch( e => {
-    //         c = false
-    //         console.log("Неверный логин")
-    //         return
-    //     })
-    // },
-    
-    // async createTestComment(newsid, user_id, text){
-    //     var data = {
-    //         text: text,
-    //     }
-    //     const res = await UserDataService.createComment(newsid, user_id, data)
-    //     return res.data.id
-    // },
-
-    // async createTestLike(newsid){
-    //     const res = await UserDataService.likeNews(newsid, "Anna")
-    // },
-
-    // async pushTestDataToDB(){
-    //     let dataNeeded = true
-    //     await UserDataService.getRecentNews().then( response => {
-    //         if(response.data.slice(0).length != 0){
-    //             dataNeeded = false
-    //         }
-    //     })
-
-    //     if(!dataNeeded) {return}
-
-    //     var newsid1
-    //     var newsid2
-    //     var newsid3
-
-    //     var userid
-
-    //     var commentid1
-
-    //     var commentsid1 = new Array(3).fill(null)
-    //     var commentsid2 = new Array(3).fill(null)
-    //     var commentsid3 = new Array(3).fill(null)
-
-    //     await this.createTestUser("Anna", "Olaf").catch( e => {
-    //         console.log("не создался")
-    //     })
-
-    //     await this.authalizeTestUser("Anna", "Olaf").catch( e => {
-    //         console.log("не авторизовался")
-    //     })
-
-    //     await UserDataService.getUser("Anna")
-    //     .then(response => { 
-    //         userid = response.data.id
-    //     })
-    //     console.log("USER: ", userid)
-
-    //     newsid1 = await this.createTestNews("text 1", "title 1", "../img/cat.jpg")
-    //     console.log("news 1 id = ", newsid1)
-    //     newsid2 = await this.createTestNews("text 2", "title 2", "../img/fon.png")
-    //     console.log("news 2 id = ", newsid2)
-    //     newsid3 = await this.createTestNews("text 3", "title 3", "../img/home.jpg")
-    //     console.log("news 3 id = ", newsid3)
-
-    //     commentid1 = await this.createTestComment(newsid1, userid,  "first comment news1")
-
-    //     for (let i = 0; i < commentsid1.length; ++i){
-    //         commentsid1[i] = await this.createTestComment(newsid1, userid, "comment news1")
-    //     }
- 
-    //     for (let i = 0; i < commentsid2.length; ++i){
-    //         commentsid1[i] = await this.createTestComment(newsid2, userid, "comment news2")
-    //     }
-
-    //     for (let i = 0; i < commentsid3.length; ++i){
-    //         commentsid1[i] = await this.createTestComment(newsid3, userid, "comment news3")
-    //     }
-
-    //     await this.createTestLike(newsid1)
-    //     await this.createTestLike(newsid2)
-    //     await this.createTestLike(newsid3)
-
-    //     localStorage.removeItem("token")
-    // },
 
     async loadData(){
         //await this.pushTestDataToDB()
@@ -607,7 +443,7 @@ export const useStore = defineStore('MyStore', {
         .then(response => {
             this.currentUser.id = response.data.id
             this.submitted = true;
-            console.log("response.data из saveUser ", response.data.username, response.data.id)
+            // console.log("response.data из saveUser ", response.data.username, response.data.id)
         })
         .catch( e => {
             alert(e)
@@ -626,7 +462,6 @@ export const useStore = defineStore('MyStore', {
 
         await UserDataService.createPost(data)
         .then( response => {
-            console.log("создан новый пост", response.data)
             id = response.data.id
         })
         .catch( e => {
@@ -652,10 +487,8 @@ export const useStore = defineStore('MyStore', {
         var comment
         var id
 
-        console.log("в запрос createComment подаем: ", newsId, user_id, data)
         await UserDataService.createComment(newsId, user_id, data)
-        .then( response => {
-            console.log("из функции ADDCOMMENT: ", response.data)            
+        .then( response => {        
             id = response.data.id
             date = response.data.date
         })
@@ -675,8 +508,7 @@ export const useStore = defineStore('MyStore', {
 
         for (let news of this.news) {
             if (news.id == newsId) {
-                news.comments.unshift(comment)
-                console.log("полный список коментов ", news.comments)   
+                news.comments.unshift(comment)   
             }
         }     
     },
@@ -698,8 +530,44 @@ export const useStore = defineStore('MyStore', {
         })
     },
 
-    logInAsAdmin(){
+    async logInAsAdmin(){
+        var c = true
+        let user
+        let request = {
+            username: this.authenticationData.enteredUserName,
+            password: this.authenticationData.enteredPassword,
+        }
+        if (this.authenticationData.enteredUserName !== "" &&
+            this.authenticationData.enteredPassword !== "" 
+    ){
+                await UserDataService.signIn(request)
+                .then(response => {
+                    localStorage.setItem("token", response.data.token)
+                })
+                .catch( e => {
+                    c = false
+                    console.log("Неверный логин")
+                    this.showErrMsg = true
+                    this.currentErrMsg = this.errMasages.authErr
+                    return
+                })
+            }
+         await UserDataService.getUser(this.authenticationData.enteredUserName)
+            .then(response => {
+                user = response.data
+            })
 
+            if (c) {
+                this.userIn = true
+
+                this.currentUser.userName = user.username
+                this.currentUser.password = user.password
+                this.currentUser.name = user.name
+                this.currentUser.surname = user.surname
+                this.currentUser.id = user.id
+                
+                this.gotoAnotherPage('/admin')
+            }
     },
 
     async verificationOfRegistration(){
@@ -736,15 +604,12 @@ export const useStore = defineStore('MyStore', {
             })
             .catch( e => {
                 c = false
-                console.log(request)
                 console.log("Ошибка получения вновьсозданного пользователя после регистрации")
                 return
             })
 
             if (c) {
                 this.userIn = true
-
-                console.log("userIn === true", this.userIn)
 
                 this.currentUser.userName = user.username
                 this.currentUser.password = user.password
@@ -789,16 +654,12 @@ export const useStore = defineStore('MyStore', {
          await UserDataService.getUser(this.authenticationData.enteredUserName)
             .then(response => {
                 user = response.data
-                console.log("USER: ", user)
             })
 
             if (c) {
                 this.userIn = true
 
-                console.log("userIn === true", this.userIn)
-
                 this.currentUser.userName = user.username
-                console.log("authenticationData.enteredUserName: ", this.authenticationData.enteredUserName, "user.username: ", user.username, "this.currentUser.userName", this.currentUser.userName)
                 this.currentUser.password = user.password
                 this.currentUser.name = user.name
                 this.currentUser.surname = user.surname
@@ -834,8 +695,7 @@ export const useStore = defineStore('MyStore', {
                     
                             await UserDataService.unlikeNews(post_id, news.likes[i].id)
                             .catch( e => {
-                                console.log("НЕ НАШЕЛ") 
-                            alert(e)
+                                alert(e)
                             })
         
                             index = i
@@ -847,17 +707,14 @@ export const useStore = defineStore('MyStore', {
                         var like
 
                         await UserDataService.likeNews(post_id, name)
-                        .then(response => {
-                            console.log("добавление в стор лайка ", post_id, news.likes) 
+                        .then(response => { 
                             like = response.data
                         })
                         .catch( e => {
                         alert(e)
                         })
 
-                        //console.log("добавление в стор, новость: ", post_id, news.likes)
                         news.likes.push(like)
-                        console.log("лайки после добавления: ", news.likes)
                     }                
                 }
             }    
@@ -889,7 +746,6 @@ export const useStore = defineStore('MyStore', {
                 if (news.id == post_id) {
                     for (let comment of news.comments) {
                         if (comment.id == comment_id) {
-                            console.log("comment.likes.length ", comment)
                             for (let i = 0; i < comment.likes.length; i++) {
                                 if (comment.likes[i].author.id == this.currentUser.id) {
                                     isLiked = true
@@ -980,11 +836,16 @@ export const useStore = defineStore('MyStore', {
     },
 
      async deleteNews(newsId){
-        console.log(newsId)
         await UserDataService.deleteNews(newsId)
         .catch(e => {
             alert(e)
         })
+
+        for (let i = 0; i < this.news.length; ++i){
+            if (this.news[i].id == newsId){
+                this.news.splice(i, 1)
+            }
+        }
      },
 
      async deleteComment(newsId, commentId){
