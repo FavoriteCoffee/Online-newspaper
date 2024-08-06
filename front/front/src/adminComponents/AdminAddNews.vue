@@ -42,7 +42,7 @@
             </v-row>
             <v-row>
                 <v-btn 
-                    @click="myStore.addPost(text, title, img)"
+                    @click="addPost()"
                     variant="text" 
                     icon="mdi-delete-outline"
                     style="color: #8674AF; margin-left: 50px;">
@@ -83,5 +83,11 @@
     const title = ref("")
     const img = ref("")
 
-
+    const addPost = () => {
+        myStore.addPost(text, title, img)
+        text = ""
+        title = ""
+        img = ""
+    }
+ 
 </script>

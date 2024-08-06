@@ -6,15 +6,12 @@
         margin: 10px;
         margin-top: 0;
         margin-left: 14%;
-        margin-bottom: 0;
         padding: 0;
         padding-left: 14%;
         padding-right: 14%;
 
         background-color: #fff;">
         
-
-        <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
         <v-row 
         style="margin-top: 0px;
         padding-bottom: 10px;">
@@ -24,12 +21,12 @@
                 font-size: 1.25rem;
                 font-weight: 500;
                 line-height: 1.6;
-                letter-spacing: 0.0125em;"> Поиск по категориям</p>
+                letter-spacing: 0.0125em;"> Исключить категории</p>
             </v-col>    
             <v-col cols="3">
                 <v-btn
                 v-if="show"
-                :loading="myStore.loading"
+                :loading="myStore.nLoading"
                 color="#8674AF"
                 variant="text"
                 @click="show=false"
@@ -39,13 +36,13 @@
                 </v-btn>
                 <v-btn
                 v-else
-                :loading="myStore.loading"
+                :loading="myStore.nLoading"
                 color="#8674AF"
                 variant="text"
                 @click="show=true"
                 style="float: right; float: top; padding: 0;"
                 >
-                Искать
+                Исключить
                 </v-btn>
             </v-col>
         </v-row>
@@ -55,15 +52,15 @@
       <v-container style="padding: 0;">
         <v-row align="center" justify="start">
           <v-col
-            v-for="(selection, i) in myStore.selections()"
+            v-for="(selection, i) in myStore.nSelections()"
             :key="selection.name"
             class="py-1 pe-0"
             cols="auto"
           >
             <v-chip
-              :disabled="myStore.loading"
+              :disabled="myStore.nLoading"
               closable
-              @click:close="myStore.selected.splice(i, 1)"
+              @click:close="myStore.nSelected.splice(i, 1)"
             >
               <!-- <v-icon :icon="selection.icon" start></v-icon> -->
   
@@ -73,10 +70,10 @@
         </v-row>  
 
         <v-row>
-          <v-col v-if="!myStore.allSelected()" cols="11">
+          <v-col v-if="!myStore.nAllSelected()" cols="11">
             <v-text-field
               ref="searchField"
-              v-model="myStore.search"
+              v-model="myStore.nSearch"
               label="Search"
               hide-details
               single-line
@@ -86,7 +83,7 @@
           <v-col cols="1">
             <v-btn style="float: top; margin: 0;"
             icon="mdi-magnify" 
-            @click="searchByCategories()"/>
+            @click="nSearchByCategories()"/>
           </v-col>
         </v-row>
       </v-container>
@@ -94,14 +91,14 @@
       <v-container style="padding: 0; margin: 0;">
         <v-row>
           <v-col cols="11">
-            <v-divider v-if="!myStore.allSelected()"></v-divider>
+            <v-divider v-if="!myStore.nAllSelected()"></v-divider>
             <v-list>
-              <template v-for="item in myStore.tags()">
+              <template v-for="item in myStore.nTags()">
                 <v-list-item
-                  v-if="!myStore.selected.includes(item)"
+                  v-if="!myStore.nSelected.includes(item)"
                   :key="item.name"
-                  :disabled="myStore.loading"
-                  @click="myStore.selected.push(item)"
+                  :disabled="myStore.nLoading"
+                  @click="myStore.nSelected.push(item)"
                 >
                   <template v-slot:prepend>
                     <!-- <v-icon :disabled="myStore.loading" :icon="item.icon"></v-icon> -->
@@ -129,9 +126,9 @@
 
   const show = ref(false)
 
-  const searchByCategories = () => {
+  const nSearchByCategories = () => {
     show.value = false
-    myStore.searchByCategories()
+    myStore.nSearchByCategories()
   }
   
   </script>

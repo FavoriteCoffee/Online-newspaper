@@ -6,8 +6,8 @@
             </div>        
         </v-row>
         <v-row>
-            <div :class="['text-body-1', 'pa-2']">
-                {{ comment.text }}
+            <div :class="['text-body-1', 'pa-2']" style="max-width: 95%;">
+                {{ comment.text }} 
             </div>
         </v-row>
         <v-row>

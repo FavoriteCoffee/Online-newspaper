@@ -24,7 +24,7 @@
             <v-btn 
             color="#8674AF"
             variant="text"
-            @click="myStore.addTag(text)"
+            @click="addTag()"
             style="margin-bottom: 20px;">
                 Создать
             </v-btn>
@@ -54,4 +54,9 @@
     const myStore = useStore();
 
     const text = ref("")
+
+    const addTag = () => {
+        myStore.addTag(text.value)
+        text.value = ""
+    }
 </script>

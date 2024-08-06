@@ -208,9 +208,10 @@
                             <v-textarea
                                 @blur="changeCommentText($event.target.value)"
                                 label="Оставьте комментарий"
+                                v-model="commentText"
                                 maxlength="1000"
                                 single-line/>
-                            <v-btn @click="myStore.addComment(this.news.id, myStore.currentUser.id, getCommentText())"
+                            <v-btn @click="addComment()"
                                 width="100%">
                                 Опубликовать
                             </v-btn>
@@ -259,6 +260,11 @@ const changeCommentsVisibility = () => {
 
 const changeAllCommentsVisibility = () => {
     showAllComents.value = !showAllComents.value
+}
+
+const addComment = () => {
+    myStore.addComment(props.news.id, myStore.currentUser.id, getCommentText())
+    commentText.value = ""
 }
 </script>
 

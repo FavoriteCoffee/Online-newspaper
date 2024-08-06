@@ -61,6 +61,12 @@ export const useStore = defineStore('MyStore', {
 
         //   ------------------------
         
+
+        // Данные для анти поиска ----------
+            nLoading: false,
+            nSearch: '',
+            nSelected: [],
+        // ---------------------------------
     }),
 
 
@@ -68,7 +74,7 @@ export const useStore = defineStore('MyStore', {
 
     // --------- >> Методы для поиска << --------- //
 
-    allSelected() {
+      allSelected() {
         return this.selected.length === this.categories.length
       },
 
@@ -104,7 +110,7 @@ export const useStore = defineStore('MyStore', {
             selected.push(tag.name)
         }
 
-
+        console.log("выбранные категории: ", selected)
         await UserDataService.getNewsByCategories(selected)
         .then( response => {
             res = response.data
@@ -114,7 +120,7 @@ export const useStore = defineStore('MyStore', {
         })
 
         await this.loadData()
-       
+
         let del = []
         let found = false
 
@@ -122,13 +128,25 @@ export const useStore = defineStore('MyStore', {
             for (let n of res){
                 if (news.id == n.id){
                     found = true
+                    break
                 }
             }
             if(!found){
-                let ind = this.news.indexOf(news)
-                this.news.splice(ind, 1)
+                for(let i = 0; i < this.news.length; ++i){
+                    if(this.news[i].id == news.id){
+                        del.push(i)        
+                    }
+                }
             }
             found = false
+        }
+
+        console.log("оставшиеся новости: ", res)
+
+        del.sort()
+
+        for(let i = del.length - 1; i >= 0 ; i-- ){
+            this.news.splice(del[i], 1)
         }
       },
 
@@ -141,8 +159,94 @@ export const useStore = defineStore('MyStore', {
           this.loading = false
         }, 2000)
       },
-  
 
+    // ----------------------
+  
+    // Методы для анти поиска
+
+    nAllSelected() {
+        return this.nSelected.length === this.categories.length
+    },
+
+    nTags() {
+        const search = this.nSearch.toLowerCase()
+
+        if (!search) return this.categories
+
+        return this.categories.filter(category => {
+            const text = category.name.toLowerCase()
+
+            return text.indexOf(search) > -1
+        })
+    },
+
+    nSelections() {
+        const selections = []
+
+        for (const selection of this.nSelected) {
+            selections.push(selection)
+        }
+
+        return selections
+    },
+
+    async nSearchByCategories(){
+        //сравниваем полученные с сервера с текущими и удаляем несовпавшие
+        let res = []
+
+        let nSelected = []
+
+        for (let tag of this.nSelected){
+            nSelected.push(tag.name)
+        }
+
+        console.log("выбранные категории: ", nSelected)
+        await UserDataService.getNewsByCategories(nSelected)
+        .then( response => {
+            res = response.data
+        })
+        .catch( e => {
+            console.log("Ошибка получения новостей по категории")
+        })
+
+        await this.loadData()
+
+        let del = []
+        let found = false
+
+        for (let news of this.news){
+            for (let n of res){
+                if (news.id == n.id){
+                    for(let i = 0; i < this.news.length; ++i){
+                        if(this.news[i].id == news.id){
+                            del.push(i)        
+                        }
+                    }
+                    break
+                }
+            }
+        }
+
+        console.log("оставшиеся новости: ", res)
+
+        del.sort()
+
+        for(let i = del.length - 1; i >= 0 ; i-- ){
+            this.news.splice(del[i], 1)
+        }
+      },
+
+      nNext() {
+        this.nLoading = true
+
+        setTimeout(() => {
+          this.nSearch = ''
+          this.nSelected = []
+          this.nLoading = false
+        }, 2000)
+      },
+
+    // ----------------------
 
     
     // ---------- >>  GETTERS  << --------- //
@@ -520,6 +624,12 @@ export const useStore = defineStore('MyStore', {
             name: text,
         }
 
+        for (let category of this.categories){
+            if(category.name === text){
+                return
+            }
+        }
+
         await UserDataService.createCategory(category)
         .then( response => {
             //тут добавление нового тега в стор для реактивности id + text
@@ -591,7 +701,7 @@ export const useStore = defineStore('MyStore', {
                 })
                 .catch( e => {
                     c = false
-                    console.log("Ошибка регистрации")
+                    console.log("Пользователь с таким именем уже существует")
                     this.showErrMsg = true
                     this.currentErrMsg = this.errMasages.regErr
                     return
