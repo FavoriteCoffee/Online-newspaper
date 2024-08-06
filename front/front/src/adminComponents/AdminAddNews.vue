@@ -84,10 +84,10 @@
     const img = ref("")
 
     const addPost = () => {
-        myStore.addPost(text, title, img)
-        text = ""
-        title = ""
-        img = ""
+        myStore.addPost(text.value, title.value, img.value)
+        text.value = ""
+        title.value = ""
+        img.value = ""
     }
  
 </script>
