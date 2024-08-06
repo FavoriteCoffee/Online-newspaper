@@ -105,13 +105,18 @@ export const useStore = defineStore('MyStore', {
         let res = []
 
         let selected = []
+        let nSelected = []
 
         for (let tag of this.selected){
             selected.push(tag.name)
         }
 
-        console.log("выбранные категории: ", selected)
-        await UserDataService.getNewsByCategories(selected)
+        for (let tag of this.nSelected){
+            nSelected.push(tag.name)
+        }
+        
+        console.log("выбранные категории: ", selected, nSelected)
+        await UserDataService.getNewsByCategories(selected, nSelected)
         .then( response => {
             res = response.data
         })
@@ -190,51 +195,51 @@ export const useStore = defineStore('MyStore', {
         return selections
     },
 
-    async nSearchByCategories(){
-        //сравниваем полученные с сервера с текущими и удаляем несовпавшие
-        let res = []
+    // async nSearchByCategories(){
+    //     //сравниваем полученные с сервера с текущими и удаляем несовпавшие
+    //     let res = []
 
-        let nSelected = []
+    //     let nSelected = []
 
-        for (let tag of this.nSelected){
-            nSelected.push(tag.name)
-        }
+    //     for (let tag of this.nSelected){
+    //         nSelected.push(tag.name)
+    //     }
 
-        console.log("выбранные категории: ", nSelected)
-        await UserDataService.getNewsByCategories(nSelected)
-        .then( response => {
-            res = response.data
-        })
-        .catch( e => {
-            console.log("Ошибка получения новостей по категории")
-        })
+    //     console.log("выбранные категории: ", nSelected)
+    //     await UserDataService.getNewsByCategories(nSelected)
+    //     .then( response => {
+    //         res = response.data
+    //     })
+    //     .catch( e => {
+    //         console.log("Ошибка получения новостей по категории")
+    //     })
 
-        await this.loadData()
+    //     await this.loadData()
 
-        let del = []
-        let found = false
+    //     let del = []
+    //     let found = false
 
-        for (let news of this.news){
-            for (let n of res){
-                if (news.id == n.id){
-                    for(let i = 0; i < this.news.length; ++i){
-                        if(this.news[i].id == news.id){
-                            del.push(i)        
-                        }
-                    }
-                    break
-                }
-            }
-        }
+    //     for (let news of this.news){
+    //         for (let n of res){
+    //             if (news.id == n.id){
+    //                 for(let i = 0; i < this.news.length; ++i){
+    //                     if(this.news[i].id == news.id){
+    //                         del.push(i)        
+    //                     }
+    //                 }
+    //                 break
+    //             }
+    //         }
+    //     }
 
-        console.log("оставшиеся новости: ", res)
+    //     console.log("оставшиеся новости: ", res)
 
-        del.sort()
+    //     del.sort()
 
-        for(let i = del.length - 1; i >= 0 ; i-- ){
-            this.news.splice(del[i], 1)
-        }
-      },
+    //     for(let i = del.length - 1; i >= 0 ; i-- ){
+    //         this.news.splice(del[i], 1)
+    //     }
+    //   },
 
       nNext() {
         this.nLoading = true

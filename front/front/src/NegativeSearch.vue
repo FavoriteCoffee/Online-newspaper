@@ -81,9 +81,9 @@
           </v-col>
 
           <v-col cols="1">
-            <v-btn style="float: top; margin: 0;"
+            <!-- <v-btn style="float: top; margin: 0;"
             icon="mdi-magnify" 
-            @click="nSearchByCategories()"/>
+            @click="nSearchByCategories()"/> -->
           </v-col>
         </v-row>
       </v-container>
