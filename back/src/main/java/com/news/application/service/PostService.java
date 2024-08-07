@@ -60,26 +60,16 @@ public class PostService {
     public Iterable<Post> findByCategory(Category category){
         return postRepository.findByCategoriesContains(category);
     }
-
-    public Iterable<Post> findByCategories(List<Category> categories){
-        Iterator<Post> iter = findRecent().iterator();
-        Set<Long> postsIdSet = new HashSet<>();
-        iter.forEachRemaining((x) -> postsIdSet.add(x.getId()));
-        Set<Long> tempSet = new HashSet<>();
-        System.out.println(categories);
-        for (Category category : categories){
-            System.out.println("POSTS:");
-            postsIdSet.forEach(System.out::println);
-            System.out.println();
-            iter = postRepository.findByCategoriesContains(category).iterator();
-            iter.forEachRemaining((x -> tempSet.add(x.getId())));
-            System.out.println("TEMPSET:");
-            tempSet.forEach(System.out::println);
-            postsIdSet.retainAll(tempSet);
-            tempSet.clear();
-        }
+    public Iterable<Post> findByCategories(List<Category> neadedCategories, List<Category> prohibitedCategories){
+        Set<Long> neadedPostsIds = (HashSet<Long>) findByCategories(neadedCategories, SearchMode.NEADED);
+//        System.out.println("NEADED");
+//        neadedPostsIds.forEach(System.out::println);
+        Iterable<Long> prohibitedPostsIds = findByCategories(prohibitedCategories, SearchMode.PROHIBITED);
+//        System.out.println("PROHIBITED");
+//        prohibitedPostsIds.forEach(System.out::println);
+        prohibitedPostsIds.forEach(neadedPostsIds::remove);
         Set<Post> postsSet = new HashSet<>();
-        postsIdSet.forEach((x -> {
+        neadedPostsIds.forEach((x -> {
             try {
                 postsSet.add(findById(x));
             } catch (Exception e) {
@@ -88,4 +78,35 @@ public class PostService {
         }));
         return postsSet;
     }
+
+    public Iterable<Long> findByCategories(List<Category> categories, SearchMode searchMode){
+        Iterator<Post> iter = findRecent().iterator();
+        Set<Long> postsIdSet = new HashSet<>();
+        if (searchMode == SearchMode.NEADED) {
+            iter.forEachRemaining((x) -> postsIdSet.add(x.getId()));
+        }
+        Set<Long> tempSet = new HashSet<>();
+        System.out.println(categories);
+        for (Category category : categories){
+//            System.out.println("POSTS:");
+//            postsIdSet.forEach(System.out::println);
+//            System.out.println();
+            iter = postRepository.findByCategoriesContains(category).iterator();
+            iter.forEachRemaining((x -> tempSet.add(x.getId())));
+//            System.out.println("TEMPSET:");
+//            tempSet.forEach(System.out::println);
+            switch (searchMode){
+                case NEADED -> postsIdSet.retainAll(tempSet);
+                case PROHIBITED -> postsIdSet.addAll(tempSet);
+            }
+            tempSet.clear();
+        }
+        return postsIdSet;
+    }
+
+    enum SearchMode {
+        NEADED,
+        PROHIBITED
+    }
+
 }

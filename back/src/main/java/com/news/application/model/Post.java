@@ -60,4 +60,9 @@ public class    Post {
         this.categories.remove(category);
         category.getPosts().remove(this);
     }
+
+    @Override
+    public String toString(){
+        return "post #" + id + " " + title;
+    }
 }

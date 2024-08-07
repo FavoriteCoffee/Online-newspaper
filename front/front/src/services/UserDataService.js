@@ -30,7 +30,7 @@ class UserDataService {
     }
 
     getNewsByCategories(neaded_categories, prohibited_categories) {
-        return http.get(`posts/by_categories?${neaded_categories.map((v, index) => `categoryName=${v}`).join('&')}, ${prohibited_categories.map((v, index) => `categoryName=${v}.join('&')`)} `)
+        return http.get(`posts/by_categories?${neaded_categories.map((v, index) => `neadedCategoryName=${v}`).join('&')}&${prohibited_categories.map((v, index) => `prohibitedCategoryName=${v}`).join('&')} `)
     }
     
     getUser(name) {

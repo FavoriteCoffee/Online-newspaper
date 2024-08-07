@@ -271,13 +271,20 @@ public class PostsController {
         }
     }
 
+
+
     @GetMapping("posts/by_categories")
-    public ResponseEntity<Object> getPostsByCategories(@RequestParam(value = "categoryName") String[] categoryNames) {
+    public ResponseEntity<Object> getPostsByCategories(@RequestParam(value = "neadedCategoryName", required = false) String[] neadedCategoryNames,
+                                                       @RequestParam(value = "prohibitedCategoryName", required = false) String[] prohibitedCategoryNames) {
         try {
-            List<String> categoryNamesList = List.of(categoryNames);
-            List<Category> categories = categoryService.findByNames(categoryNamesList);
-            System.out.println(categories);
-            Iterable<Post> posts = postService.findByCategories(categories);
+            List<Category> neadedCategories = (neadedCategoryNames != null)
+                    ? categoryService.findByNames(List.of(neadedCategoryNames))
+                    : new ArrayList<>();
+
+            List<Category> prohibitedCategories = (prohibitedCategoryNames != null)
+                    ? categoryService.findByNames(List.of(prohibitedCategoryNames))
+                    : new ArrayList<>();
+            Iterable<Post> posts = postService.findByCategories(neadedCategories, prohibitedCategories);
             return new ResponseEntity<Object>(posts, HttpStatus.OK);
         } catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
